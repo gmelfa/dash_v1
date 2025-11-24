@@ -44,10 +44,10 @@ class Comment(db.Model):
     __tablename__ = 'comments'
     
     id = db.Column(db.Integer, primary_key=True)
-    query_id = db.Column(db.String(100), nullable=False)  # ID da query (ex: "resultado_10_2025")
+    query_id = db.Column(db.String(100), nullable=False, index=True)  # ID da query (ex: "resultado_10_2025")
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    status = db.Column(db.String(20), default='pending')  # pending, approved, rejected
+    status = db.Column(db.String(20), default='pending', index=True)  # pending, approved, rejected
     
     # Campos para edição pelo gestor
     edited_content = db.Column(db.Text, nullable=True)
@@ -57,6 +57,11 @@ class Comment(db.Model):
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Índice composto para performance com 100+ queries
+    __table_args__ = (
+        db.Index('idx_query_status', 'query_id', 'status'),
+    )
     
     def to_dict(self):
         """Serializa para JSON"""
