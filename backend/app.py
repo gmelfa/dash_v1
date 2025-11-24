@@ -56,13 +56,65 @@ def get_databricks_connection():
     )
 
 def load_queries():
-    """Carrega queries do arquivo JSON"""
+    """Carrega queries do arquivo JSON - suporta formato antigo (array) e novo (categorizado)"""
     try:
         with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
+            data = json.load(f)
+            
+        # Se for array (formato antigo), retorna direto
+        if isinstance(data, list):
+            return data
+            
+        # Se for objeto com categories (formato novo), flatten para compatibilidade
+        if isinstance(data, dict) and 'categories' in data:
+            all_queries = []
+            for category in data['categories']:
+                for query in category.get('queries', []):
+                    # Adiciona metadados da categoria na query
+                    query['category_id'] = category['id']
+                    query['category_name'] = category['name']
+                    query['category_icon'] = category.get('icon', '')
+                    all_queries.append(query)
+            return all_queries
+            
+        return []
     except Exception as e:
         print(f"Erro ao carregar queries: {e}")
         return []
+
+def load_queries_categorized():
+    """Carrega queries no formato categorizado (novo formato)"""
+    try:
+        with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+            
+        # Se já está no formato novo, retorna direto
+        if isinstance(data, dict) and 'categories' in data:
+            return data
+            
+        # Se é formato antigo (array), converte para categorizado
+        if isinstance(data, list):
+            categories_map = {}
+            for query in data:
+                cat_name = query.get('category', 'Sem Categoria')
+                if cat_name not in categories_map:
+                    categories_map[cat_name] = {
+                        'id': cat_name.lower().replace(' ', '_'),
+                        'name': cat_name,
+                        'icon': '📊',
+                        'description': '',
+                        'queries': []
+                    }
+                categories_map[cat_name]['queries'].append(query)
+            
+            return {
+                'categories': list(categories_map.values())
+            }
+            
+        return {'categories': []}
+    except Exception as e:
+        print(f"Erro ao carregar queries categorizadas: {e}")
+        return {'categories': []}
 
 def save_queries(queries):
     """Salva queries no arquivo JSON"""
@@ -83,13 +135,22 @@ def health_check():
 def get_queries():
     """Retorna lista de todas as queries cadastradas"""
     try:
+        # Verificar se deve retornar formato categorizado
+        categorized = request.args.get('categorized', 'false').lower() == 'true'
+        
+        if categorized:
+            data = load_queries_categorized()
+            return jsonify(data), 200
+        
+        # Formato antigo (flat array)
         queries = load_queries()
+        
         # Filtra apenas queries ativas se solicitado
         active_only = request.args.get('active_only', 'false').lower() == 'true'
         if active_only:
             queries = [q for q in queries if q.get('active', True)]
         
-        # Agrupa por categoria se solicitado
+        # Agrupa por categoria se solicitado (formato antigo de agrupamento)
         group_by_category = request.args.get('group_by_category', 'false').lower() == 'true'
         if group_by_category:
             categories = {}
