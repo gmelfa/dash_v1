@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, g
+import time
 from flask_cors import CORS
 from flask_login import LoginManager
 from databricks import sql
@@ -10,6 +11,8 @@ from models import db, User
 from auth import auth_bp
 from comments import comments_bp
 from export import export_bp
+from export_batch_images import export_batch_bp
+from query_loader import QueryLoader
 
 load_dotenv()
 
@@ -34,13 +37,35 @@ login_manager.login_view = 'auth.login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@app.before_request
+def start_timer():
+    g.start = time.time()
+
+@app.after_request
+def log_request(response):
+    if hasattr(g, 'start'):
+        diff = time.time() - g.start
+        # Adicionar header com tempo de resposta
+        response.headers['X-Response-Time'] = str(diff)
+        # Logar requisições lentas (> 1s)
+        if diff > 1:
+            print(f"⚠️ SLOW REQUEST: {request.method} {request.path} took {diff:.4f}s")
+    return response
+
 # Registrar blueprints
 app.register_blueprint(auth_bp)
 app.register_blueprint(comments_bp)
 app.register_blueprint(export_bp)
+app.register_blueprint(export_batch_bp)
 
-# Caminho para o arquivo de queries
+# Caminho para o arquivo de queries (mantido para compatibilidade)
 QUERIES_FILE = os.path.join(os.path.dirname(__file__), 'queries.json')
+
+# Inicializar Query Loader com cache SQLite
+query_loader = QueryLoader(queries_dir='queries', db_path=':memory:')
+print("Carregando queries do diretorio...")
+query_loader.load_all_queries()
+print(f"[OK] Sistema de queries inicializado com {query_loader.get_stats()['total_queries']} queries")
 
 # Configuração do Databricks
 DATABRICKS_SERVER_HOSTNAME = os.getenv('DATABRICKS_SERVER_HOSTNAME')
@@ -56,80 +81,140 @@ def get_databricks_connection():
     )
 
 def load_queries():
-    """Carrega queries do arquivo JSON - suporta formato antigo (array) e novo (categorizado)"""
+    """Carrega queries usando QueryLoader (novo sistema)"""
     try:
-        with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            
-        # Se for array (formato antigo), retorna direto
-        if isinstance(data, list):
-            return data
-            
-        # Se for objeto com categories (formato novo), flatten para compatibilidade
-        if isinstance(data, dict) and 'categories' in data:
-            all_queries = []
-            for category in data['categories']:
-                for query in category.get('queries', []):
-                    # Adiciona metadados da categoria na query
-                    query['category_id'] = category['id']
-                    query['category_name'] = category['name']
-                    query['category_icon'] = category.get('icon', '')
-                    all_queries.append(query)
-            return all_queries
-            
-        return []
+        # Verificar se há atualizações nos arquivos (hot reload)
+        query_loader.check_for_updates()
+        
+        # Buscar todas as queries do cache SQLite
+        queries_data = query_loader.list_queries()
+        
+        # Converter para formato compatível com sistema antigo
+        queries = []
+        for q in queries_data:
+            queries.append({
+                'id': q['id'],
+                'title': q['name'],
+                'description': q['description'],
+                'category': q['category'],
+                'query': q['sql_content'],
+                'active': True,
+                'tags': q.get('tags', '').split(',') if q.get('tags') else []
+            })
+        
+        return queries
     except Exception as e:
         print(f"Erro ao carregar queries: {e}")
         return []
 
 def load_queries_categorized():
-    """Carrega queries no formato categorizado (novo formato)"""
+    """Carrega queries no formato categorizado usando QueryLoader"""
     try:
-        with open(QUERIES_FILE, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        # Verificar atualizações
+        query_loader.check_for_updates()
+        
+        # Buscar categorias
+        categories_data = query_loader.get_categories()
+        
+        # Construir estrutura categorizada
+        categories = []
+        for cat in categories_data:
+            cat_name = cat['category']
+            cat_queries = query_loader.list_queries(category=cat_name)
             
-        # Se já está no formato novo, retorna direto
-        if isinstance(data, dict) and 'categories' in data:
-            return data
+            # Converter queries para formato compatível
+            queries = []
+            for q in cat_queries:
+                queries.append({
+                    'id': q['id'],
+                    'title': q['name'],
+                    'description': q['description'],
+                    'category': q['category'],
+                    'query': q['sql_content'],
+                    'active': True
+                })
             
-        # Se é formato antigo (array), converte para categorizado
-        if isinstance(data, list):
-            categories_map = {}
-            for query in data:
-                cat_name = query.get('category', 'Sem Categoria')
-                if cat_name not in categories_map:
-                    categories_map[cat_name] = {
-                        'id': cat_name.lower().replace(' ', '_'),
-                        'name': cat_name,
-                        'icon': '📊',
-                        'description': '',
-                        'queries': []
-                    }
-                categories_map[cat_name]['queries'].append(query)
-            
-            return {
-                'categories': list(categories_map.values())
-            }
-            
-        return {'categories': []}
+            categories.append({
+                'id': cat_name.lower().replace(' ', '_'),
+                'name': cat_name.title(),
+                'icon': '📊',
+                'description': f'{cat["count"]} queries',
+                'queries': queries
+            })
+        
+        return {'categories': categories}
     except Exception as e:
         print(f"Erro ao carregar queries categorizadas: {e}")
         return {'categories': []}
 
 def save_queries(queries):
-    """Salva queries no arquivo JSON"""
-    try:
-        with open(QUERIES_FILE, 'w', encoding='utf-8') as f:
-            json.dump(queries, f, indent=2, ensure_ascii=False)
-        return True
-    except Exception as e:
-        print(f"Erro ao salvar queries: {e}")
-        return False
+    """Salva queries no arquivo JSON (mantido para compatibilidade, mas não usado)"""
+    print("AVISO: save_queries() chamado, mas queries agora são gerenciadas via arquivos SQL")
+    return True
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Endpoint para verificar se o servidor está rodando"""
     return jsonify({'status': 'ok', 'message': 'Backend está rodando'}), 200
+
+@app.route('/api/queries/stats', methods=['GET'])
+def get_query_stats():
+    """Retorna estatísticas do sistema de queries"""
+    try:
+        stats = query_loader.get_stats()
+        return jsonify(stats), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/queries/categories', methods=['GET'])
+def get_query_categories():
+    """Retorna lista de categorias disponíveis"""
+    try:
+        categories = query_loader.get_categories()
+        return jsonify({'categories': categories}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/queries/search', methods=['GET'])
+def search_queries():
+    """Busca queries por termo"""
+    try:
+        search_term = request.args.get('q', '')
+        if not search_term:
+            return jsonify({'error': 'Parâmetro de busca "q" é obrigatório'}), 400
+        
+        results = query_loader.search_queries(search_term)
+        
+        # Converter para formato compatível
+        queries = []
+        for q in results:
+            queries.append({
+                'id': q['id'],
+                'title': q['name'],
+                'description': q['description'],
+                'category': q['category'],
+                'query': q['sql_content'],
+                'active': True
+            })
+        
+        return jsonify({'queries': queries, 'total': len(queries)}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/queries/reload', methods=['POST'])
+def reload_queries():
+    """Força reload de todas as queries do diretório"""
+    try:
+        count = query_loader.load_all_queries(force_reload=True)
+        stats = query_loader.get_stats()
+        return jsonify({
+            'message': f'Queries recarregadas com sucesso',
+            'loaded': count,
+            'total': stats['total_queries']
+        }), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/api/queries', methods=['GET'])
 def get_queries():
@@ -165,7 +250,7 @@ def get_queries():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/queries/<query_id>', methods=['GET'])
+@app.route('/api/queries/<path:query_id>', methods=['GET'])
 def get_query_by_id(query_id):
     """Retorna uma query específica pelo ID"""
     try:
@@ -179,7 +264,7 @@ def get_query_by_id(query_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@app.route('/api/queries/<query_id>/execute', methods=['POST'])
+@app.route('/api/queries/<path:query_id>/execute', methods=['POST'])
 def execute_saved_query(query_id):
     """Executa uma query salva pelo ID"""
     try:

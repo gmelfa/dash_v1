@@ -33,4 +33,4 @@ def init_db(app):
             db.session.commit()
             print("✓ Usuário admin criado (username: admin, password: admin123)")
         
-        print("✓ Banco de dados inicializado")
+        print("[OK] Banco de dados inicializado")

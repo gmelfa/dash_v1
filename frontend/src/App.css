@@ -419,6 +419,31 @@ body {
   align-items: center;
 }
 
+.search-container {
+  padding: 0 0 1rem 0;
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+  z-index: 10;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+  background: var(--background);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  background: var(--surface);
+}
+
 .btn-export-mode {
   background: transparent;
   color: var(--text-primary);
@@ -761,6 +786,7 @@ body {
 }
 
 .cover-title {
+  font-family: Georgia, 'Times New Roman', serif;
   font-size: 3.5rem;
   font-weight: 700;
   color: #1e40af;
@@ -769,6 +795,7 @@ body {
 }
 
 .cover-subtitle {
+  font-family: Georgia, 'Times New Roman', serif;
   font-size: 3.5rem;
   font-weight: 400;
   color: #1e40af;
