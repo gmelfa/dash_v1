@@ -116,53 +116,57 @@ def export_batch():
         if not query_ids or not isinstance(query_ids, list):
             return jsonify({'error': 'query_ids deve ser uma lista de strings'}), 400
         
-        # Criar apresentação
+        # Criar apresentação com dimensões em EMU (inteiros)
         prs = Presentation()
-        prs.slide_width = 10 * 914400  # 10 polegadas em EMU
-        prs.slide_height = 7.5 * 914400  # 7.5 polegadas em EMU
+        prs.slide_width = 9144000   # 10 polegadas em EMU (10 * 914400)
+        prs.slide_height = 6858000  # 7.5 polegadas em EMU (7.5 * 914400)
         
         # Adicionar slide de capa
         blank_layout = prs.slide_layouts[6]
         slide = prs.slides.add_slide(blank_layout)
         
-        # Estilo de capa (simplificado)
+        # Estilo de capa
         background = slide.background
         fill = background.fill
         fill.solid()
-        fill.fore_color.rgb = RGBColor(30, 58, 95)  # Azul escuro
+        fill.fore_color.rgb = RGBColor(30, 58, 95)
         
-        # Adicionar texto na capa (usar EMU diretamente)
+        # Texto da capa
         title_box = slide.shapes.add_textbox(
             int(Inches(1.1)), int(Inches(3.3)), 
-            int(prs.slide_width - Inches(2.2)), int(Inches(1.1))
+            int(Inches(7.8)), int(Inches(1.1))
         )
         text_frame = title_box.text_frame
-        text_frame.text = "Business Review - Finanças"
+        text_frame.text = "Resumo - Grupo SEB (YTD Outubro)"
         text_frame.paragraphs[0].font.size = Pt(54)
         text_frame.paragraphs[0].font.color.rgb = RGBColor(255, 255, 255)
         text_frame.paragraphs[0].font.bold = True
+
+        # Propriedades do arquivo
+        prs.core_properties.title = "Resumo - Grupo SEB (YTD Outubro)"
+        prs.core_properties.subject = "Resumo - Grupo SEB (YTD Outubro)"
         
-        # Carregar queries
+        # Carregar queries usando QueryLoader
         try:
-            import os
-            queries_file = os.path.join(os.path.dirname(__file__), 'queries.json')
-            print(f"DEBUG: Loading queries from {queries_file}")
-            with open(queries_file, 'r', encoding='utf-8') as f:
-                all_queries = json.load(f)
-            print(f"DEBUG: Loaded {len(all_queries)} queries")
+            from query_loader import QueryLoader
+            query_loader = QueryLoader(queries_dir='queries', db_path=':memory:')
+            query_loader.load_all_queries()
+            all_queries_data = query_loader.list_queries()
+            print(f"DEBUG: Loaded {len(all_queries_data)} queries from QueryLoader")
         except Exception as e:
             print(f"DEBUG: Error loading queries: {e}")
             return jsonify({'error': f'Erro ao carregar queries: {str(e)}'}), 500
         
-        # Executar cada query e adicionar ao PowerPoint
+        # Processar cada query
         for query_id in query_ids:
             try:
-                # Encontrar query
-                query = next((q for q in all_queries if q['id'] == query_id), None)
-                if not query:
+                # Encontrar query nos dados carregados
+                query_data = next((q for q in all_queries_data if q['id'] == query_id), None)
+                if not query_data:
+                    print(f"WARN: Query {query_id} not found, skipping")
                     continue
                 
-                # Executar query
+                # Executar query no Databricks
                 try:
                     print(f"DEBUG: Executing query {query_id}")
                     from databricks import sql
@@ -176,51 +180,42 @@ def export_batch():
                         access_token=os.getenv('DATABRICKS_TOKEN')
                     )
                     cursor = conn.cursor()
-                    cursor.execute(query['query'])
+                    cursor.execute(query_data['sql_content'])
                     result = cursor.fetchall()
                     columns = [desc[0] for desc in cursor.description]
                     cursor.close()
                     conn.close()
-                    print(f"DEBUG: Query {query_id} executed successfully, rows: {len(result)}")
-                    
-                    # Preparar dados para slide
-                    query_data = {
-                        'title': query.get('title', 'Sem título'),
-                        'columns': columns,
-                        'data': result,
-                        'rowCount': len(result)
-                    }
+                    print(f"DEBUG: Query {query_id} executed, rows: {len(result)}")
                     
                     # Buscar comentários
                     comments = Comment.query.filter_by(query_id=query_id).order_by(Comment.created_at).all()
                     comments_data = [comment.to_dict() for comment in comments]
                     
-                    # Criar slide com tabela nativa
-                    slide_layout = prs.slide_layouts[5]  # Blank layout
+                    # Criar slide
+                    slide_layout = prs.slide_layouts[5]
                     new_slide = prs.slides.add_slide(slide_layout)
                     
-                    # Adicionar título (converter para int)
+                    # Título do slide
                     title_shape = new_slide.shapes.add_textbox(
                         int(Inches(1)), int(Inches(0.5)), 
-                        int(prs.slide_width - Inches(2)), int(Inches(0.5))
+                        int(Inches(8)), int(Inches(0.5))
                     )
                     title_frame = title_shape.text_frame
-                    title_frame.text = query_data['title']
+                    title_frame.text = query_data['name']
                     title_frame.paragraphs[0].font.size = Pt(32)
                     title_frame.paragraphs[0].font.bold = True
                     title_frame.paragraphs[0].font.color.rgb = RGBColor(30, 58, 95)
                     
-                    # Adicionar tabela (converter para int)
-                    rows = min(len(result) + 1, 15)  # Limitar a 14 linhas de dados + cabeçalho
+                    # Tabela (limitar a 14 linhas de dados)
+                    rows = min(len(result) + 1, 15)
                     cols = len(columns)
-                    left = int(Inches(1))
-                    top = int(Inches(1.3))
-                    width = int(prs.slide_width - Inches(2))
-                    height = int(Inches(4.9))
+                    table_shape = new_slide.shapes.add_table(
+                        rows, cols,
+                        int(Inches(1)), int(Inches(1.3)),
+                        int(Inches(8)), int(Inches(4.9))
+                    ).table
                     
-                    table_shape = new_slide.shapes.add_table(rows, cols, left, top, width, height).table
-                    
-                    # Preencher cabeçalho
+                    # Cabeçalho da tabela
                     for col_idx, column_name in enumerate(columns):
                         cell = table_shape.cell(0, col_idx)
                         cell.text = str(column_name)
@@ -231,7 +226,7 @@ def export_batch():
                         paragraph.font.bold = True
                         paragraph.font.size = Pt(11)
                     
-                    # Preencher dados (apenas primeiras 14 linhas)
+                    # Dados da tabela
                     for row_idx, row_data in enumerate(result[:14], 1):
                         for col_idx, value in enumerate(row_data):
                             cell = table_shape.cell(row_idx, col_idx)
@@ -242,11 +237,11 @@ def export_batch():
                             paragraph = cell.text_frame.paragraphs[0]
                             paragraph.font.size = Pt(10)
                     
-                    # Adicionar informação de comentários se houver
+                    # Informação de comentários
                     if comments_data:
                         comment_shape = new_slide.shapes.add_textbox(
                             int(Inches(1)), int(Inches(6.45)), 
-                            int(prs.slide_width - Inches(2)), int(Inches(0.55))
+                            int(Inches(8)), int(Inches(0.55))
                         )
                         comment_frame = comment_shape.text_frame
                         comment_frame.word_wrap = True
@@ -263,17 +258,16 @@ def export_batch():
                     continue
                     
             except Exception as e:
-                print(f"Erro ao processar query {query_id}: {str(e)}")
+                print(f"ERROR processing query {query_id}: {str(e)}")
                 continue
         
-        # Salvar em BytesIO
+        # Salvar PowerPoint
         pptx_bytes = BytesIO()
         prs.save(pptx_bytes)
         pptx_bytes.seek(0)
         
-        print(f"DEBUG: PowerPoint gerado com sucesso, tamanho: {pptx_bytes.getbuffer().nbytes} bytes")
+        print(f"DEBUG: PowerPoint generated, size: {pptx_bytes.getbuffer().nbytes} bytes")
         
-        # Retornar arquivo
         return send_file(
             pptx_bytes,
             mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -286,3 +280,4 @@ def export_batch():
         import traceback
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+

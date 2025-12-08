@@ -102,6 +102,16 @@ thead .table-separator {
     text-transform: uppercase;
 }
   
+/* --- Cores --- */
+.negative-val {
+    color: #c0392b; /* Vermelho */
+    font-weight: 700;
+}
+  
+.subtotal-row .negative-val {
+    color: #ff8a80; /* Salmão para fundo escuro */
+}
+  
 /* Zebra */
 .data-table tbody tr:nth-child(even):not(.subtotal-row) {
     background-color: #f0f4f8; /* Cinza azulado muito leve */

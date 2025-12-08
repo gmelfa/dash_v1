@@ -5,7 +5,7 @@ from datetime import datetime
 
 comments_bp = Blueprint('comments', __name__, url_prefix='/api/comments')
 
-@comments_bp.route('/query/<query_id>', methods=['GET'])
+@comments_bp.route('/query/<path:query_id>', methods=['GET'])
 def get_comments_by_query(query_id):
     """Retorna todos os comentários de uma query"""
     try:
@@ -122,7 +122,7 @@ def delete_comment(comment_id):
         return jsonify({'error': str(e)}), 500
 
 
-@comments_bp.route('/query/<query_id>/approved', methods=['GET'])
+@comments_bp.route('/query/<path:query_id>/approved', methods=['GET'])
 def get_approved_comments(query_id):
     """Retorna apenas comentários aprovados de uma query"""
     try:
@@ -139,7 +139,7 @@ def get_approved_comments(query_id):
         return jsonify({'error': str(e)}), 500
 
 
-@comments_bp.route('/query/<query_id>/batch-update', methods=['POST'])
+@comments_bp.route('/query/<path:query_id>/batch-update', methods=['POST'])
 @login_required
 def batch_update_comments(query_id):
     """Atualiza múltiplos comentários de uma vez (apenas admin)"""

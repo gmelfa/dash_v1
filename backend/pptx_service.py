@@ -61,10 +61,10 @@ def create_development_pptx(query_title, table_image_bytes, comments):
     img = Image.open(img_stream)
     
     # Calcular dimensões mantendo aspect ratio
-    # Ajustado para formato 16:9
+    # Ajustado para formato 16:9 com mais espaço para tabela
     img_width, img_height = img.size
     max_width = Inches(9.5)
-    max_height = Inches(3.0)  # Reduzido de 3.5 para 3.0 (slide mais baixo em 16:9)
+    max_height = Inches(4.2)  # Aumentado de 3.0 para 4.2 para evitar corte
     
     aspect_ratio = img_width / img_height
     if (max_width / aspect_ratio) <= max_height:
@@ -86,7 +86,7 @@ def create_development_pptx(query_title, table_image_bytes, comments):
     )
     
     # Adicionar seção de comentários (ajustado para 16:9)
-    comment_top = Inches(3.7)  # Reduzido de 3.9 - ainda mais espaço para comentários
+    comment_top = Inches(4.5)  # Posicionado abaixo da tabela maior
     add_comments_section(slide, comments, comment_top)
     
     # Adicionar comentários nas NOTES do slide
