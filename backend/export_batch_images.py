@@ -5,6 +5,7 @@ from io import BytesIO
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN
 from PIL import Image
 
 export_batch_bp = Blueprint('export_batch', __name__, url_prefix='/api/export')
@@ -13,28 +14,25 @@ export_batch_bp = Blueprint('export_batch', __name__, url_prefix='/api/export')
 @login_required
 def export_batch_with_images():
     """
-    Exporta múltiplas queries em um único PowerPoint usando imagens das tabelas
-    Recebe: FormData com query_count, query_id_N, query_title_N, table_image_N
-    Retorna: PowerPoint com slide de capa + um slide por query (com imagem)
+    Exporta PPTX com Layout Híbrido Automático:
+    - Tabelas Largas (> 1.2 aspect ratio) -> Layout Topo (Full Width)
+    - Tabelas Altas/Quadradas -> Layout Lateral (Dashboard)
     """
     try:
-        # Obter número de queries
         query_count = int(request.form.get('query_count', 0))
-        print(f"DEBUG: Batch export with {query_count} queries")
         
         if query_count == 0:
             return jsonify({'error': 'Nenhuma query fornecida'}), 400
         
         # Criar apresentação
         prs = Presentation()
-        prs.slide_width = 9144000   # 10 polegadas em EMU
-        prs.slide_height = 6858000  # 7.5 polegadas em EMU
+        prs.slide_width = 9144000   # 10 polegadas (largura)
+        prs.slide_height = 6858000  # 7.5 polegadas (altura)
         
-        # ===== SLIDE DE CAPA (Removido - vem do frontend) =====
-        # O frontend agora envia a capa como o primeiro slide (imagem)
-        print("DEBUG: Cover slide will be generated from frontend image")
-        
-        # ===== PROCESSAR CADA QUERY =====
+        # Slide Ratio (4:3 = 1.333)
+        # Se a imagem tiver ratio maior que 1.25, consideramos ela "Larga"
+        THRESHOLD_RATIO = 1.25
+
         for i in range(query_count):
             try:
                 query_id = request.form.get(f'query_id_{i}')
@@ -42,136 +40,170 @@ def export_batch_with_images():
                 table_image_file = request.files.get(f'table_image_{i}')
                 
                 if not all([query_id, query_title, table_image_file]):
-                    print(f"WARN: Missing data for query {i}, skipping")
                     continue
                 
-                print(f"DEBUG: Processing query {i}: {query_id}")
-                
-                # Ler imagem
+                # Ler imagem e descobrir dimensões
                 image_bytes = table_image_file.read()
                 image_stream = BytesIO(image_bytes)
                 
-                # Criar slide
-                slide_layout = prs.slide_layouts[6]  # Blank
-                slide = prs.slides.add_slide(slide_layout)
-                
-                # Adicionar título
-                title_shape = slide.shapes.add_textbox(
-                    int(Inches(0.5)), int(Inches(0.3)), 
-                    int(Inches(9)), int(Inches(0.5))
-                )
-                title_frame = title_shape.text_frame
-                title_frame.text = query_title
-                title_frame.paragraphs[0].font.size = Pt(28)
-                title_frame.paragraphs[0].font.bold = True
-                title_frame.paragraphs[0].font.color.rgb = RGBColor(30, 58, 95)
-                
-                # Adicionar imagem da tabela com escala inteligente
-                image_stream.seek(0)
                 with Image.open(image_stream) as img:
                     img_w, img_h = img.size
+                    img_ratio = img_w / img_h
+                
+                # Resetar stream para leitura pelo PPTX
                 image_stream.seek(0)
                 
-                # Lógica especial para CAPA (query_id == 'cover')
+                # Adicionar Slide em Branco
+                slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+                # --- CAPA ---
                 if query_id == 'cover':
-                    # Capa ocupa o slide todo
-                    slide.shapes.add_picture(
-                        image_stream,
-                        0, 0,
-                        width=prs.slide_width,
-                        height=prs.slide_height
-                    )
-                    # Não adiciona título nem comentários na capa
+                    slide.shapes.add_picture(image_stream, 0, 0, width=prs.slide_width, height=prs.slide_height)
                     continue
 
-                # Lógica para slides normais (com margens seguras)
-                max_width = int(Inches(9.5))   # Largura máxima
-                max_height = int(Inches(5.0))  # Altura máxima REDUZIDA para evitar corte inferior
+                # =========================================================
+                # DECISÃO DE LAYOUT BASEADA NA IMAGEM
+                # =========================================================
                 
-                # Calcular proporções
-                width_ratio = max_width / img_w
-                height_ratio = max_height / img_h
-                
-                # Escolher a menor proporção
-                scale = min(width_ratio, height_ratio)
-                
-                final_width = int(img_w * scale)
-                final_height = int(img_h * scale)
-                
-                # Centralizar horizontalmente
-                left = int((prs.slide_width - final_width) / 2)
-                top = int(Inches(1.1)) # Logo abaixo do título
-                
-                slide.shapes.add_picture(
-                    image_stream,
-                    left, top,
-                    width=final_width,
-                    height=final_height
-                )
-                
-                # Buscar comentários
-                comments = Comment.query.filter_by(query_id=query_id).order_by(Comment.created_at).all()
-                
-                # Adicionar informação de comentários se houver
-                if comments:
-                    comment_shape = slide.shapes.add_textbox(
-                        int(Inches(0.5)), int(Inches(6.8)), 
-                        int(Inches(9)), int(Inches(0.4))
-                    )
-                    comment_frame = comment_shape.text_frame
-                    comment_frame.word_wrap = True
+                if img_ratio > THRESHOLD_RATIO:
+                    # -----------------------------------------------------
+                    # LAYOUT A: FULL WIDTH (Para Tabelas Grandes/Largas)
+                    # Título no Topo | Tabela no Meio | Comentários no Rodapé
+                    # -----------------------------------------------------
+                    MARGIN_X = Inches(0.25)
+                    TITLE_TOP = Inches(0.15)
                     
-                    # Separar comentários
-                    approved_comments = [c for c in comments if c.status == 'approved']
-                    pending_or_rejected_count = sum(1 for c in comments if c.status != 'approved')
-                    
-                    lines = []
-                    
-                    # 1. Mostrar contagem de não aprovados (se houver)
-                    if pending_or_rejected_count > 0:
-                        lines.append(f"⚠️ {pending_or_rejected_count} comentário(s) não aprovado(s)")
-                    
-                    # 2. Mostrar conteúdo dos aprovados
-                    for comment in approved_comments:
-                        # Formato: "Nome: Conteúdo"
-                        author_name = comment.author.username if comment.author else "Desconhecido"
-                        lines.append(f"👤 {author_name}: {comment.content}")
-                    
-                    if not lines:
-                        lines.append("Nenhum comentário visível")
+                    # 1. Título Topo
+                    title_shape = slide.shapes.add_textbox(MARGIN_X, TITLE_TOP, prs.slide_width - (MARGIN_X*2), Inches(0.7))
+                    tf = title_shape.text_frame
+                    tf.text = query_title
+                    p = tf.paragraphs[0]
+                    p.font.size = Pt(22)
+                    p.font.bold = True
+                    p.font.name = 'Arial'
+                    p.font.color.rgb = RGBColor(30, 58, 95)
+                    p.alignment = PP_ALIGN.LEFT
 
-                    comment_frame.text = "\n".join(lines)
+                    # 2. Tabela Larga
+                    TABLE_TOP = Inches(0.9)
+                    MAX_H = prs.slide_height - TABLE_TOP - Inches(0.8) # Reserva rodapé
                     
-                    # Ajustar formatação
-                    for paragraph in comment_frame.paragraphs:
-                        paragraph.font.size = Pt(10)
-                        paragraph.font.italic = True
-                        paragraph.font.color.rgb = RGBColor(80, 80, 80) # Cinza escuro para leitura melhor
-                
-                print(f"DEBUG: Slide created for query {query_id}")
-                
+                    pic = slide.shapes.add_picture(image_stream, MARGIN_X, TABLE_TOP, width=prs.slide_width - (MARGIN_X*2))
+                    
+                    # Ajuste fino se estourar altura
+                    if pic.height > MAX_H:
+                        pic.height = MAX_H
+                        pic.left = int((prs.slide_width - pic.width) / 2)
+
+                    # 3. Comentários Rodapé
+                    footer_top = prs.slide_height - Inches(0.7)
+                    _add_comments_footer(slide, query_id, MARGIN_X, footer_top, prs.slide_width - (MARGIN_X*2))
+
+                else:
+                    # -----------------------------------------------------
+                    # LAYOUT B: DASHBOARD LATERAL (Para Tabelas Altas/Quadradas)
+                    # Esquerda: Título e Comentários | Direita: Tabela Cheia
+                    # -----------------------------------------------------
+                    SIDEBAR_W = Inches(2.5)
+                    MARGIN = Inches(0.2)
+                    
+                    # 1. Título Esquerda
+                    title_shape = slide.shapes.add_textbox(MARGIN, MARGIN, SIDEBAR_W - MARGIN, Inches(2.0))
+                    tf = title_shape.text_frame
+                    tf.word_wrap = True
+                    tf.text = query_title
+                    p = tf.paragraphs[0]
+                    p.font.size = Pt(24)
+                    p.font.bold = True
+                    p.font.name = 'Arial'
+                    p.font.color.rgb = RGBColor(30, 58, 95)
+                    
+                    # 2. Comentários Esquerda (Abaixo do título)
+                    _add_comments_sidebar(slide, query_id, MARGIN, Inches(1.8), SIDEBAR_W - MARGIN, prs.slide_height)
+
+                    # 3. Tabela Direita (Ocupando altura máxima)
+                    TABLE_LEFT = SIDEBAR_W + MARGIN
+                    TABLE_MAX_W = prs.slide_width - SIDEBAR_W - (MARGIN*2)
+                    TABLE_MAX_H = prs.slide_height - (MARGIN*2)
+                    
+                    pic = slide.shapes.add_picture(image_stream, TABLE_LEFT, MARGIN, width=TABLE_MAX_W)
+                    
+                    # Se estourar altura, ajusta
+                    if pic.height > TABLE_MAX_H:
+                        pic.height = TABLE_MAX_H
+                    
+                    # Linha Divisória
+                    line = slide.shapes.add_connector(1, SIDEBAR_W, MARGIN, SIDEBAR_W, prs.slide_height - MARGIN)
+                    line.line.color.rgb = RGBColor(200, 200, 200)
+
             except Exception as e:
-                print(f"ERROR processing query {i}: {str(e)}")
-                import traceback
-                traceback.print_exc()
+                print(f"Erro processando query {i}: {e}")
                 continue
         
-        # Salvar PowerPoint
+        # Salvar
         pptx_bytes = BytesIO()
         prs.save(pptx_bytes)
         pptx_bytes.seek(0)
-        
-        print(f"DEBUG: PowerPoint generated, size: {pptx_bytes.getbuffer().nbytes} bytes")
         
         return send_file(
             pptx_bytes,
             mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation',
             as_attachment=True,
-            download_name='export_batch.pptx'
+            download_name='export_hybrid.pptx'
         )
-        
+
     except Exception as e:
-        print(f"ERROR in export_batch_with_images: {str(e)}")
-        import traceback
-        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
+
+# --- Funções Auxiliares para Limpar o Código Principal ---
+
+def _add_comments_footer(slide, query_id, left, top, width):
+    """Adiciona comentários em linha única no rodapé (Layout A)"""
+    comments = Comment.query.filter_by(query_id=query_id).order_by(Comment.created_at).all()
+    approved = [c for c in comments if c.status == 'approved']
+    
+    if approved:
+        shape = slide.shapes.add_textbox(left, top, width, Inches(0.6))
+        tf = shape.text_frame
+        tf.word_wrap = True
+        
+        lines = [f"{c.author.username if c.author else 'User'}: {c.content}" for c in approved]
+        text = "  |  ".join(lines)
+        
+        tf.text = text
+        for p in tf.paragraphs:
+            p.font.size = Pt(10)
+            p.font.color.rgb = RGBColor(100, 100, 100)
+
+def _add_comments_sidebar(slide, query_id, left, top, width, slide_height):
+    """Adiciona comentários empilhados na lateral (Layout B)"""
+    comments = Comment.query.filter_by(query_id=query_id).order_by(Comment.created_at).all()
+    approved = [c for c in comments if c.status == 'approved']
+    
+    if approved:
+        height = slide_height - top - Inches(0.2)
+        shape = slide.shapes.add_textbox(left, top, width, height)
+        tf = shape.text_frame
+        tf.word_wrap = True
+        
+        p_head = tf.add_paragraph()
+        p_head.text = "Comentários:"
+        p_head.font.bold = True
+        p_head.font.size = Pt(11)
+        p_head.font.color.rgb = RGBColor(80, 80, 80)
+        p_head.space_after = Pt(6)
+
+        for c in approved:
+            author = c.author.username if c.author else "User"
+            
+            p_auth = tf.add_paragraph()
+            p_auth.text = f"👤 {author}:"
+            p_auth.font.bold = True
+            p_auth.font.size = Pt(10)
+            p_auth.font.color.rgb = RGBColor(37, 99, 235)
+            
+            p_content = tf.add_paragraph()
+            p_content.text = c.content
+            p_content.font.size = Pt(10)
+            p_content.font.color.rgb = RGBColor(60, 60, 60)
+            p_content.space_after = Pt(10)

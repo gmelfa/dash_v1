@@ -10,7 +10,6 @@ import './database.css'
 
 function Database({ columns, data }) {
   const visibleColumnsNames = useMemo(() => {
-    // Remove sort_order, id e limita a 19 colunas para evitar quebra de layout
     const cleanCols = columns.filter(col =>
       col !== 'sort_order' &&
       col !== 'sort_order ' &&
@@ -23,20 +22,32 @@ function Database({ columns, data }) {
     () =>
       visibleColumnsNames.map((col, index) => {
         const isTextColumn = index === 0
-
-        // Separadores de Grupo
         const isTableStart = index === 1 || index === 5 || index === 9 || index === 13 || index === 15 || index === 17
 
-        // Lógica atualizada para pegar "Var" com ou sem ponto
-        const isVariation = col.includes('Var')
-        const isVariationPct = col.includes('Var %') || (isVariation && col.includes('%'))
-        const isPercentage = col.includes('%') || isVariationPct
+        // Detecção Automática de Porcentagem
+        const isPercentage = col.includes('%') || col.toLowerCase().includes('pct')
+
+        // [CORREÇÃO] Detecção da coluna de Alunos
+        const isAlunos = col.toLowerCase().includes('alunos')
 
         return {
           accessorKey: col,
           header: () => {
-            // 1. Separa o texto principal do que está entre parênteses
-            // Ex: "ALUNOS (10M24 R)" -> "(10M24 R)" em cima e "ALUNOS" embaixo
+            // --- REGRA MESTRA: SEPARADOR PIPE (|) ---
+            if (col.includes('|')) {
+              const parts = col.split('|')
+              const topText = parts[0].replace('Pct', '%')
+              const bottomText = parts.slice(1).join(' ')
+
+              return (
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: '1.1' }}>
+                  <span style={{ fontSize: '0.85em', opacity: 0.9, marginBottom: '2px', whiteSpace: 'nowrap' }}>{topText}</span>
+                  <span style={{ whiteSpace: 'nowrap' }}>{bottomText}</span>
+                </div>
+              )
+            }
+
+            // --- REGRA LEGADA 1: Texto entre parênteses ---
             const parts = col.split(' (')
             if (parts.length === 2 && parts[1].endsWith(')')) {
               const mainText = parts[0]
@@ -50,23 +61,15 @@ function Database({ columns, data }) {
               )
             }
 
-            // 2. Lógica para colunas de Variação (Var) - Case Insensitive
-            // Ex: "Var Alunos" -> "Var" em cima e "Alunos" embaixo
+            // --- REGRA LEGADA 2: Colunas Var antigas ---
             if (col.toLowerCase().startsWith('var ')) {
               let mainText = '';
               let subText = '';
-
-              // Normalizar prefixo para exibição
-              // Se quiser manter o case original do prefixo, usar substring. 
-              // Aqui vou forçar "VAR" ou "VAR %" conforme pedido, ou manter "Var" se preferir.
-              // O usuário pediu "VAR em cima", então vou forçar UpperCase no subText se for Var simples
-
-              const isPercent = col.toLowerCase().startsWith('var % ') || col.includes('%');
+              const isPercent = col.toLowerCase().startsWith('var % ') || col.includes('%') || col.toLowerCase().includes('pct');
 
               if (isPercent) {
                 subText = 'VAR %';
-                // Remove "Var % " ou "VAR % " do início
-                mainText = col.replace(/var % /i, '').replace(/var %/i, '');
+                mainText = col.replace(/var % /i, '').replace(/var %/i, '').replace(/var pct /i, '').replace(/var pct/i, '');
               } else {
                 subText = 'VAR';
                 mainText = col.replace(/var /i, '');
@@ -84,7 +87,6 @@ function Database({ columns, data }) {
           },
           cell: (info) => {
             const value = info.getValue()
-            // Se for nulo, retorna traço
             if (value === null || value === undefined || value === '') return '-'
 
             const numValue = typeof value === 'number' ? value : parseFloat(String(value).replace(/,/g, ''))
@@ -95,15 +97,22 @@ function Database({ columns, data }) {
               let minFrac = 0;
               let maxFrac = 0;
 
+              // Lógica de Formatação Numérica
               if (isPercentage) {
-                // Porcentagem
                 displayValue = numValue;
                 suffix = '%';
                 minFrac = 1;
                 maxFrac = 1;
-              } else {
-                // Valores já vêm formatados das queries (já divididos por 1000 quando necessário)
+              } else if (isAlunos) {
+                // [CORREÇÃO] Se for coluna de Alunos, força 3 casas decimais
                 displayValue = numValue;
+                minFrac = 3;
+                maxFrac = 3;
+              } else {
+                // Para financeiro e outros inteiros
+                displayValue = numValue;
+                minFrac = 0;
+                maxFrac = 0;
               }
 
               const formatted = displayValue.toLocaleString('pt-BR', {
