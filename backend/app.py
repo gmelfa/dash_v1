@@ -49,7 +49,7 @@ def log_request(response):
         response.headers['X-Response-Time'] = str(diff)
         # Logar requisições lentas (> 1s)
         if diff > 1:
-            print(f"⚠️ SLOW REQUEST: {request.method} {request.path} took {diff:.4f}s")
+            print(f"[SLOW REQUEST] {request.method} {request.path} took {diff:.4f}s")
     return response
 
 # Registrar blueprints
