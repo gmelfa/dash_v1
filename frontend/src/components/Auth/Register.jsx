@@ -44,9 +44,14 @@ function Register({ onSwitchToLogin }) {
     return (
       <div className="auth-container">
         <div className="auth-box">
-          <h2>Cadastro realizado!</h2>
+          <h2>Cadastro enviado!</h2>
           <p className="success-message">
-            Sua conta foi criada com sucesso. Redirecionando para o login...
+            Sua solicitação foi recebida. Um administrador precisará aprovar sua conta antes do primeiro acesso.
+          </p>
+          <p style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <span className="auth-link" onClick={onSwitchToLogin} style={{ cursor: 'pointer', color: 'var(--primary-color)' }}>
+              Voltar ao login
+            </span>
           </p>
         </div>
       </div>

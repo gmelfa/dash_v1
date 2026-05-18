@@ -92,6 +92,8 @@ def load_queries():
         # Converter para formato compatível com sistema antigo
         queries = []
         for q in queries_data:
+            if q.get('query_type', 'table') == 'chart':
+                continue
             queries.append({
                 'id': q['id'],
                 'title': q['name'],
@@ -99,7 +101,8 @@ def load_queries():
                 'category': q['category'],
                 'query': q['sql_content'],
                 'active': True,
-                'tags': q.get('tags', '').split(',') if q.get('tags') else []
+                'tags': q.get('tags', '').split(',') if q.get('tags') else [],
+                'chart_query_id': q.get('chart_query_id', '')
             })
         
         return queries
@@ -270,28 +273,40 @@ def execute_saved_query(query_id):
     try:
         queries = load_queries()
         query_obj = next((q for q in queries if q['id'] == query_id), None)
-        
+
         if not query_obj:
             return jsonify({'error': 'Query não encontrada'}), 404
-        
+
         if not query_obj.get('active', True):
             return jsonify({'error': 'Query está inativa'}), 403
-        
+
+        data = request.get_json(silent=True) or {}
+        mes_selecionado = data.get('mes_selecionado')
+        ano_selecionado = data.get('ano_selecionado')
+
+        if mes_selecionado is None or ano_selecionado is None:
+            return jsonify({'error': 'Parâmetros mes_selecionado e ano_selecionado são obrigatórios'}), 400
+
+        parameters = {
+            'mes_selecionado': int(mes_selecionado),
+            'ano_selecionado': int(ano_selecionado),
+            'ano_anterior':    int(ano_selecionado) - 1,
+        }
+
         query_sql = query_obj['query']
-        
+
         with get_databricks_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute(query_sql)
+                cursor.execute(query_sql, parameters=parameters)
                 columns = [desc[0] for desc in cursor.description]
                 rows = cursor.fetchall()
-                
+
                 # Remover coluna sort_order se existir
                 sort_order_index = None
                 if 'sort_order' in columns:
                     sort_order_index = columns.index('sort_order')
                     columns = [col for col in columns if col != 'sort_order']
-                
-                # Converter para formato JSON, removendo sort_order
+
                 result = []
                 for row in rows:
                     if sort_order_index is not None:
@@ -300,14 +315,27 @@ def execute_saved_query(query_id):
                         result.append(dict(zip(columns, row_list)))
                     else:
                         result.append(dict(zip(columns, row)))
-                
+
+                # Executar query de gráfico vinculada, se existir
+                chart_data = None
+                chart_query_id = query_obj.get('chart_query_id', '')
+                if chart_query_id:
+                    all_queries = query_loader.list_queries()
+                    chart_query_obj = next((q for q in all_queries if q['id'] == chart_query_id), None)
+                    if chart_query_obj:
+                        cursor.execute(chart_query_obj['sql_content'], parameters=parameters)
+                        chart_cols = [desc[0] for desc in cursor.description]
+                        chart_rows = cursor.fetchall()
+                        chart_data = [dict(zip(chart_cols, row)) for row in chart_rows]
+
                 return jsonify({
                     'queryId': query_id,
                     'title': query_obj['title'],
                     'description': query_obj.get('description', ''),
                     'columns': columns,
                     'data': result,
-                    'rowCount': len(result)
+                    'rowCount': len(result),
+                    'chartData': chart_data
                 }), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500

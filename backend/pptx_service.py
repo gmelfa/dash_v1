@@ -1,6 +1,6 @@
 from pptx import Presentation
 from pptx.util import Inches, Pt
-from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.enum.text import PP_ALIGN
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 from io import BytesIO
@@ -247,37 +247,30 @@ def add_comments_section(slide, comments, top_position):
     current_top = top_position
     
     for idx, comment in enumerate(comments, 1):
-        # Círculo numerado amarelo
-        circle = slide.shapes.add_shape(
-            MSO_SHAPE.OVAL,
-            Inches(0.5), current_top,
-            Inches(0.25), Inches(0.25)
-        )
-        circle.fill.solid()
-        circle.fill.fore_color.rgb = RGBColor(255, 192, 0)
-        circle.line.color.rgb = RGBColor(0, 0, 0)
-        circle.line.width = Pt(1)
-        
-        # Número
-        circle.text_frame.text = str(idx)
-        circle.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
-        circle.text_frame.paragraphs[0].font.size = Pt(9)
-        circle.text_frame.paragraphs[0].font.bold = True
-        circle.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
-        
-        # Texto do comentário
+        # Texto do comentário com autor em negrito
         comment_box = slide.shapes.add_textbox(
-            Inches(0.85), current_top,
-            Inches(8.65), Inches(0.35)
+            Inches(0.5), current_top,
+            Inches(9.0), Inches(0.35)
         )
-        
-        # Usar conteúdo editado se existir, senão o original
-        content = comment.get('edited_content') or comment['content']
-        
-        comment_box.text_frame.text = content
-        comment_box.text_frame.paragraphs[0].font.size = Pt(9)
-        comment_box.text_frame.paragraphs[0].alignment = PP_ALIGN.LEFT
         comment_box.text_frame.word_wrap = True
+
+        content = comment.get('edited_content') or comment['content']
+        author = comment.get('username', 'User')
+
+        p = comment_box.text_frame.paragraphs[0]
+        p.alignment = PP_ALIGN.LEFT
+
+        run_author = p.add_run()
+        run_author.text = f"{author}: "
+        run_author.font.bold = True
+        run_author.font.size = Pt(11)
+        run_author.font.color.rgb = RGBColor(30, 58, 95)
+
+        run_text = p.add_run()
+        run_text.text = content
+        run_text.font.bold = False
+        run_text.font.size = Pt(11)
+        run_text.font.color.rgb = RGBColor(60, 60, 60)
         
         current_top += Inches(0.35)
 

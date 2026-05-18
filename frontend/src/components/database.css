@@ -117,6 +117,27 @@ thead .table-separator {
     background-color: #f0f4f8; /* Cinza azulado muito leve */
 }
   
-.data-table tbody tr:hover:not(.subtotal-row) {
+.data-table tbody tr:hover:not(.subtotal-row):not(.section-header-row) {
     background-color: #e1eaf5;
+}
+
+/* --- Linhas de Cabeçalho de Seção (Histórico, Forecast, Realizado) --- */
+.section-header-row {
+    background-color: #002060 !important;
+    color: white !important;
+    font-weight: bold;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-header-row td {
+    background-color: #002060 !important;
+    border-bottom: 2px solid #003380;
+    color: white !important;
+    padding: 10px 8px;
+}
+
+.section-header-row .text-left {
+    color: white !important;
 }

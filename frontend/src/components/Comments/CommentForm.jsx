@@ -9,11 +9,18 @@ function CommentForm({ queryId, onCommentAdded }) {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 
+  const MAX_CHARS = 500
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
+
     if (!content.trim()) {
       setError('O comentário não pode estar vazio')
+      return
+    }
+
+    if (content.trim().length > MAX_CHARS) {
+      setError(`Comentário não pode ter mais de ${MAX_CHARS} caracteres`)
       return
     }
 
@@ -45,10 +52,14 @@ function CommentForm({ queryId, onCommentAdded }) {
         onChange={(e) => setContent(e.target.value)}
         placeholder="Adicione um comentário sobre esta tabela..."
         rows="3"
+        maxLength={MAX_CHARS}
         disabled={loading}
       />
-      
-      <button type="submit" disabled={loading || !content.trim()}>
+      <div className="char-counter" style={{ color: content.length > MAX_CHARS * 0.9 ? '#dc2626' : 'var(--text-secondary)' }}>
+        {content.length}/{MAX_CHARS}
+      </div>
+
+      <button type="submit" disabled={loading || !content.trim() || content.length > MAX_CHARS}>
         {loading ? 'Enviando...' : 'Comentar'}
       </button>
     </form>
