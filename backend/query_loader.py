@@ -36,6 +36,8 @@ class QueryMetadata:
     order: int
     created_at: str
     updated_at: str
+    query_type: str = 'table'
+    chart_query_id: str = ''
     
     def to_dict(self) -> Dict[str, Any]:
         """Converte para dicionário"""
@@ -88,7 +90,9 @@ class QueryLoader:
                 tags TEXT,
                 query_order INTEGER DEFAULT 999,
                 created_at TEXT NOT NULL,
-                updated_at TEXT NOT NULL
+                updated_at TEXT NOT NULL,
+                query_type TEXT DEFAULT 'table',
+                chart_query_id TEXT DEFAULT ''
             )
         ''')
         
@@ -127,16 +131,20 @@ class QueryLoader:
                 'name': None,
                 'description': '',
                 'tags': [],
-                'order': 999
+                'order': 999,
+                'query_type': 'table',
+                'chart_query_id': ''
             }
             
             # Regex para capturar metadados
-            id_match = re.search(r'--\s*@id:\s*(.+)', content)
-            name_match = re.search(r'--\s*@name:\s*(.+)', content)
-            desc_match = re.search(r'--\s*@description:\s*(.+)', content)
-            tags_match = re.search(r'--\s*@tags:\s*(.+)', content)
-            order_match = re.search(r'--\s*@order:\s*(\d+)', content)
-            
+            id_match            = re.search(r'--\s*@id:\s*(.+)', content)
+            name_match          = re.search(r'--\s*@name:\s*(.+)', content)
+            desc_match          = re.search(r'--\s*@description:\s*(.+)', content)
+            tags_match          = re.search(r'--\s*@tags:\s*(.+)', content)
+            order_match         = re.search(r'--\s*@order:\s*(\d+)', content)
+            type_match          = re.search(r'--\s*@type:\s*(.+)', content)
+            chart_qid_match     = re.search(r'--\s*@chart_query_id:\s*(.+)', content)
+
             if id_match:
                 metadata['id'] = id_match.group(1).strip()
             if name_match:
@@ -148,6 +156,10 @@ class QueryLoader:
                 metadata['tags'] = [t.strip() for t in tags_str.split(',')]
             if order_match:
                 metadata['order'] = int(order_match.group(1).strip())
+            if type_match:
+                metadata['query_type'] = type_match.group(1).strip()
+            if chart_qid_match:
+                metadata['chart_query_id'] = chart_qid_match.group(1).strip()
             
             # Se não tiver @id, usar nome do arquivo
             if not metadata['id']:
@@ -178,7 +190,9 @@ class QueryLoader:
                 tags=metadata['tags'],
                 order=metadata['order'],
                 created_at=now,
-                updated_at=now
+                updated_at=now,
+                query_type=metadata['query_type'],
+                chart_query_id=metadata['chart_query_id']
             )
         
         except Exception as e:
@@ -236,9 +250,9 @@ class QueryLoader:
             # Inserir ou atualizar se hash mudou ou force_reload
             if not existing or existing['file_hash'] != query.file_hash or force_reload:
                 cursor.execute('''
-                    INSERT OR REPLACE INTO queries 
-                    (id, category, name, description, sql_content, file_path, file_hash, tags, query_order, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    INSERT OR REPLACE INTO queries
+                    (id, category, name, description, sql_content, file_path, file_hash, tags, query_order, created_at, updated_at, query_type, chart_query_id)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
                     query.id,
                     query.category,
@@ -250,7 +264,9 @@ class QueryLoader:
                     ','.join(query.tags),
                     query.order,
                     query.created_at,
-                    query.updated_at
+                    query.updated_at,
+                    query.query_type,
+                    query.chart_query_id
                 ))
                 loaded_count += 1
         

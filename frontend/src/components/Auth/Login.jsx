@@ -59,10 +59,6 @@ function Login({ onSwitchToRegister, onLoginSuccess }) {
           </button>
         </form>
 
-        <p className="auth-switch">
-          Não tem conta?{' '}
-          <span onClick={onSwitchToRegister}>Registre-se</span>
-        </p>
       </div>
     </div>
   )

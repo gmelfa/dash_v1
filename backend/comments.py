@@ -31,7 +31,10 @@ def create_comment():
         
         if not data['content'].strip():
             return jsonify({'error': 'Comentário não pode estar vazio'}), 400
-        
+
+        if len(data['content'].strip()) > 500:
+            return jsonify({'error': 'Comentário não pode ter mais de 500 caracteres'}), 400
+
         # Criar comentário
         comment = Comment(
             query_id=data['query_id'],
@@ -72,9 +75,11 @@ def update_comment(comment_id):
         # Usuário normal só pode editar o conteúdo
         if not current_user.is_admin:
             if 'content' in data:
-                comment.content = data['content'].strip()
+                stripped = data['content'].strip()
+                if len(stripped) > 500:
+                    return jsonify({'error': 'Comentário não pode ter mais de 500 caracteres'}), 400
+                comment.content = stripped
         else:
-            # Admin pode editar tudo
             if 'content' in data:
                 comment.content = data['content'].strip()
             

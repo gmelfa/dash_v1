@@ -103,13 +103,8 @@ function Database({ columns, data }) {
                 suffix = '%';
                 minFrac = 1;
                 maxFrac = 1;
-              } else if (isAlunos) {
-                // [CORREÇÃO] Se for coluna de Alunos, força 3 casas decimais
-                displayValue = numValue;
-                minFrac = 3;
-                maxFrac = 3;
               } else {
-                // Para financeiro e outros inteiros
+                // Para financeiro e outros inteiros (incluindo Alunos agora)
                 displayValue = numValue;
                 minFrac = 0;
                 maxFrac = 0;
@@ -166,8 +161,17 @@ function Database({ columns, data }) {
             {filteredRows.map((row) => {
               const vertical = row.original.Vertical || row.original.vertical || row.original.Diretoria || ''
               const isSubtotal = vertical.includes('Operações') || vertical.includes('Total') || vertical.includes('Corporativas')
+
+              // Detecta linhas de cabeçalho de seção (Histórico, Forecast, Realizado)
+              const firstColValue = String(row.original[visibleColumnsNames[0]] || '')
+              const isSectionHeader = firstColValue.startsWith('Histórico') || firstColValue.startsWith('Forecast') || firstColValue === 'Realizado' || firstColValue.startsWith('Variação')
+
+              let rowClass = ''
+              if (isSectionHeader) rowClass = 'section-header-row'
+              else if (isSubtotal) rowClass = 'subtotal-row'
+
               return (
-                <tr key={row.id} className={isSubtotal ? 'subtotal-row' : ''}>
+                <tr key={row.id} className={rowClass}>
                   {row.getVisibleCells().map((cell) => (
                     <td key={cell.id} className={cell.column.columnDef.meta?.className || ''}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

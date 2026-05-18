@@ -5,9 +5,114 @@ import Login from './components/Auth/Login'
 import Register from './components/Auth/Register'
 import DataTable from './components/DataTable'
 import CommentsSection from './components/Comments/CommentsSection'
+import PcldChart from './components/PcldChart'
 import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+               'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
+
+function getDefaultPeriod() {
+  const now = new Date()
+  const mes = now.getMonth() === 0 ? 12 : now.getMonth()          // getMonth() retorna 0-11
+  const ano = now.getMonth() === 0 ? now.getFullYear() - 1 : now.getFullYear()
+  return { mes, ano }
+}
+
+function CreateUserInline({ onCreateUser, allUsers, currentUserId, onToggleAdmin }) {
+  const [showForm, setShowForm] = useState(false)
+  const [form, setForm] = useState({ username: '', email: '', password: '', is_admin: false })
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    const err = await onCreateUser(form)
+    setLoading(false)
+    if (err) {
+      setError(err)
+    } else {
+      setForm({ username: '', email: '', password: '', is_admin: false })
+      setShowForm(false)
+    }
+  }
+
+  return (
+    <>
+      <button className="btn-new-user" onClick={() => setShowForm(v => !v)}>
+        {showForm ? '✕ Cancelar' : 'Criar'}
+      </button>
+
+      {showForm && (
+        <form className="create-user-form" onSubmit={handleSubmit}>
+          {error && <p className="create-user-error">{error}</p>}
+          <input
+            type="text"
+            placeholder="Usuário"
+            value={form.username}
+            onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+            required
+          />
+          <input
+            placeholder="Email"
+            type="email"
+            value={form.email}
+            onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+            required
+          />
+          <input
+            placeholder="Senha"
+            type="password"
+            value={form.password}
+            onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+            required
+          />
+          <label className="create-user-admin-check">
+            <input
+              type="checkbox"
+              checked={form.is_admin}
+              onChange={e => setForm(f => ({ ...f, is_admin: e.target.checked }))}
+            />
+            Perfil admin
+          </label>
+          <button type="submit" className="btn-approve" disabled={loading}>
+            {loading ? 'Criando...' : 'Criar'}
+          </button>
+        </form>
+      )}
+
+      <div className="user-list">
+        {allUsers.length === 0 ? (
+          <p className="pending-users-empty">Nenhum usuário ativo.</p>
+        ) : (
+          allUsers.map(u => (
+            <div key={u.id} className="pending-user-row">
+              <div className="pending-user-info">
+                <span className="pending-user-name">
+                  {u.username}
+                  {u.is_admin && <span className="admin-tag">admin</span>}
+                </span>
+                <span className="pending-user-email">{u.email}</span>
+              </div>
+              {u.id !== currentUserId && (
+                <button
+                  className={`btn-toggle-admin ${u.is_admin ? 'is-admin' : ''}`}
+                  onClick={() => onToggleAdmin(u.id)}
+                  title={u.is_admin ? 'Remover admin' : 'Tornar admin'}
+                >
+                  ★
+                </button>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </>
+  )
+}
 
 function AppContent() {
   const { user, loading: authLoading, logout } = useAuth()
@@ -21,11 +126,46 @@ function AppContent() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
   const [selectedQueriesForExport, setSelectedQueriesForExport] = useState(new Set())
   const [isExportMode, setIsExportMode] = useState(false)
+  const [expandedCategories, setExpandedCategories] = useState(new Set())
+  const [exportProgress, setExportProgress] = useState(null)
+  const [allUsers, setAllUsers] = useState([])
+  const [showPendingPanel, setShowPendingPanel] = useState(false)
+  const { mes: defaultMes, ano: defaultAno } = getDefaultPeriod()
+  const [selectedMes, setSelectedMes] = useState(defaultMes)
+  const [selectedAno, setSelectedAno] = useState(defaultAno)
 
-  // Carregar queries salvas ao montar o componente
   useEffect(() => {
     loadSavedQueries()
-  }, [])
+    if (user?.is_admin) loadAllUsers()
+  }, [user])
+
+  const loadAllUsers = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/api/auth/users`, { withCredentials: true })
+      setAllUsers(res.data.users.filter(u => u.is_approved))
+    } catch (err) {
+      console.error('Erro ao carregar usuários:', err)
+    }
+  }
+
+  const handleToggleAdmin = async (userId) => {
+    try {
+      await axios.post(`${API_URL}/api/auth/users/${userId}/toggle-admin`, {}, { withCredentials: true })
+      loadAllUsers()
+    } catch (err) {
+      console.error('Erro ao alterar admin:', err)
+    }
+  }
+
+  const handleCreateUser = async (formData) => {
+    try {
+      await axios.post(`${API_URL}/api/auth/admin/create-user`, formData, { withCredentials: true })
+      loadAllUsers()
+      return null
+    } catch (err) {
+      return err.response?.data?.error || 'Erro ao criar usuário'
+    }
+  }
 
   const loadSavedQueries = async () => {
     try {
@@ -45,7 +185,11 @@ function AppContent() {
     setTableData(null)
 
     try {
-      const response = await axios.post(`${API_URL}/api/queries/${queryId}/execute`)
+      const response = await axios.post(
+        `${API_URL}/api/queries/${queryId}/execute`,
+        { mes_selecionado: selectedMes, ano_selecionado: selectedAno },
+        { withCredentials: true }
+      )
       setTableData(response.data)
       setSelectedQuery(queryId)
     } catch (err) {
@@ -129,33 +273,29 @@ function AppContent() {
   }
 
   const exportMultipleQueriesPPT = async () => {
-    if (selectedQueriesForExport.size === 0) {
-      alert('Selecione pelo menos uma query para exportar')
-      return
-    }
+    if (selectedQueriesForExport.size === 0) return
+
+    const queryIds = Array.from(selectedQueriesForExport)
+    const failed = []
+
+    const progress = (current, total, currentTitle) =>
+      setExportProgress({ current, total, currentTitle, failed: [] })
 
     try {
-      const queryIds = Array.from(selectedQueriesForExport)
-      console.time('Batch Export Total')
-      console.log('Iniciando batch export com Clone & Capture:', queryIds)
-      alert(`Processando Capa + ${queryIds.length} queries. Isso pode levar alguns minutos...`)
-
       const html2canvas = (await import('html2canvas')).default
       const queryDataArray = []
 
       // --- PASSO 1: CAPTURAR A CAPA ---
+      progress(0, queryIds.length + 1, 'Capa')
       try {
-        console.log('Processando Capa...')
         setLoading(false)
         setSelectedQuery('cover')
         setTableData(null)
 
-        // Aguardar renderização da capa
         let coverElement = null
         let attempts = 0
         while (attempts < 20) {
           await new Promise(resolve => setTimeout(resolve, 500))
-          // CORREÇÃO: Usar .cover-page em vez de .cover-container
           coverElement = document.querySelector('.cover-page')
           if (coverElement) break
           attempts++
@@ -165,24 +305,19 @@ function AppContent() {
           await new Promise(resolve => setTimeout(resolve, 500))
           const canvas = await html2canvas(coverElement, {
             scale: 2,
-            backgroundColor: '#ffffff', // Capa é branca
+            backgroundColor: '#ffffff',
             logging: false,
             useCORS: true,
-            windowWidth: 1600, // Forçar largura para evitar cortes em telas pequenas
+            windowWidth: 1600,
             windowHeight: 1200
           })
           const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
-          queryDataArray.push({
-            query_id: 'cover',
-            query_title: 'Capa',
-            image_blob: blob,
-            is_cover: true
-          })
-          console.log('Capa capturada com sucesso')
+          queryDataArray.push({ query_id: 'cover', query_title: 'Capa', image_blob: blob, is_cover: true })
         } else {
-          console.warn('Elemento .cover-page não encontrado')
+          failed.push('Capa')
         }
       } catch (err) {
+        failed.push('Capa')
         console.error('Erro ao capturar capa:', err)
       }
 
@@ -193,29 +328,23 @@ function AppContent() {
         try {
           setLoading(true)
           setTableData(null)
-          console.log(`[${idx + 1}/${queryIds.length}] Processando query: ${queryId}`)
-          console.time(`Query ${queryId}`)
 
           const queryResponse = await axios.post(
             `${API_URL}/api/queries/${queryId}/execute`,
-            {},
+            { mes_selecionado: selectedMes, ano_selecionado: selectedAno },
             { withCredentials: true, timeout: 600000 }
           )
-
           const data = queryResponse.data
 
-          const previousQuery = selectedQuery
-          const previousData = tableData
+          progress(idx + 1, queryIds.length + 1, data.title || queryId)
+
           setSelectedQuery(queryId)
           setLoading(false)
           setTableData(data)
 
-          // Polling
           let tableElement = null
           let attempts = 0
-          const maxAttempts = 1200
-
-          while (attempts < maxAttempts) {
+          while (attempts < 1200) {
             await new Promise(resolve => setTimeout(resolve, 500))
             tableElement = document.querySelector('.data-table-container')
             if (tableElement && tableElement.querySelector('table')) break
@@ -223,75 +352,52 @@ function AppContent() {
           }
 
           if (!tableElement || !tableElement.querySelector('table')) {
-            console.warn(`Tabela não encontrada para ${queryId}`)
+            failed.push(data.title || queryId)
             continue
           }
 
-          await new Promise(resolve => setTimeout(resolve, 1000)) // Pausa maior para garantir render
+          await new Promise(resolve => setTimeout(resolve, 1000))
 
-          // --- CLONE & CAPTURE STRATEGY ---
-          // Clonar a tabela para fora do container com overflow
           const originalTable = tableElement.querySelector('table')
           const cloneContainer = document.createElement('div')
-
-          // Estilos para garantir que o clone seja renderizado completo
-          cloneContainer.style.position = 'fixed'
-          cloneContainer.style.top = '-10000px' // Fora da tela visível
-          cloneContainer.style.left = '0'
-          cloneContainer.style.width = 'fit-content' // Largura total do conteúdo
-          cloneContainer.style.height = 'auto'
-          cloneContainer.style.zIndex = '-1'
-          cloneContainer.style.background = 'white'
-          cloneContainer.style.padding = '20px' // Margem interna
-
-          // Clonar a tabela
-          const tableClone = originalTable.cloneNode(true)
-          cloneContainer.appendChild(tableClone)
+          cloneContainer.style.cssText = 'position:fixed;top:-10000px;left:0;width:fit-content;height:auto;z-index:-1;background:white;padding:20px'
+          cloneContainer.appendChild(originalTable.cloneNode(true))
           document.body.appendChild(cloneContainer)
 
-          // Capturar o clone
           const canvas = await html2canvas(cloneContainer, {
-            scale: 2,
+            scale: 3,
             backgroundColor: '#ffffff',
             logging: false,
-            windowWidth: cloneContainer.scrollWidth + 100, // Garantir largura total
+            windowWidth: cloneContainer.scrollWidth + 100,
             windowHeight: cloneContainer.scrollHeight + 100
           })
-
-          // Remover clone
           document.body.removeChild(cloneContainer)
 
           const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
-
-          queryDataArray.push({
-            query_id: queryId,
-            query_title: data.title,
-            image_blob: blob,
-            is_cover: false
-          })
-
-          console.timeEnd(`Query ${queryId}`)
+          queryDataArray.push({ query_id: queryId, query_title: data.title, image_blob: blob, is_cover: false })
 
           setTableData(null)
           await new Promise(resolve => setTimeout(resolve, 200))
 
         } catch (err) {
+          const label = savedQueries.find(q => q.id === queryId)?.title || queryId
+          failed.push(label)
           console.error(`Erro na query ${queryId}:`, err)
         }
       }
 
       if (queryDataArray.length === 0) {
-        alert('Nada foi processado')
-        setLoading(false)
+        setExportProgress({ current: 0, total: 0, currentTitle: '', failed, done: true, error: 'Nenhum slide foi gerado.' })
         return
       }
 
+      setExportProgress({ current: queryIds.length + 1, total: queryIds.length + 1, currentTitle: 'Gerando PowerPoint...', failed: [] })
       setLoading(true)
-      alert(`${queryDataArray.length} slides gerados. Criando PowerPoint...`)
 
       const formData = new FormData()
       formData.append('query_count', queryDataArray.length)
-
+      formData.append('mes_selecionado', selectedMes)
+      formData.append('ano_selecionado', selectedAno)
       queryDataArray.forEach((item, index) => {
         formData.append(`query_id_${index}`, item.query_id)
         formData.append(`query_title_${index}`, item.query_title)
@@ -301,11 +407,7 @@ function AppContent() {
       const response = await axios.post(
         `${API_URL}/api/export/pptx/batch-images`,
         formData,
-        {
-          responseType: 'blob',
-          withCredentials: true,
-          headers: { 'Content-Type': 'multipart/form-data' }
-        }
+        { responseType: 'blob', withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } }
       )
 
       const url = window.URL.createObjectURL(new Blob([response.data]))
@@ -316,14 +418,12 @@ function AppContent() {
       link.click()
       link.remove()
 
-      alert('PowerPoint gerado com sucesso!')
-      console.timeEnd('Batch Export Total')
+      setExportProgress({ done: true, slides: queryDataArray.length, failed })
       setSelectedQueriesForExport(new Set())
-      setIsExportMode(false)
 
     } catch (err) {
       console.error('Erro geral:', err)
-      alert(`Erro: ${err.message}`)
+      setExportProgress({ done: true, slides: 0, failed, error: err.message })
     } finally {
       setLoading(false)
     }
@@ -344,6 +444,27 @@ function AppContent() {
     <div className="app">
       <header className="app-header">
         <h1>Dashboard Databricks</h1>
+
+        <div className="period-selector">
+          <label>Período:</label>
+          <select
+            value={selectedMes}
+            onChange={e => { setSelectedMes(Number(e.target.value)); setTableData(null) }}
+          >
+            {MESES.map((nome, i) => (
+              <option key={i + 1} value={i + 1}>{nome}</option>
+            ))}
+          </select>
+          <select
+            value={selectedAno}
+            onChange={e => { setSelectedAno(Number(e.target.value)); setTableData(null) }}
+          >
+            {[2023, 2024, 2025, 2026, 2027].map(a => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
+        </div>
+
         <div className="header-actions">
           <div className="user-info">
             <span className="welcome-message">Olá, {user.username}!</span>
@@ -354,7 +475,6 @@ function AppContent() {
       </header>
 
       <div className={`main-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-        {/* Botão de toggle quando sidebar está fechado */}
         {!isSidebarOpen && (
           <button
             className="sidebar-toggle-btn-floating"
@@ -371,13 +491,21 @@ function AppContent() {
             <div className="sidebar-controls">
               {isSidebarOpen && (
                 <>
+                  {user?.is_admin && (
+                    <button
+                      className={`btn-export-mode ${showPendingPanel ? 'active' : ''}`}
+                      onClick={() => setShowPendingPanel(v => !v)}
+                      title="Usuários aguardando aprovação"
+                      style={{ position: 'relative' }}
+                    >
+                      👤
+                    </button>
+                  )}
                   <button
                     className={`btn-export-mode ${isExportMode ? 'active' : ''}`}
                     onClick={() => {
                       setIsExportMode(!isExportMode)
-                      if (!isExportMode) {
-                        setSelectedQueriesForExport(new Set())
-                      }
+                      if (!isExportMode) setSelectedQueriesForExport(new Set())
                     }}
                     title="Modo de exportação em lote"
                   >
@@ -395,34 +523,68 @@ function AppContent() {
             </div>
           </div>
 
+          {showPendingPanel && user?.is_admin && (
+            <div className="pending-users-panel">
+              <CreateUserInline onCreateUser={handleCreateUser} allUsers={allUsers} currentUserId={user?.id} onToggleAdmin={handleToggleAdmin} />
+            </div>
+          )}
+
           {isExportMode && (
             <div className="batch-export-controls">
-              <div className="batch-info">
-                {selectedQueriesForExport.size > 0 && (
-                  <p>{selectedQueriesForExport.size} selecionada(s)</p>
-                )}
-              </div>
-              <button
-                onClick={() => {
-                  setSelectedQueriesForExport(new Set(savedQueries.map(q => q.id)))
-                }}
-                className="btn-select-all"
-              >
-                Selecionar Todas
-              </button>
-              <button
-                onClick={() => setSelectedQueriesForExport(new Set())}
-                className="btn-clear-selection"
-              >
-                Limpar Seleção
-              </button>
-              <button
-                onClick={exportMultipleQueriesPPT}
-                disabled={selectedQueriesForExport.size === 0 || loading}
-                className="btn-export-batch"
-              >
-                {loading ? 'Exportando...' : `Exportar (${selectedQueriesForExport.size})`}
-              </button>
+              {exportProgress && !exportProgress.done ? (
+                <div className="export-progress">
+                  <div className="export-progress-label">
+                    {exportProgress.currentTitle}
+                  </div>
+                  <div className="export-progress-bar-track">
+                    <div
+                      className="export-progress-bar-fill"
+                      style={{ width: `${Math.round((exportProgress.current / (exportProgress.total || 1)) * 100)}%` }}
+                    />
+                  </div>
+                  <div className="export-progress-count">
+                    {exportProgress.current} / {exportProgress.total}
+                  </div>
+                </div>
+              ) : exportProgress?.done ? (
+                <div className="export-done">
+                  {exportProgress.error ? (
+                    <p className="export-error">Erro: {exportProgress.error}</p>
+                  ) : (
+                    <p className="export-success">✓ {exportProgress.slides} slides gerados</p>
+                  )}
+                  {exportProgress.failed?.length > 0 && (
+                    <div className="export-failed">
+                      <p>Falhou ({exportProgress.failed.length}):</p>
+                      <ul>{exportProgress.failed.map((f, i) => <li key={i}>{f}</li>)}</ul>
+                    </div>
+                  )}
+                  <button className="btn-clear-selection" onClick={() => { setExportProgress(null); setIsExportMode(false) }}>
+                    Fechar
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="batch-info">
+                    {selectedQueriesForExport.size > 0 && (
+                      <p>{selectedQueriesForExport.size} selecionada(s)</p>
+                    )}
+                  </div>
+                  <button onClick={() => setSelectedQueriesForExport(new Set(savedQueries.map(q => q.id)))} className="btn-select-all">
+                    Selecionar Todas
+                  </button>
+                  <button onClick={() => setSelectedQueriesForExport(new Set())} className="btn-clear-selection">
+                    Limpar Seleção
+                  </button>
+                  <button
+                    onClick={exportMultipleQueriesPPT}
+                    disabled={selectedQueriesForExport.size === 0 || loading}
+                    className="btn-export-batch"
+                  >
+                    {`Exportar (${selectedQueriesForExport.size})`}
+                  </button>
+                </>
+              )}
             </div>
           )}
 
@@ -441,35 +603,66 @@ function AppContent() {
                   <div className="query-description">Página inicial do relatório</div>
                 </div>
               </li>
-              {savedQueries.map((query, index) => (
-                <li
-                  key={query.id}
-                  className={`${selectedQuery === query.id ? 'active' : ''} ${isExportMode ? 'selectable' : ''}`}
-                  onClick={() => {
-                    if (isExportMode) {
-                      toggleQuerySelection(query.id)
-                    } else {
-                      executeSavedQuery(query.id)
-                    }
-                  }}
-                >
-                  {isExportMode && (
-                    <input
-                      type="checkbox"
-                      checked={selectedQueriesForExport.has(query.id)}
-                      onChange={() => toggleQuerySelection(query.id)}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  )}
-                  <span className="query-number">{isExportMode ? '' : `${index + 1}.`}</span>
-                  <div className="query-info">
-                    <div className="query-title">{query.title}</div>
-                    {query.description && (
-                      <div className="query-description">{query.description}</div>
+              {Object.entries(
+                savedQueries.reduce((groups, query) => {
+                  const cat = query.category || 'Outros'
+                  if (!groups[cat]) groups[cat] = []
+                  groups[cat].push(query)
+                  return groups
+                }, {})
+              ).map(([category, queries]) => {
+                const isExpanded = expandedCategories.has(category)
+                const toggleCategory = () => {
+                  setExpandedCategories(prev => {
+                    const next = new Set(prev)
+                    if (next.has(category)) next.delete(category)
+                    else next.add(category)
+                    return next
+                  })
+                }
+                return (
+                  <li key={category} className="query-group">
+                    <div className="query-group-header" onClick={toggleCategory}>
+                      <span className="query-group-arrow">{isExpanded ? '▾' : '▸'}</span>
+                      <span className="query-group-name">{category}</span>
+                      <span className="query-group-count">{queries.length}</span>
+                    </div>
+                    {isExpanded && (
+                      <ul className="query-group-list">
+                        {queries.map((query, index) => (
+                          <li
+                            key={query.id}
+                            className={`${selectedQuery === query.id ? 'active' : ''} ${isExportMode ? 'selectable' : ''}`}
+                            onClick={() => {
+                              if (isExportMode) {
+                                toggleQuerySelection(query.id)
+                              } else {
+                                executeSavedQuery(query.id)
+                              }
+                            }}
+                          >
+                            {isExportMode && (
+                              <input
+                                type="checkbox"
+                                checked={selectedQueriesForExport.has(query.id)}
+                                onChange={() => toggleQuerySelection(query.id)}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                            <span className="query-number">{isExportMode ? '' : `${index + 1}.`}</span>
+                            <div className="query-info">
+                              <div className="query-title">{query.title}</div>
+                              {query.description && (
+                                <div className="query-description">{query.description}</div>
+                              )}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
                     )}
-                  </div>
-                </li>
-              ))}
+                  </li>
+                )
+              })}
             </ul>
           )}
         </aside>
@@ -488,8 +681,12 @@ function AppContent() {
               <div className="cover-content">
                 <h1 className="cover-title">Business Review</h1>
                 <h2 className="cover-subtitle">Finanças</h2>
-                <h2 className="cover-subtitle">Resultado 10/2025 + Rolling Fcst</h2>
-                <p className="cover-date">19 de novembro de 2025</p>
+                <h2 className="cover-subtitle">
+                  Resultado {String(selectedMes).padStart(2, '0')}/{selectedAno} + Rolling Fcst
+                </h2>
+                <p className="cover-date">
+                  {new Date().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
               </div>
             </div>
           ) : null}
@@ -508,8 +705,15 @@ function AppContent() {
           )}
 
           {tableData && !loading && (
-            <div className="results-section">
-              <div className="results-header">
+            // AQUI ESTÁ A CORREÇÃO DE LAYOUT
+            // flexDirection: 'column' garante que:
+            // 1. O Cabeçalho (Título) fique em cima
+            // 2. A Tabela fique no meio
+            // 3. Os Comentários fiquem embaixo
+            <div className="results-section" style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'stretch' }}>
+
+              {/* CABEÇALHO */}
+              <div className="results-header" style={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                 <div>
                   <h2>{tableData.title}</h2>
                   {tableData.description && <p>{tableData.description}</p>}
@@ -522,9 +726,27 @@ function AppContent() {
                 </div>
               </div>
 
-              <DataTable columns={tableData.columns} data={tableData.data} />
+              {/* CONTEÚDO VERTICAL: TABELA + GRÁFICO + COMENTÁRIOS */}
+              <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '30px' }}>
+                <div className="table-wrapper-full" style={{ width: '100%' }}>
+                  <DataTable columns={tableData.columns} data={tableData.data} />
+                </div>
 
-              <CommentsSection queryId={selectedQuery} />
+                {tableData.chartData && (
+                  <div className="data-table-container" style={{ width: '100%' }}>
+                    <PcldChart
+                      data={tableData.chartData}
+                      anoAtual={selectedAno}
+                      anoAnterior={selectedAno - 1}
+                    />
+                  </div>
+                )}
+
+                <div className="comments-wrapper-full" style={{ width: '100%' }}>
+                  <CommentsSection queryId={selectedQuery} />
+                </div>
+              </div>
+
             </div>
           )}
         </main>

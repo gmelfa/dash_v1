@@ -181,33 +181,18 @@ function CommentItem({ comment, currentUser, onDeleted, onUpdated }) {
 
       {isAdmin && !isEditing && (
         <div className="admin-actions">
-          {comment.status !== 'approved' && (
-            <button 
-              onClick={() => handleStatusChange('approved')}
-              className="btn-approve"
-              disabled={loading}
-            >
-              ✓ Aprovar
-            </button>
-          )}
-          {comment.status !== 'rejected' && (
-            <button 
-              onClick={() => handleStatusChange('rejected')}
-              className="btn-reject"
-              disabled={loading}
-            >
-              ✗ Rejeitar
-            </button>
-          )}
-          {comment.status !== 'pending' && (
-            <button 
-              onClick={() => handleStatusChange('pending')}
-              className="btn-pending"
-              disabled={loading}
-            >
-              ⟳ Pendente
-            </button>
-          )}
+          <button
+            onClick={() => handleStatusChange('approved')}
+            className="btn-approve-icon"
+            disabled={loading || comment.status === 'approved'}
+            title="Aprovar"
+          />
+          <button
+            onClick={() => handleStatusChange('rejected')}
+            className="btn-reject-icon"
+            disabled={loading || comment.status === 'rejected'}
+            title="Rejeitar"
+          />
         </div>
       )}
     </div>

@@ -3,11 +3,19 @@ import CommentItem from './CommentItem'
 import './Comments.css'
 
 function CommentList({ comments, currentUser, onCommentDeleted, onCommentUpdated }) {
-  const [filter, setFilter] = useState('all') // all, pending, approved, rejected
+  const [filter, setFilter] = useState('all')
+
+  const isAdmin = currentUser?.is_admin
+  const myComments = comments.filter(c => c.user_id === currentUser?.id)
 
   const filteredComments = comments.filter(comment => {
-    if (filter === 'all') return true
-    return comment.status === filter
+    if (isAdmin) {
+      if (filter === 'all') return true
+      return comment.status === filter
+    }
+    // Usuário comum: vê todos os comentários aprovados + os próprios em qualquer status
+    if (filter === 'mine') return comment.user_id === currentUser?.id
+    return comment.status === 'approved' || comment.user_id === currentUser?.id
   })
 
   if (comments.length === 0) {
@@ -20,31 +28,26 @@ function CommentList({ comments, currentUser, onCommentDeleted, onCommentUpdated
 
   return (
     <div className="comment-list">
-      {currentUser?.is_admin && (
+      {isAdmin ? (
         <div className="comment-filters">
-          <button
-            className={filter === 'all' ? 'active' : ''}
-            onClick={() => setFilter('all')}
-          >
-            Todos ({comments.length})
+          {[
+            { key: 'all', label: 'Todos', count: comments.length },
+            { key: 'pending', label: 'Pendentes', count: comments.filter(c => c.status === 'pending').length },
+            { key: 'approved', label: 'Aprovados', count: comments.filter(c => c.status === 'approved').length },
+            { key: 'rejected', label: 'Rejeitados', count: comments.filter(c => c.status === 'rejected').length },
+          ].map(({ key, label, count }) => (
+            <button key={key} className={filter === key ? 'active' : ''} onClick={() => setFilter(key)}>
+              {label} ({count})
+            </button>
+          ))}
+        </div>
+      ) : myComments.length > 0 && (
+        <div className="comment-filters">
+          <button className={filter === 'all' ? 'active' : ''} onClick={() => setFilter('all')}>
+            Todos
           </button>
-          <button
-            className={filter === 'pending' ? 'active' : ''}
-            onClick={() => setFilter('pending')}
-          >
-            Pendentes ({comments.filter(c => c.status === 'pending').length})
-          </button>
-          <button
-            className={filter === 'approved' ? 'active' : ''}
-            onClick={() => setFilter('approved')}
-          >
-            Aprovados ({comments.filter(c => c.status === 'approved').length})
-          </button>
-          <button
-            className={filter === 'rejected' ? 'active' : ''}
-            onClick={() => setFilter('rejected')}
-          >
-            Rejeitados ({comments.filter(c => c.status === 'rejected').length})
+          <button className={filter === 'mine' ? 'active' : ''} onClick={() => setFilter('mine')}>
+            Meus ({myComments.length})
           </button>
         </div>
       )}
