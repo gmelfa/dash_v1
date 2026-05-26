@@ -191,7 +191,7 @@ function AppContent() {
     }
   }
 
-  const executeSavedQuery = async (queryId) => {
+  const executeSavedQuery = async (queryId, mes = selectedMes, ano = selectedAno) => {
     setLoading(true)
     setError(null)
     setTableData(null)
@@ -199,7 +199,7 @@ function AppContent() {
     try {
       const response = await axios.post(
         `${API_URL}/api/queries/${queryId}/execute`,
-        { mes_selecionado: selectedMes, ano_selecionado: selectedAno },
+        { mes_selecionado: mes, ano_selecionado: ano },
         { withCredentials: true }
       )
       setTableData(response.data)
@@ -461,7 +461,12 @@ function AppContent() {
           <label>Período:</label>
           <select
             value={selectedMes}
-            onChange={e => { setSelectedMes(Number(e.target.value)); setTableData(null) }}
+            onChange={e => {
+              const newMes = Number(e.target.value)
+              setSelectedMes(newMes)
+              if (selectedQuery && selectedQuery !== 'cover') executeSavedQuery(selectedQuery, newMes, selectedAno)
+              else setTableData(null)
+            }}
           >
             {MESES.map((nome, i) => (
               <option key={i + 1} value={i + 1}>{nome}</option>
@@ -469,7 +474,12 @@ function AppContent() {
           </select>
           <select
             value={selectedAno}
-            onChange={e => { setSelectedAno(Number(e.target.value)); setTableData(null) }}
+            onChange={e => {
+              const newAno = Number(e.target.value)
+              setSelectedAno(newAno)
+              if (selectedQuery && selectedQuery !== 'cover') executeSavedQuery(selectedQuery, selectedMes, newAno)
+              else setTableData(null)
+            }}
           >
             {[2023, 2024, 2025, 2026, 2027].map(a => (
               <option key={a} value={a}>{a}</option>

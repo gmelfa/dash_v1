@@ -1,6 +1,8 @@
 from flask import Flask, jsonify, request, g
 import time
 from flask_cors import CORS
+
+_query_cache = {}  # { "query_id_mes_ano": resultado }
 from flask_login import LoginManager
 from databricks import sql
 import os
@@ -283,9 +285,14 @@ def execute_saved_query(query_id):
         data = request.get_json(silent=True) or {}
         mes_selecionado = data.get('mes_selecionado')
         ano_selecionado = data.get('ano_selecionado')
+        force_refresh = data.get('force', False)
 
         if mes_selecionado is None or ano_selecionado is None:
             return jsonify({'error': 'Parâmetros mes_selecionado e ano_selecionado são obrigatórios'}), 400
+
+        cache_key = f"{query_id}_{mes_selecionado}_{ano_selecionado}"
+        if not force_refresh and cache_key in _query_cache:
+            return jsonify(_query_cache[cache_key]), 200
 
         parameters = {
             'mes_selecionado': int(mes_selecionado),
@@ -328,7 +335,7 @@ def execute_saved_query(query_id):
                         chart_rows = cursor.fetchall()
                         chart_data = [dict(zip(chart_cols, row)) for row in chart_rows]
 
-                return jsonify({
+                response = {
                     'queryId': query_id,
                     'title': query_obj['title'],
                     'description': query_obj.get('description', ''),
@@ -336,7 +343,9 @@ def execute_saved_query(query_id):
                     'data': result,
                     'rowCount': len(result),
                     'chartData': chart_data
-                }), 200
+                }
+                _query_cache[cache_key] = response
+                return jsonify(response), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
