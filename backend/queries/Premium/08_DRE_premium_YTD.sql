@@ -40,7 +40,8 @@ base AS (
       AND YEAR(f.Data_Transacao)  IN (p.ano_atual, p.ano_anterior)
       AND MONTH(f.Data_Transacao) BETWEEN 1 AND p.mes_ytd
       AND f.Nome_Unidade NOT LIKE '%CSC Local%'
-      AND f.Nome_Unidade <> 'Diretoria Premium - Pueri Domus'
+      AND f.Nome_Unidade NOT LIKE '%Diretoria%'
+      AND f.Nome_Unidade <> 'Pueri Domus Ipiranga'
 ),
 
 -- Agregação em uma única linha: cada coluna = métrica × cenário

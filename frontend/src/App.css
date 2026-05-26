@@ -1,3 +1,7 @@
+/* =========================================================
+   TEMAS
+   ========================================================= */
+
 :root {
   --primary-color: #2563eb;
   --primary-hover: #1d4ed8;
@@ -6,11 +10,68 @@
   --error-color: #ef4444;
   --background: #f8fafc;
   --surface: #ffffff;
+  --surface-header: #ffffff;
   --border: #e2e8f0;
   --text-primary: #1e293b;
   --text-secondary: #64748b;
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --input-bg: #ffffff;
+  --input-text: #1a202c;
+  --comment-bg: #fffbeb;
+  --comment-form-bg: #f8fafc;
+  --comment-filters-bg: #f1f5f9;
+  --comment-filter-btn: #ffffff;
+  --edited-bg: #f0f9ff;
+  --edited-text: #1e40af;
+}
+
+[data-theme="dark-gray"] {
+  --primary-color: #60a5fa;
+  --primary-hover: #3b82f6;
+  --secondary-color: #9e9e9e;
+  --success-color: #34d399;
+  --error-color: #f87171;
+  --background: #1a1a1a;
+  --surface: #252525;
+  --surface-header: #1f1f1f;
+  --border: #3a3a3a;
+  --text-primary: #e2e2e2;
+  --text-secondary: #9e9e9e;
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  --input-bg: #2e2e2e;
+  --input-text: #e2e2e2;
+  --comment-bg: #2a2820;
+  --comment-form-bg: #1a1a1a;
+  --comment-filters-bg: #1a1a1a;
+  --comment-filter-btn: #2e2e2e;
+  --edited-bg: #1a2233;
+  --edited-text: #93c5fd;
+}
+
+[data-theme="slate"] {
+  --primary-color: #60a5fa;
+  --primary-hover: #3b82f6;
+  --secondary-color: #94a3b8;
+  --success-color: #34d399;
+  --error-color: #f87171;
+  --background: #0f172a;
+  --surface: #1e293b;
+  --surface-header: #1e293b;
+  --border: #334155;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5);
+  --input-bg: #0f172a;
+  --input-text: #e2e8f0;
+  --comment-bg: #1a2235;
+  --comment-form-bg: #0f172a;
+  --comment-filters-bg: #0f172a;
+  --comment-filter-btn: #1e293b;
+  --edited-bg: #0c1a2e;
+  --edited-text: #93c5fd;
 }
 
 * {
@@ -61,7 +122,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background-color: #fff;
+  background-color: var(--surface-header);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
 }
@@ -366,8 +427,8 @@ body {
   font-size: 0.8rem;
   border: 1px solid var(--border);
   border-radius: 0.25rem;
-  background: #ffffff;
-  color: #1a202c;
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 .create-user-form .btn-approve {
@@ -844,7 +905,7 @@ body {
 
 /* Results Section */
 .results-section {
-  background: var(--surface);
+  background: var(--background);
   padding: 1rem;
   margin: 1.5rem;
   border-radius: 0.5rem;
@@ -926,7 +987,7 @@ body {
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid #e2e8f0;
+  border: 4px solid var(--border);
   border-top-color: var(--primary-color);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
@@ -1132,3 +1193,41 @@ body {
   text-align: left !important;
   padding-left: 15px;
 }
+
+/* =========================================================
+   SELETOR DE TEMA
+   ========================================================= */
+
+.theme-selector {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.2rem 0.3rem;
+}
+
+.theme-btn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.theme-btn:hover {
+  transform: scale(1.15);
+}
+
+.theme-btn.active {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+.theme-btn-light  { background: #f8fafc; border-color: #cbd5e1; }
+.theme-btn-dark   { background: #252525; }
+.theme-btn-slate  { background: #1e293b; }

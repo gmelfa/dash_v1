@@ -13,6 +13,17 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro']
 
+function useTheme() {
+  const [theme, setThemeState] = useState(() => localStorage.getItem('theme') || 'light')
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
+  return [theme, setThemeState]
+}
+
 function getDefaultPeriod() {
   const now = new Date()
   const mes = now.getMonth() === 0 ? 12 : now.getMonth()          // getMonth() retorna 0-11
@@ -116,6 +127,7 @@ function CreateUserInline({ onCreateUser, allUsers, currentUserId, onToggleAdmin
 
 function AppContent() {
   const { user, loading: authLoading, logout } = useAuth()
+  const [theme, setTheme] = useTheme()
   const [showAuth, setShowAuth] = useState('login')
   const [tableData, setTableData] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -466,6 +478,23 @@ function AppContent() {
         </div>
 
         <div className="header-actions">
+          <div className="theme-selector">
+            <button
+              className={`theme-btn theme-btn-light ${theme === 'light' ? 'active' : ''}`}
+              onClick={() => setTheme('light')}
+              title="Claro"
+            />
+            <button
+              className={`theme-btn theme-btn-dark ${theme === 'dark-gray' ? 'active' : ''}`}
+              onClick={() => setTheme('dark-gray')}
+              title="Escuro"
+            />
+            <button
+              className={`theme-btn theme-btn-slate ${theme === 'slate' ? 'active' : ''}`}
+              onClick={() => setTheme('slate')}
+              title="Slate"
+            />
+          </div>
           <div className="user-info">
             <span className="welcome-message">Olá, {user.username}!</span>
             {user.is_admin && <span className="admin-badge">Admin</span>}
