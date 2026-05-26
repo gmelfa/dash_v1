@@ -1,11 +1,16 @@
 /* Reset básico */
 .data-table-container {
     width: 100%;
-    overflow-x: auto;
     font-family: 'Arial', sans-serif;
     margin: 20px 0;
     background: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 180px);
 }
   
 .data-table {
@@ -27,6 +32,17 @@
     border-right: 1px solid rgba(255,255,255,0.2);
     text-transform: uppercase;
     font-size: 11px;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+/* Célula de canto: fixa no eixo X e Y simultaneamente */
+.data-table thead th:first-child {
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 5;
 }
 
 /* Cabeçalhos específicos de variação */
