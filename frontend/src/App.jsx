@@ -31,11 +31,29 @@ function getDefaultPeriod() {
   return { mes, ano }
 }
 
-function CreateUserInline({ onCreateUser, allUsers, currentUserId, onToggleAdmin }) {
+function CreateUserInline({ onCreateUser, allUsers, currentUserId, onToggleAdmin, onResetPassword }) {
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ username: '', email: '', password: '', is_admin: false })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [resetUserId, setResetUserId] = useState(null)
+  const [resetPassword, setResetPasswordValue] = useState('')
+  const [resetError, setResetError] = useState('')
+  const [resetLoading, setResetLoading] = useState(false)
+
+  const handleResetSubmit = async (e) => {
+    e.preventDefault()
+    setResetLoading(true)
+    setResetError('')
+    const err = await onResetPassword(resetUserId, resetPassword)
+    setResetLoading(false)
+    if (err) {
+      setResetError(err)
+    } else {
+      setResetUserId(null)
+      setResetPasswordValue('')
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -108,14 +126,44 @@ function CreateUserInline({ onCreateUser, allUsers, currentUserId, onToggleAdmin
                 </span>
                 <span className="pending-user-email">{u.email}</span>
               </div>
-              {u.id !== currentUserId && (
+              <div style={{ display: 'flex', gap: '4px' }}>
                 <button
-                  className={`btn-toggle-admin ${u.is_admin ? 'is-admin' : ''}`}
-                  onClick={() => onToggleAdmin(u.id)}
-                  title={u.is_admin ? 'Remover admin' : 'Tornar admin'}
+                  className="btn-toggle-admin"
+                  onClick={() => { setResetUserId(u.id); setResetPasswordValue(''); setResetError('') }}
+                  title="Redefinir senha"
                 >
-                  ★
+                  🔑
                 </button>
+                {u.id !== currentUserId && (
+                  <button
+                    className={`btn-toggle-admin ${u.is_admin ? 'is-admin' : ''}`}
+                    onClick={() => onToggleAdmin(u.id)}
+                    title={u.is_admin ? 'Remover admin' : 'Tornar admin'}
+                  >
+                    ★
+                  </button>
+                )}
+              </div>
+              {resetUserId === u.id && (
+                <form className="create-user-form" onSubmit={handleResetSubmit} style={{ marginTop: '8px' }}>
+                  {resetError && <p className="create-user-error">{resetError}</p>}
+                  <input
+                    type="password"
+                    placeholder="Nova senha"
+                    value={resetPassword}
+                    onChange={e => setResetPasswordValue(e.target.value)}
+                    required
+                    minLength={6}
+                  />
+                  <div style={{ display: 'flex', gap: '4px' }}>
+                    <button type="submit" className="btn-approve" disabled={resetLoading}>
+                      {resetLoading ? 'Salvando...' : 'Salvar'}
+                    </button>
+                    <button type="button" className="btn-clear-selection" onClick={() => setResetUserId(null)}>
+                      Cancelar
+                    </button>
+                  </div>
+                </form>
               )}
             </div>
           ))
@@ -176,6 +224,15 @@ function AppContent() {
       return null
     } catch (err) {
       return err.response?.data?.error || 'Erro ao criar usuário'
+    }
+  }
+
+  const handleResetPassword = async (userId, password) => {
+    try {
+      await axios.post(`${API_URL}/api/auth/users/${userId}/reset-password`, { password }, { withCredentials: true })
+      return null
+    } catch (err) {
+      return err.response?.data?.error || 'Erro ao redefinir senha'
     }
   }
 
@@ -564,7 +621,7 @@ function AppContent() {
 
           {showPendingPanel && user?.is_admin && (
             <div className="pending-users-panel">
-              <CreateUserInline onCreateUser={handleCreateUser} allUsers={allUsers} currentUserId={user?.id} onToggleAdmin={handleToggleAdmin} />
+              <CreateUserInline onCreateUser={handleCreateUser} allUsers={allUsers} currentUserId={user?.id} onToggleAdmin={handleToggleAdmin} onResetPassword={handleResetPassword} />
             </div>
           )}
 
