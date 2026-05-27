@@ -2,8 +2,35 @@ from flask import Blueprint, request, jsonify
 from flask_login import login_user, logout_user, login_required, current_user
 from sqlalchemy import func
 from models import db, User
+import time
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
+
+_login_attempts = {}  # { ip: { 'count': N, 'locked_until': timestamp } }
+MAX_ATTEMPTS = 5
+LOCKOUT_SECONDS = 15 * 60  # 15 minutos
+
+def _get_ip():
+    return request.headers.get('X-Forwarded-For', request.remote_addr).split(',')[0].strip()
+
+def _check_lockout(ip):
+    entry = _login_attempts.get(ip)
+    if not entry:
+        return False
+    if entry.get('locked_until') and time.time() < entry['locked_until']:
+        return True
+    if entry.get('locked_until') and time.time() >= entry['locked_until']:
+        del _login_attempts[ip]
+    return False
+
+def _register_failure(ip):
+    entry = _login_attempts.setdefault(ip, {'count': 0})
+    entry['count'] += 1
+    if entry['count'] >= MAX_ATTEMPTS:
+        entry['locked_until'] = time.time() + LOCKOUT_SECONDS
+
+def _clear_attempts(ip):
+    _login_attempts.pop(ip, None)
 
 @auth_bp.route('/register', methods=['POST'])
 def register():
@@ -59,16 +86,21 @@ def register():
 def login():
     """Login de usuário"""
     try:
+        ip = _get_ip()
+
+        if _check_lockout(ip):
+            return jsonify({'error': 'Muitas tentativas incorretas. Tente novamente em 15 minutos.'}), 429
+
         data = request.json
         print(f"[DEBUG] Tentativa de login - dados recebidos: {data}")
-        
+
         username = data.get('username')
         password = data.get('password')
-        
+
         if not username or not password:
             print("[DEBUG] Username ou senha não fornecidos")
             return jsonify({'error': 'Username e senha são obrigatórios'}), 400
-        
+
         # Buscar usuário por username ou email (case-insensitive)
         username_lower = username.lower()
         user = User.query.filter(
@@ -76,27 +108,27 @@ def login():
             (func.lower(User.email) == username_lower)
         ).first()
         print(f"[DEBUG] Usuário encontrado: {user.username if user else 'None'}")
-        
-        if not user:
-            print("[DEBUG] Usuário não encontrado")
-            return jsonify({'error': 'Credenciais inválidas'}), 401
-            
-        if not user.check_password(password):
-            print(f"[DEBUG] Senha incorreta para usuário: {username}")
-            return jsonify({'error': 'Credenciais inválidas'}), 401
+
+        if not user or not user.check_password(password):
+            _register_failure(ip)
+            attempts = _login_attempts.get(ip, {}).get('count', 0)
+            remaining = MAX_ATTEMPTS - attempts
+            if remaining <= 0:
+                return jsonify({'error': 'Muitas tentativas incorretas. Tente novamente em 15 minutos.'}), 429
+            return jsonify({'error': f'Credenciais inválidas. {remaining} tentativa(s) restante(s).'}), 401
 
         if not user.is_approved:
             return jsonify({'error': 'Conta aguardando aprovação de um administrador.'}), 403
 
-        # Fazer login
+        _clear_attempts(ip)
         print(f"[DEBUG] Login bem-sucedido para: {username}")
         login_user(user, remember=True)
-        
+
         return jsonify({
             'message': 'Login realizado com sucesso',
             'user': user.to_dict()
         }), 200
-        
+
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
@@ -195,6 +227,29 @@ def toggle_admin(user_id):
 
     acao = 'promovido a admin' if user.is_admin else 'removido de admin'
     return jsonify({'message': f'{user.username} {acao}.', 'user': user.to_dict()}), 200
+
+
+@auth_bp.route('/users/<int:user_id>/reset-password', methods=['POST'])
+@login_required
+def reset_password(user_id):
+    """Admin redefine a senha de um usuário"""
+    if not current_user.is_admin:
+        return jsonify({'error': 'Acesso negado'}), 403
+
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'Usuário não encontrado'}), 404
+
+    data = request.json or {}
+    new_password = data.get('password', '').strip()
+
+    if len(new_password) < 6:
+        return jsonify({'error': 'A senha deve ter pelo menos 6 caracteres'}), 400
+
+    user.set_password(new_password)
+    db.session.commit()
+
+    return jsonify({'message': f'Senha de {user.username} redefinida com sucesso.'}), 200
 
 
 @auth_bp.route('/users/<int:user_id>/approve', methods=['POST'])
