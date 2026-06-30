@@ -62,18 +62,13 @@ function Database({ columns, data }) {
             }
 
             // --- REGRA LEGADA 2: Colunas Var antigas ---
-            if (col.toLowerCase().startsWith('var ')) {
-              let mainText = '';
-              let subText = '';
-              const isPercent = col.toLowerCase().startsWith('var % ') || col.includes('%') || col.toLowerCase().includes('pct');
-
-              if (isPercent) {
-                subText = 'VAR %';
-                mainText = col.replace(/var % /i, '').replace(/var %/i, '').replace(/var pct /i, '').replace(/var pct/i, '');
-              } else {
-                subText = 'VAR';
-                mainText = col.replace(/var /i, '');
-              }
+            if (col.toLowerCase().startsWith('var')) {
+              const isPercent = col.includes('%') || col.toLowerCase().includes('pct');
+              const subText = isPercent ? 'VAR %' : 'VAR';
+              const mainText = col
+                .replace(/^var\s*%\s*/i, '')
+                .replace(/^var\s+/i, '')
+                .trim();
 
               return (
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', lineHeight: '1.1' }}>
@@ -91,6 +86,10 @@ function Database({ columns, data }) {
 
             const numValue = typeof value === 'number' ? value : parseFloat(String(value).replace(/,/g, ''))
 
+            const firstColKey = visibleColumnsNames[0];
+            const firstColValue = String(info.row.original[firstColKey] || '').toLowerCase();
+            const isMargemRow = firstColValue.includes('margem');
+
             if (!isNaN(numValue)) {
               let displayValue = numValue;
               let suffix = '';
@@ -99,6 +98,11 @@ function Database({ columns, data }) {
 
               // Lógica de Formatação Numérica
               if (isPercentage) {
+                displayValue = numValue;
+                suffix = '%';
+                minFrac = 1;
+                maxFrac = 1;
+              } else if (isMargemRow) {
                 displayValue = numValue;
                 suffix = '%';
                 minFrac = 1;

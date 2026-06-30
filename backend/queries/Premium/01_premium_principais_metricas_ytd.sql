@@ -27,12 +27,51 @@ base as (
         p.ano_anterior,
         p.mes_ytd
     from financeiro.prd.mv_f_apresentacao f
+    left join financeiro.prd.link_unidades     lu on lu.skUnidadeFct = f.skUnidade
+    left join financeiro.prd.d_classunidades   dc on dc.skunidade    = lu.skUnidade
     cross join params p
     where f.Vertical = p.vertical
       and year(f.Data_Transacao)  in (p.ano_atual, p.ano_anterior)
       and month(f.Data_Transacao) between 1 and p.mes_ytd
       and f.Nome_Unidade not like '%CSC Local%'
       and f.Nome_Unidade not like '%Diretoria Premium%'
+      and f.skUnidade not in ('111010011040', '111020011040', '1040')
+      and dc.CNPJ != 'HEB'
+),
+
+-- idEstFiscal das unidades Premium sem Ipiranga — distinct evita duplicação no join com rolling forecast
+premium_ids as (
+    select distinct idEstFiscal
+    from financeiro.prd.d_classunidades
+    where Vertical = 'Premium'
+      and idEstFiscal != '1040'
+),
+
+-- alunos 26F: snapshot do mês para jan-mar
+-- forecast só começa no mês 5 (Forecast 4+8), então meses 1-3 usam Realizado
+fcst_alunos_snap as (
+    select coalesce(sum(f.QtdAlunos), 0) as qtd
+    from financeiro.prd.f_orcamentoalunosrollingforecast f
+    inner join premium_ids d on f.idEstFiscal = d.idEstFiscal
+    cross join params p
+    where f.Versao = 'Realizado'
+      and year(f.Data) = p.ano_atual
+      and month(f.Data) = p.mes_ytd
+),
+
+-- alunos 26F: soma mar-mes_ytd para média abr+
+-- rolling forecast: Realizado para meses 3-4 + Forecast para meses 5 em diante
+fcst_alunos_soma as (
+    select coalesce(sum(f.QtdAlunos), 0) as qtd
+    from financeiro.prd.f_orcamentoalunosrollingforecast f
+    inner join premium_ids d on f.idEstFiscal = d.idEstFiscal
+    cross join params p
+    where year(f.Data) = p.ano_atual
+      and (
+          (f.Versao = 'Realizado' and month(f.Data) between 3 and least(p.mes_ytd, 4))
+          or
+          (f.Versao = 'Forecast'  and month(f.Data) between 5 and p.mes_ytd)
+      )
 ),
 
 -- agrega tudo em uma linha só — cada coluna é um cenário/período
@@ -43,13 +82,13 @@ numeros_raw as (
         -- alunos: snapshot do mês exato (usado quando mes_ytd <= 3)
         sum(case when ano = ano_anterior and mes = mes_ytd and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_25r_snap,
         sum(case when ano = ano_atual    and mes = mes_ytd and Origem = 'Budget'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26b_snap,
-        sum(case when ano = ano_atual    and mes = mes_ytd and Origem = 'Forecast' and skclasspnl = '400000000' then Valor else 0 end) as alunos_26f_snap,
+        (select qtd from fcst_alunos_snap)                                                                                             as alunos_26f_snap,
         sum(case when ano = ano_atual    and mes = mes_ytd and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26r_snap,
 
         -- alunos: soma acumulada desde março (usado quando mes_ytd >= 4, dividir por mes_ytd - 2)
         sum(case when ano = ano_anterior and mes >= 3 and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_25r_soma,
         sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Budget'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26b_soma,
-        sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Forecast' and skclasspnl = '400000000' then Valor else 0 end) as alunos_26f_soma,
+        (select qtd from fcst_alunos_soma)                                                                                         as alunos_26f_soma,
         sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26r_soma,
 
         -- receita de ensino em reais brutos, sem /1000 — usada só para calcular o ticket médio
@@ -102,10 +141,10 @@ select 'Alunos #' as Metrica,
     round(alunos_26b, 0)                                                                                  as `26B`,
     round(alunos_26f, 0)                                                                                  as `26F`,
     round(alunos_26r, 0)                                                                                  as `26R`,
-    round(alunos_26r - alunos_26b, 0)                                                                     as `Var 26xBgt`,
-    round(case when alunos_26b > 0 then alunos_26r / alunos_26b * 100 else null end, 1)                   as `Var% 26xBgt`,
-    round(alunos_26r - alunos_26f, 0)                                                                     as `Var 26xFcst`,
-    round(case when alunos_26f > 0 then alunos_26r / alunos_26f * 100 else null end, 1)                   as `Var% 26xFcst`,
+    round(alunos_26r - alunos_26b, 0)                                                                             as `Var 26xBgt`,
+    round(case when alunos_26b > 0 then (alunos_26r - alunos_26b) / alunos_26b * 100 else null end, 1)        as `Var % 26xBgt`,
+    round(alunos_26r - alunos_26f, 0)                                                                         as `Var 26xFcst`,
+    round(case when alunos_26f > 0 then (alunos_26r - alunos_26f) / alunos_26f * 100 else null end, 1)        as `Var % 26xFcst`,
     round(alunos_26r - alunos_25r, 0)                                                                     as `Var 26x25`
 from numeros
 
@@ -119,9 +158,9 @@ select 'Ticket Médio (R$ mês)',
     round(rec_ensino_26f / nullif(alunos_26f, 0) / mes_ytd,                                               0),
     round(rec_ensino_26r / nullif(alunos_26r, 0) / mes_ytd,                                               0),
     round((rec_ensino_26r/nullif(alunos_26r,0) - rec_ensino_26b/nullif(alunos_26b,0)) / mes_ytd,          2),
-    round(case when alunos_26b > 0 then (rec_ensino_26r/alunos_26r) / (rec_ensino_26b/alunos_26b) * 100 else null end, 1),
+    round(case when alunos_26b > 0 then ((rec_ensino_26r/alunos_26r) - (rec_ensino_26b/alunos_26b)) / (rec_ensino_26b/alunos_26b) * 100 else null end, 1),
     round((rec_ensino_26r/nullif(alunos_26r,0) - rec_ensino_26f/nullif(alunos_26f,0)) / mes_ytd,          2),
-    round(case when alunos_26f > 0 then (rec_ensino_26r/alunos_26r) / (rec_ensino_26f/alunos_26f) * 100 else null end, 1),
+    round(case when alunos_26f > 0 then ((rec_ensino_26r/alunos_26r) - (rec_ensino_26f/alunos_26f)) / (rec_ensino_26f/alunos_26f) * 100 else null end, 1),
     round((rec_ensino_26r/nullif(alunos_26r,0) - rec_ensino_25r/nullif(alunos_25r,0)) / mes_ytd,          0)
 from numeros
 
@@ -133,9 +172,9 @@ select 'ROL',
     round(rol_26f, 0),
     round(rol_26r, 0),
     round(rol_26r - rol_26b,  2),
-    round(case when rol_26b <> 0 then rol_26r / rol_26b * 100 else null end, 1),
+    round(case when rol_26b <> 0 then (rol_26r - rol_26b) / rol_26b * 100 else null end, 1),
     round(rol_26r - rol_26f,  2),
-    round(case when rol_26f <> 0 then rol_26r / rol_26f * 100 else null end, 1),
+    round(case when rol_26f <> 0 then (rol_26r - rol_26f) / rol_26f * 100 else null end, 1),
     round(rol_26r - rol_25r,  0)
 from numeros
 
@@ -147,9 +186,9 @@ select 'EBITDA',
     round(ebitda_26f, 0),
     round(ebitda_26r, 0),
     round(ebitda_26r - ebitda_26b,  2),
-    round(case when ebitda_26b <> 0 then ebitda_26r / ebitda_26b * 100 else null end, 1),
+    round(case when ebitda_26b <> 0 then (ebitda_26r - ebitda_26b) / ebitda_26b * 100 else null end, 1),
     round(ebitda_26r - ebitda_26f,  2),
-    round(case when ebitda_26f <> 0 then ebitda_26r / ebitda_26f * 100 else null end, 1),
+    round(case when ebitda_26f <> 0 then (ebitda_26r - ebitda_26f) / ebitda_26f * 100 else null end, 1),
     round(ebitda_26r - ebitda_25r,  0)
 from numeros
 
