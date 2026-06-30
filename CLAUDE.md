@@ -442,6 +442,201 @@ with params as (
 
 O frontend envia `ano_selecionado`, `ano_anterior`, `mes_selecionado` nas chamadas de API. As convenções de CLAUDE.md sobre aliases de coluna (`25R`, `26B`, `26F`, `26R`) continuam válidas.
 
+### Schemas do Databricks
+
+- `financeiro.prd.*` — tabelas processadas/curadas (fatos e dimensões)
+- `financeiro.d365fo.*` — tabelas brutas do Dynamics 365 F&O
+- `financeiro.dcrm.*` — tabelas do CRM (Dynamics CRM)
+
+### `financeiro.prd.f_resultado` — realizado financeiro (contas 3 e 4)
+
+Fonte principal de resultados. Puxa do razão geral do D365FO, só contas 3 (receitas) e 4 (despesas). Exclui entidades IOA/clínicas (`KEF`, `IOA`, `IOL`, `IEA`, `LAP`, `SYT`, `ITC`, `I001`–`I006`, `IOP`). Cobre todas as verticais.
+
+| Coluna | Descrição |
+|--------|-----------|
+| `idEntidade` | Código da empresa no Dynamics — `upper(DataAreaId)` (ex: `'ESF'`, `'HEB'`, `'NWC'`) |
+| `idContaContabil` | Número da conta contábil (3xxxxx ou 4xxxxx) |
+| `idUnidadeOperacional` | Dimensão financeira: unidade operacional |
+| `idEstFiscal` | Estabelecimento fiscal |
+| `skUnidade` | `concat(idUnidadeOperacional, idEstFiscal)` → join com `d_classunidades.skunidade` |
+| `idBU` | Business unit ajustada (lógica de fallback por entidade/idEstFiscal) |
+| `idCentroCusto` | Centro de custo (string vazia se nulo) |
+| `idProjeto` | Projeto (string vazia se nulo) |
+| `skclasspnl` | `concat(idBU, idContaContabil, idCentroCusto, idProjeto)` → join com `d_classpnl` |
+| `Data_Transacao` | Data do lançamento |
+| `Valor_BRL` / `Valor_USD` / `Valor_CAD` | Valor convertido (via `d_cambio_brl`) |
+| `Moeda` | Moeda original da transação |
+| `Codigo_Participante` / `Nome_Participante` | Fornecedor ou cliente do lançamento |
+| `Origem` | Sempre `'Resultado'` |
+| `idComprovante` | Voucher do lançamento |
+| `IdFatura` | Número da fatura |
+| `Descricao_Transacao` | Texto do lançamento |
+| `skProjeto` | `concat(idEntidade, '_', idProjeto)` |
+
+### `financeiro.prd.f_ajustes` — ajustes manuais
+
+Mesma estrutura de colunas da `f_resultado`. Fonte: CSVs carregados manualmente. `Origem = 'Ajustes'`. `idEntidade` resolvido via `d_classunidades.CNPJ WHERE codPadrao = 'Sim'`. Colunas adicionais: `Nome_Colaborador`, `Descricao_Ajuste`.
+
+**Realizado completo = `f_resultado` + `f_ajustes` combinados.**
+
+### `financeiro.prd.f_orcamento` — orçamento financeiro
+
+Budget e forecasts financeiros. Fontes: CSVs (orçamento original, `Origem = 'Original'`) e `f_orcamento_as` (AllStrategy, `Origem = 'AllStrategy'`). AP entra só via CSV — AllStrategy exclui idEstFiscal da AP explicitamente. Mesmas chaves da `f_resultado`. Valores já convertidos em BRL, USD e CAD.
+
+| Coluna extra | Descrição |
+|-------------|-----------|
+| `Versao` | `'Budget'`, `'Forecast'`, etc. |
+| `idrollingforecast` | Versão do rolling: `0` = Budget original, `1+` = versões de rolling |
+| `nomerollingforecast` | Nome legível (ex: `'Forecast RF3'`, `'Budget'`) |
+| `vlrOrcamento_BRL` / `vlrOrcamento_USD` / `vlrOrcamento_CAD` | Valor orçado convertido |
+
+### `financeiro.prd.f_orcamentorollingforecast` — rolling financeiro composto
+
+**A view mais importante para análise combinada realizado vs orçado.** Une três camadas por unidade/ano, usando `idrollingforecast` como ponto de corte:
+
+1. **Realizado** (`mes ≤ idrollingforecast`): `f_resultado + f_ajustes`, `Versao = 'Realizado'`, `idrollingforecast = 88`
+2. **Forecast** (`mes > idrollingforecast`): `f_orcamento`
+3. **Budget** (`idrollingforecast = 0`): sempre presente
+
+Só unidades que existem em `link_unidades` aparecem aqui. Mesmas colunas do `f_orcamento`.
+
+**Modelo de versionamento (`idrollingforecast`):**
+
+| Valor | Significado |
+|-------|------------|
+| `0` | Budget original — sem rolling, sempre presente |
+| `1`, `2`, `3`... | Versões de rolling forecast (RF1, RF2, RF3...) |
+| `88` | Realizado — meses com dado real em `f_orcamentorollingforecast` |
+
+### `financeiro.prd.f_matriculas` — matrículas por linha de serviço
+
+Granularidade: **uma linha por serviço por matrícula** (não por aluno). Uma matrícula gera N linhas (Regular, Upselling, Material Didático, etc.). Fontes: tabelas PTR custom do Dynamics (`gmmatriculatable_ptr` + `gmservicosmatricula_ptr`) e CRM (`seb_matricula` para motivo de cancelamento). Só status 2 (Matriculado) e 3 (Cancelado).
+
+| Coluna | Descrição |
+|--------|-----------|
+| `sk_matricula` | ID da matrícula |
+| `tipo_matricula` | `'Matrícula'`, `'Rematrícula'`, `'Outros'` |
+| `id_estab_fiscal` | Estabelecimento fiscal → join com `d_classunidades.idEstFiscal` |
+| `id_entidade` | Código da entidade Dynamics |
+| `Status` | `'Matriculado'`, `'Cancelado'` |
+| `ano_letivo` | Ano letivo |
+| `Tipo_Servico` | `'Regular'`, `'Bilíngue'`, `'Upselling'`, `'Material Didático'`, `'Alimentação'`, `'Taxa'`, `'Evento'` |
+| `vlr_contrato` / `vlr_liquido` | Valor do contrato e valor líquido do serviço |
+| `percent_desconto` | Percentual de desconto |
+| `data_matricula` / `data_cancelamento` | Datas |
+| `motivo_cancelamento` | Motivo (CRM) |
+| `Turno_Tratado` | `'Integral'`, `'Manhã'`, `'Tarde'`, `'Noite'` |
+
+### `financeiro.prd.gerenciadordefontescontabeis` — razão completo D365FO
+
+Fonte mais abrangente: **todas as contas** (1, 2, 3, 4, 9) de **todas as entidades** (incluindo IOA). Sem conversão de moeda — `Valor` na moeda original. Inclui lançamentos de abertura, fechamento e do ano.
+
+| Coluna | Descrição |
+|--------|-----------|
+| `Entidade` | DataAreaId (= `idEntidade` da f_resultado, nome diferente) |
+| `Conta_Contabil` | Número da conta — todas as classes |
+| `Estab_Fiscal` | Estabelecimento fiscal (= `idEstFiscal`, nome diferente) |
+| `BU` | Business unit bruta |
+| `Centro_Custo` / `Unidade_Operacional` | Dimensões financeiras |
+| `Valor` | Valor na **moeda original** (sem conversão) |
+| `Moeda` | Moeda da transação |
+| `Calendario_fiscal` | `'Transação de Abertura'` / `'Transação do Ano'` / `'Transação de Encerramento'` |
+| `PartidaContrapartida` | `'Partida'` (débito, positivo) / `'Contrapartida'` (crédito, negativo) |
+| `Dimensao_alterada` | Qual dimensão mudou entre partida e contrapartida |
+| `Categoria_do_Lancamento` | Categoria decodificada do Dynamics (68 tipos) |
+| `Participante` | `'Fornecedor'` / `'Cliente'` / NULL |
+| `Mes`, `Ano` | Extraídos de `AccountingDate` |
+
+**Join com `d_classunidades`:** `concat(Unidade_Operacional, Estab_Fiscal) = skunidade`
+
+**Quando usar o gerenciador vs f_resultado:**
+- Balanço patrimonial (contas 1 e 2) → **gerenciador**
+- Lançamentos de abertura/encerramento → **gerenciador** (filtrar `Calendario_fiscal`)
+- Análise débito/crédito → **gerenciador** (`PartidaContrapartida`)
+- Entidades IOA/clínicas → **gerenciador**
+- P&L em BRL/USD/CAD → **f_resultado**
+
+**Atenção:** nomes de coluna diferem entre as duas — `Entidade` ≠ `idEntidade`, `Conta_Contabil` ≠ `idContaContabil`, `Valor` único ≠ `Valor_BRL/USD/CAD`.
+
+### `financeiro.prd.d_planodecontas` — plano de contas
+
+Join: `Cod_Conta = f_resultado.idContaContabil`
+
+Os flags `Ebitda` e `Recorrente` ficam **aqui**, não na tabela fato — diferente da `mv_f_apresentacao`. Para filtrar EBITDA em `f_resultado`, é obrigatório fazer join com esta dimensão.
+
+| Coluna | Descrição |
+|--------|-----------|
+| `Cod_Conta` | Número da conta — chave de join |
+| `Nome_Conta` | Nome da conta (PT) |
+| `Nome_ContaInglish` | Nome da conta (EN) |
+| `Ebitda` | Flag se a conta entra no EBITDA |
+| `Recorrente` | Flag se é recorrente |
+| `GrupoCustos` / `SubGrupoCustos` | Agrupamentos analíticos de custo |
+| `ClassificacaoConta` | Classificação da conta |
+| `ClassificacaoRateio` | Classificação de rateio |
+
+### `financeiro.prd.d_classpnl` — classificação P&L
+
+Dimensão de linhas do DRE. Cada linha tem flags indicando em quais subtotais ela entra.
+
+Join: `skclasspnl = concat(idBU, idContaContabil, idCentroCusto, idProjeto)`
+
+| Coluna | Descrição |
+|--------|-----------|
+| `idBU` | Business unit |
+| `skPnL` | Chave da linha P&L |
+| `Nome` | Nome da linha do DRE |
+| `Ordem` | Ordem de exibição |
+| `Subtotal` | Se é linha de subtotal (1/0) |
+
+Flags de agregação (1 = entra neste subtotal): `ROL`, `CMV`, `Total_Custos_Diretos`, `Margem_Contribuicao`, `Total_Custos_Despesas_Fixas`, `Total_Despesas_Vendas`, `EBITDA`, `EBITDA_sem_Rateio`, `EBIT`, `NOPAT`, `Resultado_Financeiro_Liquido`, `Renda_Antes_dos_Impostos`, `Resultado_Liquido`, `EBITDA_Contabil`, `EBT`, `Receita_Ensino_Bruta`, `Receita_Ensino`, `ROB`, `ROL_Antes_Deducoes`, `Total_FOPAG_Beneficios`, `Receita_de_Franquias`
+
+### `financeiro.prd.d_centrodecusto` — centros de custo
+
+Join: `idCentroCustos = f_resultado.idCentroCusto`
+
+Colunas: `idCentroCustos`, `NomeCentroCustos`, `Area`, `Diretoria`, `NameCostCenter`
+
+### `financeiro.prd.d_cambio_brl` — câmbio
+
+Join por data: `d_cambio_brl.Data_Cambio = Data_Transacao`
+Colunas: `CAD_BRL`, `USD_BRL` — usadas internamente por `f_resultado` e `f_orcamento`.
+
+### `financeiro.prd.link_unidades` — filtro de rolling forecast
+
+Contém as unidades que participam do rolling forecast. Colunas: `skUnidadeFct`, `skUnidade`. Unidades fora desta tabela não aparecem em `f_orcamentorollingforecast`.
+
+### Tabelas PTR (custom Dynamics)
+
+Tabelas criadas especificamente para o Grupo SEB no Dynamics 365, sufixo `_ptr`, em `financeiro.d365fo.*`:
+- `gmmatriculatable_ptr` — dados de matrícula
+- `gmservicosmatricula_ptr` — serviços por matrícula
+
+### Joins universais
+
+```sql
+-- Financeiro → unidade
+f_resultado.skUnidade = d_classunidades.skunidade
+
+-- Gerenciador → unidade
+concat(gerenciador.Unidade_Operacional, gerenciador.Estab_Fiscal) = d_classunidades.skunidade
+
+-- Financeiro → conta contábil
+f_resultado.idContaContabil = d_planodecontas.Cod_Conta
+
+-- Financeiro → centro de custo
+f_resultado.idCentroCusto = d_centrodecusto.idCentroCustos
+
+-- Financeiro → classificação P&L
+f_resultado.skclasspnl = d_classpnl  -- via concat(idBU, idContaContabil, idCentroCusto, idProjeto)
+
+-- Matrículas → unidade
+f_matriculas.id_estab_fiscal = d_classunidades.idEstFiscal
+
+-- Entidade → nome (CNPJ = código de agrupamento, não CNPJ jurídico)
+d_classunidades.CNPJ WHERE codPadrao = 'Sim' AND idEstFiscal = <idEstFiscal>
+```
+
 ### Pastas de queries
 
 As pastas `backend/queries/financeiro/` e `backend/queries/diretorias/` existem mas estão **vazias** — prontas para futuras verticais.
