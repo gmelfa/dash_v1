@@ -295,39 +295,54 @@ O Grupo SEB opera sob múltiplos CNPJs. `HEB` é um deles e agrupa as **escolas 
 
 ### mv_f_apresentacao — tabela central de dados financeiros
 
-Apesar do nome "view materializada", é a principal fonte de dados para quase todas as queries financeiras Premium.
+View materializada. Owner: Jonas Jobel. Atualizada automaticamente seg–sex às 03:00 BRT.
 
-- Owner: Jonas Jobel
-- Causa fan-out via tabela `link_unidades` quando feito join externo — NÃO usar como base de join para agregar valores com d_classunidades
-- Para contornar o fan-out: filtrar por `f.Vertical = 'Premium'` diretamente na mv
+**5 fontes combinadas via UNION ALL:**
 
-**Colunas relevantes:**
+| Fonte | Origem na view |
+|-------|---------------|
+| `f_resultado` | `'Resultado'` |
+| `f_ajustes` | `'Ajustes'` |
+| `f_orcamento` | `Versao` (ex: `'Budget'`, `'Forecast'`) |
+| `f_alunos` | `'Alunos'` — `skclasspnl = '400000000'` |
+| `f_orcamentoalunos` | `Versao` — `skclasspnl = '400000000'` |
 
-| Coluna | Valores | Significado |
-|--------|---------|-------------|
-| `Vertical` | `'Premium'`, etc. | Filtra a vertical |
-| `Nome_Unidade` | nome da escola | Usado para excluir CSC Local, Diretoria, Ipiranga |
-| `Origem` | `'Resultado'`, `'Ajustes'`, `'Forecast'`, `'Budget'`, `'Alunos'` | Tipo do lançamento |
-| `Data_Transacao` | date | Data do lançamento (ano/mês) |
-| `Ebitda` | `'Sim'`/`'Não'` | Se a linha entra no escopo do EBITDA |
-| `Recorrente` | `'Sim'`/`'Não'` | Se é recorrente (exclui extraordinários) |
-| `ROL` | `1`/`0` | Se entra na Receita Operacional Líquida |
-| `Nome_PnL` | ex: `'FOPAG Direto (CLT- PJ)'` | Linha do DRE — nível de agregação |
-| `skclasspnl` | ex: `'400000000'` | Chave de classificação PnL (`'400000000'` = alunos) |
-| `Valor` | numérico | **Receitas armazenadas como negativo** — sempre usar `Valor * -1` para receitas |
-| `skUnidade` | string | Chave de unidade |
+**Filtro:** `YEAR(Data_Transacao) > 2023` — a view só contém dados a partir de 2024.
+
+**Cadeia de joins interna:**
+- `skUnidade` → `link_unidades.skUnidadeFct` → `link_unidades.skUnidade` → `d_classunidades.skunidade`
+- `skclasspnl` → `link_PnL.skclasspnl` → `link_PnL.skPnL` → `d_classpnl.skPnL`
+
+**Colunas expostas:**
+
+| Coluna | Origem | Significado |
+|--------|--------|-------------|
+| `skUnidade` | fato | Chave de unidade |
+| `skclasspnl` | fato | Chave de classificação PnL |
+| `Data_Transacao` | fato | Data do lançamento |
+| `Origem` | fato | `'Resultado'`, `'Ajustes'`, `'Budget'`, `'Forecast'`, `'Alunos'` |
+| `Vertical` | d_classunidades | Vertical da unidade |
+| `Grupo` | d_classunidades | Grupo da unidade |
+| `Nome_Unidade` | d_classunidades | Nome da escola |
+| `Nome_PnL` | d_classpnl | Linha do DRE |
+| `Ebitda` | **link_PnL** | `'Sim'`/`'Não'` — flag de EBITDA |
+| `Recorrente` | **link_PnL** | `'Sim'`/`'Não'` — flag de recorrência |
+| `ROL` | d_classpnl | `1`/`0` — flag de ROL |
+| `idEstFiscal` | d_classunidades | Código do estabelecimento fiscal da unidade |
+| `Valor` | fato (sum) | **Receitas negativas** — usar `Valor * -1` para exibir positivo |
+
+**NÃO expõe:** `CNPJ`
 
 **Padrão de filtro para "realizado":** `Origem IN ('Resultado', 'Ajustes')`
 **Padrão para Forecast:** `Origem = 'Forecast'`
 **Padrão para Budget:** `Origem = 'Budget'`
 
-**NÃO expõe:** `idEstFiscal`, `CNPJ`
+### link_PnL — ponte entre skclasspnl e d_classpnl
 
-### link_pnl — granularidade dentro do Nome_PnL
+Tabela de ligação que resolve o join entre as tabelas fato e a dimensão P&L. É dela que vêm os flags `Ebitda` e `Recorrente` (não do `d_planodecontas`).
 
-Join: `f.skclasspnl = lp.skclasspnl` → retorna `lp.Nome_Conta`
-
-Usado quando se precisa de mais detalhe que `Nome_PnL`. Exemplo: dentro de `'FOPAG Direto (CLT- PJ)'`, o `Nome_Conta` diferencia Salários, Férias, INSS, FGTS, etc.
+Join: `link_PnL.skclasspnl = f.skclasspnl` → retorna `link_PnL.skPnL`, `link_PnL.Ebitda`, `link_PnL.Recorrente`
+Depois: `link_PnL.skPnL = d_classpnl.skPnL` → retorna `Nome_PnL`, `ROL`, demais flags
 
 ### f_orcamentoalunosrollingforecast (rolling forecast de alunos — query 01 e 02)
 
