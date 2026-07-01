@@ -220,6 +220,30 @@ A tabela tem **múltiplas linhas por unidade**: a linha real (`codPadrao = 'Sim'
 | `idEstFiscal` | N linhas por unidade | Só usar com `codPadrao = 'Sim'` ou filtros de Nome |
 | `idUnidadeOperacional` | Sempre `11101001` em f_alunos — código de sistema | **Nunca usar como join key** |
 
+**Schema completo de `d_classunidades`:**
+
+| Coluna | Tipo | Descrição |
+|--------|------|-----------|
+| `skunidade` | BIGINT | Surrogate key — join 1:1 com tabelas fato (armazenado como double no CSV, convertido para bigint) |
+| `idUnidOperacional` | STRING | Unidade operacional (nome diferente de `idUnidadeOperacional` nas tabelas fato) |
+| `idEstFiscal` | STRING | Estabelecimento fiscal |
+| `codPadrao` | STRING | `'Sim'` = linha primária, `'Não'` = CSC Local / Diretoria / Franquias |
+| `Nome` | STRING | Nome da escola/entidade |
+| `Grupo` | STRING | Grupo da unidade |
+| `Vertical` | STRING | Vertical do SEB |
+| `CSCLocal` | STRING | Flag de CSC Local |
+| `Banco` | STRING | Banco da unidade |
+| `CNPJ` | STRING | Código de agrupamento interno (não é CNPJ jurídico — ex: `'HEB'`, `'Pueri Domus'`, `'ESF'`) |
+| `Holding` | STRING | Holding da unidade (ex: `'HEB'`, `'SEB'`, `'NWC'`) |
+| `Status` | STRING | Status da unidade (ativo/inativo) |
+| `idBU` | STRING | Business unit |
+| `Cidade` | STRING | Cidade |
+| `Estado` | STRING | Estado |
+| `UF` | STRING | Sigla do estado |
+| `Pais` | STRING | País |
+| `Continente` | STRING | Continente |
+| `old` | STRING | Flag de legado |
+
 Nomes de coluna no Databricks (diferem dos aliases no Excel exportado):
 - `idEstFiscal` (Excel: `codEstFiscal`)
 - `Nome` (Excel: `desNome`)
@@ -343,6 +367,25 @@ Tabela de ligação que resolve o join entre as tabelas fato e a dimensão P&L. 
 
 Join: `link_PnL.skclasspnl = f.skclasspnl` → retorna `link_PnL.skPnL`, `link_PnL.Ebitda`, `link_PnL.Recorrente`
 Depois: `link_PnL.skPnL = d_classpnl.skPnL` → retorna `Nome_PnL`, `ROL`, demais flags
+
+### `financeiro.prd.f_orcamentoalunos` — orçamento de alunos (fonte da mv_f_apresentacao)
+
+Carregado de CSV. Usado na `mv_f_apresentacao` como 5ª fonte (Versao como Origem, `skclasspnl = '400000000'`). Tem granularidade maior que o que a view expõe.
+
+| Coluna | Tipo | Descrição |
+|--------|------|-----------|
+| `idUnidadeOperacional` | STRING | Unidade operacional |
+| `idEstFiscal` | STRING | Estabelecimento fiscal |
+| `skUnidade` | STRING | Surrogate key — join com `d_classunidades.skunidade` |
+| `idProduto` | STRING | Código do produto/curso |
+| `desProduto` | STRING | Descrição do produto |
+| `Servico` | STRING | Tipo de serviço |
+| `CentroCusto` | STRING | Centro de custo |
+| `Turno` | STRING | Turno (Integral, Manhã, Tarde, Noite) |
+| `Versao` | STRING | `'Budget'`, `'Forecast'`, etc. |
+| `Data` | DATE | Mês de referência |
+| `QtdAlunos` | INT | Quantidade de alunos orçada |
+| `nomerollingforecast` | STRING | `'Budget'` se Versao=Budget, senão `Versao + ' ' + coluna[11]` |
 
 ### f_orcamentoalunosrollingforecast (rolling forecast de alunos — query 01 e 02)
 
