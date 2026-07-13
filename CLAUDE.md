@@ -387,13 +387,9 @@ Carregado de CSV. Usado na `mv_f_apresentacao` como 5ª fonte (Versao como Orige
 | `QtdAlunos` | INT | Quantidade de alunos orçada |
 | `nomerollingforecast` | STRING | `'Budget'` se Versao=Budget, senão `Versao + ' ' + coluna[11]` |
 
-### f_orcamentoalunosrollingforecast (rolling forecast de alunos — query 01 e 02)
+### f_orcamentoalunosrollingforecast — descontinuado
 
-- Join com d_classunidades: `dc.skunidade = f.skUnidade` (1:1 para unidades Premium)
-- Coluna `Versao`: `'Budget'` (meses 1–12), `'Forecast'` (meses 5–12), `'Realizado'` (meses 1–4)
-- Lógica de média YTD (contagem de alunos é média mensal, não acumulado):
-  - `mes_ytd ≤ 3` → snapshot do mês atual (`Versao = 'Realizado'`, `month = mes_ytd`)
-  - `mes_ytd ≥ 4` → soma desde março / (mes_ytd - 2): Realizado meses 3–4 + Forecast meses 5–mes_ytd
+Não usar em novas queries. Migrado para `f_orcamentoalunos` com filtro direto por `Versao = 'Budget'` / `Versao = 'Forecast'`.
 
 ### f_alunos_forecastrealizado (forecast histórico de alunos — query 04)
 
@@ -539,32 +535,27 @@ Mesma estrutura de colunas da `f_resultado`. Fonte: CSVs carregados manualmente.
 
 ### `financeiro.prd.f_orcamento` — orçamento financeiro
 
-Budget e forecasts financeiros. Fontes: CSVs (orçamento original, `Origem = 'Original'`) e `f_orcamento_as` (AllStrategy, `Origem = 'AllStrategy'`). AP entra só via CSV — AllStrategy exclui idEstFiscal da AP explicitamente. Mesmas chaves da `f_resultado`. Valores já convertidos em BRL, USD e CAD.
+**Fonte padrão para Budget e Forecast** — substituiu o uso de `f_orcamentorollingforecast`. Filtro direto por `Versao`, sem lógica de rolling.
+
+Fontes: CSVs (orçamento original) e `f_orcamento_as` (AllStrategy). AP entra só via CSV. Mesmas chaves da `f_resultado`. Valores já convertidos em BRL, USD e CAD.
 
 | Coluna extra | Descrição |
 |-------------|-----------|
-| `Versao` | `'Budget'`, `'Forecast'`, etc. |
-| `idrollingforecast` | Versão do rolling: `0` = Budget original, `1+` = versões de rolling |
-| `nomerollingforecast` | Nome legível (ex: `'Forecast RF3'`, `'Budget'`) |
+| `Versao` | `'Budget'`, `'Forecast'`, etc. — **filtro principal** |
 | `vlrOrcamento_BRL` / `vlrOrcamento_USD` / `vlrOrcamento_CAD` | Valor orçado convertido |
 
-### `financeiro.prd.f_orcamentorollingforecast` — rolling financeiro composto
+**Padrão de uso:**
+```sql
+-- Budget
+where Versao = 'Budget'
 
-**A view mais importante para análise combinada realizado vs orçado.** Une três camadas por unidade/ano, usando `idrollingforecast` como ponto de corte:
+-- Forecast
+where Versao = 'Forecast'
+```
 
-1. **Realizado** (`mes ≤ idrollingforecast`): `f_resultado + f_ajustes`, `Versao = 'Realizado'`, `idrollingforecast = 88`
-2. **Forecast** (`mes > idrollingforecast`): `f_orcamento`
-3. **Budget** (`idrollingforecast = 0`): sempre presente
+### `financeiro.prd.f_orcamentorollingforecast` — descontinuado
 
-Só unidades que existem em `link_unidades` aparecem aqui. Mesmas colunas do `f_orcamento`.
-
-**Modelo de versionamento (`idrollingforecast`):**
-
-| Valor | Significado |
-|-------|------------|
-| `0` | Budget original — sem rolling, sempre presente |
-| `1`, `2`, `3`... | Versões de rolling forecast (RF1, RF2, RF3...) |
-| `88` | Realizado — meses com dado real em `f_orcamentorollingforecast` |
+Não usar em novas queries. A empresa migrou para `f_orcamento` com filtro direto por `Versao`.
 
 ### `financeiro.prd.f_matriculas` — matrículas por linha de serviço
 
@@ -660,9 +651,9 @@ Colunas: `idCentroCustos`, `NomeCentroCustos`, `Area`, `Diretoria`, `NameCostCen
 Join por data: `d_cambio_brl.Data_Cambio = Data_Transacao`
 Colunas: `CAD_BRL`, `USD_BRL` — usadas internamente por `f_resultado` e `f_orcamento`.
 
-### `financeiro.prd.link_unidades` — filtro de rolling forecast
+### `financeiro.prd.link_unidades` — mapeamento de unidades
 
-Contém as unidades que participam do rolling forecast. Colunas: `skUnidadeFct`, `skUnidade`. Unidades fora desta tabela não aparecem em `f_orcamentorollingforecast`.
+Mapeia `skUnidade` das tabelas fato para o `skUnidade` da `d_classunidades`. Colunas: `skUnidadeFct`, `skUnidade`. Usada internamente pela `mv_f_apresentacao`.
 
 ### Tabelas PTR (custom Dynamics)
 
@@ -705,7 +696,7 @@ As pastas `backend/queries/financeiro/` e `backend/queries/diretorias/` existem 
 
 ### Implementações recentes
 
-- **Query 02 — Rolling forecast por unidade**: CTE `fcst_alu_por_unidade` adicionada, fazendo join direto em `f_orcamentoalunosrollingforecast` via `skunidade` (contorna fan-out da mv_f_apresentacao). Lógica de snapshot vs. acumulado implementada.
+- **Query 02 — Rolling forecast por unidade**: migração pendente — ainda usa `f_orcamentoalunosrollingforecast`. Deve ser reescrita para usar `f_orcamento` / `f_orcamentoalunos` com filtro simples por `Versao`.
 
 ### Débitos técnicos conhecidos
 
