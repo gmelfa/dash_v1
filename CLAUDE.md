@@ -293,6 +293,8 @@ Total              | subtotal + Ipiranga
 
 Isso se aplica a CAPEX e qualquer outra métrica por unidade que inclua Ipiranga. **Já implementado nas queries existentes** — ao escrever novas queries por unidade, replicar esse padrão.
 
+**Exceção confirmada — query 03 (DRE Premium YTD):** por ser um DRE único e consolidado (sem linha separada por unidade), a query 03 exclui Ipiranga inteiramente do `base` (`Nome_Unidade <> 'Pueri Domus Ipiranga'`) — ela não entra em nenhum subtotal nem no total final desse DRE. Confirmado com o usuário em 2026-07-20 que esse é o comportamento correto (bate com o BI), mesmo sendo diferente da regra "incluir no total final" acima, que vale para as queries por unidade (02, CAPEX, etc.). A mesma query também exclui `CSC Local` e `Diretoria` (impacto pequeno, poucos R$ mil).
+
 Exclusão intencional (ensino superior, NÃO são Premium):
 ```sql
 dc.idEstFiscal NOT IN ('1501', '1502', '1601', '5401', '6101')
@@ -696,7 +698,8 @@ As pastas `backend/queries/financeiro/` e `backend/queries/diretorias/` existem 
 
 ### Implementações recentes
 
-- **Query 02 — Rolling forecast por unidade**: migração pendente — ainda usa `f_orcamentoalunosrollingforecast`. Deve ser reescrita para usar `f_orcamento` / `f_orcamentoalunos` com filtro simples por `Versao`.
+- **Queries 01 e 02 — migradas do rolling forecast** (2026-07-20): ambas paravam de usar `f_orcamentoalunosrollingforecast` e agora leem alunos forecast direto da `mv_f_apresentacao` (`Origem = 'Forecast'`), sem join com `d_classunidades`/`link_unidades`. O filtro `dc.CNPJ != 'HEB'` foi removido dessas duas queries — confirmado obsoleto, porque os `idEstFiscal` da Premium não pertencem à HEB.
+- **Decisão de negócio — sem rolling forecast**: o projeto não usa mais a lógica de blend Realizado+Forecast por mês (rolling forecast). Toda coluna `26F` deve ler `Origem = 'Forecast'` direto — a própria fonte de dados já espelha o Realizado nos meses anteriores ao início do forecast real, tornando o fallback manual redundante. Essa premissa pode mudar de novo (já mudou várias vezes) — reconferir no Databricks antes de reintroduzir lógica de blend.
 
 ### Débitos técnicos conhecidos
 

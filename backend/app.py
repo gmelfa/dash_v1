@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request, g
 import time
+import re
 from flask_cors import CORS
 
 _query_cache = {}  # { "query_id_mes_ano": resultado }
@@ -313,6 +314,11 @@ def execute_saved_query(query_id):
                 if 'sort_order' in columns:
                     sort_order_index = columns.index('sort_order')
                     columns = [col for col in columns if col != 'sort_order']
+
+                # Colunas como "3M 25 R" trazem um número de meses fixo no alias SQL
+                # (não é possível parametrizar nome de coluna no Databricks) — substitui
+                # pelo mes_selecionado real de cada request antes de retornar ao frontend
+                columns = [re.sub(r'^\d+M ', f'{mes_selecionado}M ', col) for col in columns]
 
                 result = []
                 for row in rows:

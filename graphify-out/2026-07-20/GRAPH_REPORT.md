@@ -1,16 +1,16 @@
 # Graph Report - dash_v1  (2026-07-20)
 
 ## Corpus Check
-- 40 files · ~45,338 words
+- 41 files · ~45,641 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 307 nodes · 361 edges · 35 communities (30 shown, 5 thin omitted)
+- 309 nodes · 362 edges · 36 communities (30 shown, 6 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `172495b3`
+- Built from commit: `3621fbf0`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -35,6 +35,7 @@
 - Favicon Asset
 - Vite Logo Asset
 - React Logo Asset
+- prune_graphify_backups.sh
 
 ## God Nodes (most connected - your core abstractions)
 1. `QueryLoader` - 15 edges
@@ -68,7 +69,7 @@
 - **mv_f_apresentacao UNION ALL Sources** — claude_mv_f_apresentacao, claude_f_resultado, claude_f_ajustes, claude_f_orcamento, claude_f_alunos, claude_f_orcamentoalunos [EXTRACTED 1.00]
 - **Premium Vertical Business Rules** — claude_vertical_premium, claude_ipiranga_rule, claude_vertical_ap, claude_d_classunidades [EXTRACTED 1.00]
 
-## Communities (35 total, 5 thin omitted)
+## Communities (36 total, 6 thin omitted)
 
 ### Community 0 - "Flask App Routes & Query API"
 Cohesion: 0.07
@@ -131,19 +132,19 @@ Cohesion: 0.67
 Nodes (4): Ipiranga Rule (seb.md), Vertical Premium (seb.md), Ipiranga (1040) Special Rule, Vertical Premium
 
 ## Knowledge Gaps
-- **56 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+51 more)
+- **57 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+52 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `Frontend Dev Tooling` to `Frontend Runtime Dependencies`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `User` (e.g. with `admin_create_user()` and `register()`) actually correct?**
   _`User` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `name`, `private`, `version` to the rest of the system?**
-  _56 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _57 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Flask App Routes & Query API` be split into smaller, more focused modules?**
   _Cohesion score 0.06794871794871794 - nodes in this community are weakly interconnected._
 - **Should `Query Loader Service` be split into smaller, more focused modules?**

@@ -5,9 +5,9 @@
     "semantic_hash": "70626d6a4f6d3808ce4df623b5775ab6"
   },
   "backend/app.py": {
-    "mtime": 1779816306.0275438,
-    "ast_hash": "7469ea331cd73d2f9435952267a2016e",
-    "semantic_hash": "7469ea331cd73d2f9435952267a2016e"
+    "mtime": 1784579007.5997684,
+    "ast_hash": "e2a885c956ce666ceb35bc3b65d57f2a",
+    "semantic_hash": ""
   },
   "backend/auth.py": {
     "mtime": 1779906044.7927976,
@@ -190,8 +190,8 @@
     "semantic_hash": "13a04f7b3de610e73f8bb4c9ba2f8854"
   },
   "CLAUDE.md": {
-    "mtime": 1784552092.3233376,
-    "ast_hash": "9c5e20b2a4b082a553c6370a7fc7f984",
+    "mtime": 1784578728.1305907,
+    "ast_hash": "f9dc1c3b950d89b72d9a8060a3d01977",
     "semantic_hash": ""
   },
   "backend/requirements.txt": {
