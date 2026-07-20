@@ -11,7 +11,6 @@ with params as (
         'Premium'            as vertical
 ),
 
--- puxa tudo do período dos dois anos, excluindo unidades que não são escolas
 base as (
     select
         f.Origem,
@@ -27,51 +26,13 @@ base as (
         p.ano_anterior,
         p.mes_ytd
     from financeiro.prd.mv_f_apresentacao f
-    left join financeiro.prd.link_unidades     lu on lu.skUnidadeFct = f.skUnidade
-    left join financeiro.prd.d_classunidades   dc on dc.skunidade    = lu.skUnidade
     cross join params p
     where f.Vertical = p.vertical
       and year(f.Data_Transacao)  in (p.ano_atual, p.ano_anterior)
       and month(f.Data_Transacao) between 1 and p.mes_ytd
       and f.Nome_Unidade not like '%CSC Local%'
       and f.Nome_Unidade not like '%Diretoria Premium%'
-      and f.skUnidade not in ('111010011040', '111020011040', '1040')
-      and dc.CNPJ != 'HEB'
-),
-
--- idEstFiscal das unidades Premium sem Ipiranga — distinct evita duplicação no join com rolling forecast
-premium_ids as (
-    select distinct idEstFiscal
-    from financeiro.prd.d_classunidades
-    where Vertical = 'Premium'
-      and idEstFiscal != '1040'
-),
-
--- alunos 26F: snapshot do mês para jan-mar
--- forecast só começa no mês 5 (Forecast 4+8), então meses 1-3 usam Realizado
-fcst_alunos_snap as (
-    select coalesce(sum(f.QtdAlunos), 0) as qtd
-    from financeiro.prd.f_orcamentoalunosrollingforecast f
-    inner join premium_ids d on f.idEstFiscal = d.idEstFiscal
-    cross join params p
-    where f.Versao = 'Realizado'
-      and year(f.Data) = p.ano_atual
-      and month(f.Data) = p.mes_ytd
-),
-
--- alunos 26F: soma mar-mes_ytd para média abr+
--- rolling forecast: Realizado para meses 3-4 + Forecast para meses 5 em diante
-fcst_alunos_soma as (
-    select coalesce(sum(f.QtdAlunos), 0) as qtd
-    from financeiro.prd.f_orcamentoalunosrollingforecast f
-    inner join premium_ids d on f.idEstFiscal = d.idEstFiscal
-    cross join params p
-    where year(f.Data) = p.ano_atual
-      and (
-          (f.Versao = 'Realizado' and month(f.Data) between 3 and least(p.mes_ytd, 4))
-          or
-          (f.Versao = 'Forecast'  and month(f.Data) between 5 and p.mes_ytd)
-      )
+      and f.idEstFiscal != '1040'
 ),
 
 -- agrega tudo em uma linha só — cada coluna é um cenário/período
@@ -82,13 +43,13 @@ numeros_raw as (
         -- alunos: snapshot do mês exato (usado quando mes_ytd <= 3)
         sum(case when ano = ano_anterior and mes = mes_ytd and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_25r_snap,
         sum(case when ano = ano_atual    and mes = mes_ytd and Origem = 'Budget'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26b_snap,
-        (select qtd from fcst_alunos_snap)                                                                                             as alunos_26f_snap,
+        sum(case when ano = ano_atual    and mes = mes_ytd and Origem = 'Forecast' and skclasspnl = '400000000' then Valor else 0 end) as alunos_26f_snap,
         sum(case when ano = ano_atual    and mes = mes_ytd and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26r_snap,
 
         -- alunos: soma acumulada desde março (usado quando mes_ytd >= 4, dividir por mes_ytd - 2)
         sum(case when ano = ano_anterior and mes >= 3 and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_25r_soma,
         sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Budget'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26b_soma,
-        (select qtd from fcst_alunos_soma)                                                                                         as alunos_26f_soma,
+        sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Forecast' and skclasspnl = '400000000' then Valor else 0 end) as alunos_26f_soma,
         sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26r_soma,
 
         -- receita de ensino em reais brutos, sem /1000 — usada só para calcular o ticket médio
