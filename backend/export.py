@@ -146,11 +146,10 @@ def export_batch():
         prs.core_properties.title = "Resumo - Grupo SEB (YTD Outubro)"
         prs.core_properties.subject = "Resumo - Grupo SEB (YTD Outubro)"
         
-        # Carregar queries usando QueryLoader
+        # Reusa o QueryLoader já carregado pelo app.py em vez de criar um novo
         try:
-            from query_loader import QueryLoader
-            query_loader = QueryLoader(queries_dir='queries', db_path=':memory:')
-            query_loader.load_all_queries()
+            from app import query_loader
+            query_loader.check_for_updates()
             all_queries_data = query_loader.list_queries()
             print(f"DEBUG: Loaded {len(all_queries_data)} queries from QueryLoader")
         except Exception as e:
