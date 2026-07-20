@@ -223,10 +223,5 @@
     "mtime": 1784552092.3233376,
     "ast_hash": "372013a64fe8c806a21192063f94fb77",
     "semantic_hash": ""
-  },
-  "scripts/prune_graphify_backups.sh": {
-    "mtime": 1784567638.7768822,
-    "ast_hash": "f8dafa09d3125d851e9c3c9024145ba2",
-    "semantic_hash": ""
   }
 }
