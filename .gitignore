@@ -42,3 +42,8 @@ yarn-error.log*
 .coverage
 htmlcov/
 .pytest_cache/
+
+# graphify - graph.json, GRAPH_REPORT.md, graph.html and manifest.json are committed
+graphify-out/cost.json
+graphify-out/.graphify_python
+graphify-out/.graphify_root
