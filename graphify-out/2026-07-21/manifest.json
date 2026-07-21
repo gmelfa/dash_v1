@@ -5,8 +5,8 @@
     "semantic_hash": "70626d6a4f6d3808ce4df623b5775ab6"
   },
   "backend/app.py": {
-    "mtime": 1784578993.0996153,
-    "ast_hash": "724d2328085203d1b140941b7c43f3a9",
+    "mtime": 1784579007.5997684,
+    "ast_hash": "e2a885c956ce666ceb35bc3b65d57f2a",
     "semantic_hash": ""
   },
   "backend/auth.py": {

@@ -30,7 +30,6 @@ fopag_base AS (
       AND f.Ebitda     = 'Sim'
       AND f.Recorrente = 'Sim'
       AND f.Nome_PnL   = 'Folha de Pagamento'
-      AND lp.Nome_Conta NOT IN ('Prêmio', 'Provisão convenção coletiva')
 ),
 
 rol_base AS (
@@ -104,10 +103,12 @@ itens AS (
             WHEN 'FGTS Sobre Salários'             THEN 10
             WHEN 'FGTS Sobre Férias'               THEN 11
             WHEN 'FGTS Sobre 13º Salário'          THEN 12
-            WHEN 'Férias'                          THEN 13
-            WHEN 'Bolsa Estágio'                   THEN 14
-            WHEN 'Ajuda de Custo'                  THEN 15
-            WHEN '13º Salário'                     THEN 16
+            WHEN 'Provisão convenção coletiva'      THEN 13
+            WHEN 'Férias'                          THEN 14
+            WHEN 'Bolsa Estágio'                   THEN 15
+            WHEN 'Ajuda de Custo'                  THEN 16
+            WHEN '13º Salário'                     THEN 17
+            WHEN 'Prêmio'                          THEN 18
             ELSE 50
         END AS sort_order
     FROM metricas m
@@ -117,12 +118,17 @@ itens AS (
 -- Linhas individuais
 SELECT
     Nome_Conta AS Descricao,
-    `AntR`, `Ajustes`, `AntTotal`, `pct_ROL_Ant`,
-    `AtuF`, `pct_ROL_AtuF`,
-    `AtuR`, `pct_ROL_AtuR`,
-    `Var_Abs_FcstR`, `Var_Pct_FcstR`,
-    `Var_Abs_AntR`,  `Var_Pct_AntR`,
-    `Var_pp_FcstR`,
+    `AntTotal`      AS `3M 25 R`,
+    `pct_ROL_Ant`   AS `25R|% ROL`,
+    `AtuF`          AS `3M 26 F`,
+    `pct_ROL_AtuF`  AS `26F|% ROL`,
+    `AtuR`          AS `3M 26 R`,
+    `pct_ROL_AtuR`  AS `26R|% ROL`,
+    `Var_Abs_FcstR` AS `Var #|26 x Fcst`,
+    `Var_Pct_FcstR` AS `Var %|26 x Fcst`,
+    `Var_Abs_AntR`  AS `Var #|26 x 25`,
+    `Var_Pct_AntR`  AS `Var %|26 x 25`,
+    `Var_pp_FcstR`  AS `Var %|p.p.`,
     sort_order
 FROM itens
 
@@ -131,8 +137,6 @@ UNION ALL
 -- Total Folha de Pagamento
 SELECT
     'Folha de Pagamento',
-    ROUND(SUM(m.ant_r), 0),
-    ROUND(SUM(m.ant_adj), 0),
     ROUND(SUM(m.ant_r + m.ant_adj), 0),
     ROUND(CASE WHEN MAX(r.rol_ant)   <> 0 THEN SUM(m.ant_r + m.ant_adj) / MAX(r.rol_ant)   * 100 ELSE 0 END, 1),
     ROUND(SUM(m.atu_f), 0),

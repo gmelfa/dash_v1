@@ -1,16 +1,16 @@
-# Graph Report - dash_v1  (2026-07-20)
+# Graph Report - dash_v1  (2026-07-21)
 
 ## Corpus Check
-- 41 files · ~45,691 words
+- 42 files · ~46,385 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 309 nodes · 362 edges · 36 communities (30 shown, 6 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
+- 312 nodes · 351 edges · 40 communities (33 shown, 7 thin omitted)
+- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3621fbf0`
+- Built from commit: `524fdaf3`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -31,6 +31,8 @@
 - SQL Style Conventions
 - Ipiranga Special Rule
 - Databricks Connection
+- Query 07 - Beneficios
+- Query 08 - Rateio Corporativo
 - SQLite Storage
 - Favicon Asset
 - Vite Logo Asset
@@ -41,13 +43,13 @@
 1. `QueryLoader` - 15 edges
 2. `mv_f_apresentacao` - 10 edges
 3. `User` - 9 edges
-4. `useAuth()` - 9 edges
-5. `load_queries()` - 8 edges
-6. `d_classunidades` - 8 edges
+4. `load_queries()` - 8 edges
+5. `d_classunidades` - 8 edges
+6. `useAuth()` - 7 edges
 7. `f_resultado` - 7 edges
 8. `get_databricks_connection()` - 6 edges
 9. `save_queries()` - 5 edges
-10. `login()` - 5 edges
+10. `execute_saved_query()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `SQL Convention (seb.md)` --semantically_similar_to--> `Human-Style SQL Convention`  [INFERRED] [semantically similar]
@@ -69,11 +71,11 @@
 - **mv_f_apresentacao UNION ALL Sources** — claude_mv_f_apresentacao, claude_f_resultado, claude_f_ajustes, claude_f_orcamento, claude_f_alunos, claude_f_orcamentoalunos [EXTRACTED 1.00]
 - **Premium Vertical Business Rules** — claude_vertical_premium, claude_ipiranga_rule, claude_vertical_ap, claude_d_classunidades [EXTRACTED 1.00]
 
-## Communities (36 total, 6 thin omitted)
+## Communities (40 total, 7 thin omitted)
 
 ### Community 0 - "Flask App Routes & Query API"
 Cohesion: 0.07
-Nodes (36): add_query(), delete_query(), execute_query(), execute_saved_query(), get_databricks_connection(), get_queries(), get_query_by_id(), get_query_categories() (+28 more)
+Nodes (38): add_query(), delete_query(), execute_query(), execute_saved_query(), get_databricks_connection(), get_queries(), get_query_by_id(), get_query_categories() (+30 more)
 
 ### Community 1 - "Query Loader Service"
 Cohesion: 0.08
@@ -84,8 +86,8 @@ Cohesion: 0.07
 Nodes (23): admin_create_user(), Admin cria um usuário já aprovado, Registra novo usuário, register(), batch_update_comments(), create_comment(), delete_comment(), get_approved_comments() (+15 more)
 
 ### Community 3 - "Frontend App & Components"
-Cohesion: 0.12
-Nodes (17): App(), AppContent(), getDefaultPeriod(), MESES, useTheme(), Login(), Register(), CommentForm() (+9 more)
+Cohesion: 0.20
+Nodes (8): Login(), Register(), CommentForm(), CommentItem(), CommentList(), CommentsSection(), AuthContext, useAuth()
 
 ### Community 4 - "Databricks Data Model (CLAUDE.md)"
 Cohesion: 0.11
@@ -131,10 +133,14 @@ Nodes (5): Bound Params Pattern (seb.md), SQL Convention (seb.md), Bound Params 
 Cohesion: 0.67
 Nodes (4): Ipiranga Rule (seb.md), Vertical Premium (seb.md), Ipiranga (1040) Special Rule, Vertical Premium
 
+### Community 22 - "Query 07 - Beneficios"
+Cohesion: 0.36
+Nodes (5): App(), AppContent(), getDefaultPeriod(), MESES, useTheme()
+
 ## Knowledge Gaps
-- **57 isolated node(s):** `name`, `private`, `version`, `type`, `dev` (+52 more)
+- **57 isolated node(s):** `MESES`, `name`, `private`, `version`, `type` (+52 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **6 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **7 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -143,13 +149,13 @@ _Questions this graph is uniquely positioned to answer:_
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `User` (e.g. with `admin_create_user()` and `register()`) actually correct?**
   _`User` has 3 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `name`, `private`, `version` to the rest of the system?**
+- **What connects `MESES`, `name`, `private` to the rest of the system?**
   _57 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Flask App Routes & Query API` be split into smaller, more focused modules?**
-  _Cohesion score 0.06794871794871794 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06504065040650407 - nodes in this community are weakly interconnected._
 - **Should `Query Loader Service` be split into smaller, more focused modules?**
   _Cohesion score 0.0773109243697479 - nodes in this community are weakly interconnected._
 - **Should `Auth/Comments Data Models` be split into smaller, more focused modules?**
   _Cohesion score 0.07126436781609195 - nodes in this community are weakly interconnected._
-- **Should `Frontend App & Components` be split into smaller, more focused modules?**
-  _Cohesion score 0.11954022988505747 - nodes in this community are weakly interconnected._
+- **Should `Databricks Data Model (CLAUDE.md)` be split into smaller, more focused modules?**
+  _Cohesion score 0.1076923076923077 - nodes in this community are weakly interconnected._
