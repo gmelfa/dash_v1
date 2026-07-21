@@ -1,7 +1,7 @@
 -- @id: premium_pcld
 -- @name: Premium - PCLD
 -- @category: Premium
--- @order: 15
+-- @order: 16
 -- @chart_query_id: Premium/premium_pcld_grafico
 
 WITH params AS (
@@ -96,11 +96,16 @@ itens AS (
 -- Linhas individuais
 SELECT
     Nome_Conta AS Descricao,
-    `AntR`, `pct_ROL_Ant`,
-    `AtuF`, `pct_ROL_AtuF`,
-    `AtuR`, `pct_ROL_AtuR`,
-    `Var_Abs_FcstR`, `Var_Pct_FcstR`,
-    `Var_Abs_AntR`,  `Var_Pct_AntR`,
+    `AntR`          AS `3M 25 R`,
+    `pct_ROL_Ant`   AS `25R|% ROL`,
+    `AtuF`          AS `3M 26 F`,
+    `pct_ROL_AtuF`  AS `26F|% ROL`,
+    `AtuR`          AS `3M 26 R`,
+    `pct_ROL_AtuR`  AS `26R|% ROL`,
+    `Var_Abs_FcstR` AS `Var #|26 x Fcst`,
+    `Var_Pct_FcstR` AS `Var %|26 x Fcst`,
+    `Var_Abs_AntR`  AS `Var #|26 x 25`,
+    `Var_Pct_AntR`  AS `Var %|26 x 25`,
     sort_order
 FROM itens
 WHERE sort_order <> 50

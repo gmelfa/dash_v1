@@ -1,7 +1,7 @@
 -- @id: premium_rateio_corporativo
 -- @name: Premium - Rateio Corporativo
 -- @category: Premium
--- @order: 14
+-- @order: 15
 
 WITH params AS (
     SELECT
@@ -104,12 +104,17 @@ itens AS (
 -- Linhas individuais
 SELECT
     Nome_Conta AS Descricao,
-    `AntR`, `Ajustes`, `AntTotal`, `pct_ROL_Ant`,
-    `AtuF`, `pct_ROL_AtuF`,
-    `AtuR`, `pct_ROL_AtuR`,
-    `Var_Abs_FcstR`, `Var_Pct_FcstR`,
-    `Var_Abs_AntR`,  `Var_Pct_AntR`,
-    `Var_pp_FcstR`,
+    `AntTotal`      AS `3M 25 R`,
+    `pct_ROL_Ant`   AS `25R|% ROL`,
+    `AtuF`          AS `3M 26 F`,
+    `pct_ROL_AtuF`  AS `26F|% ROL`,
+    `AtuR`          AS `3M 26 R`,
+    `pct_ROL_AtuR`  AS `26R|% ROL`,
+    `Var_Abs_FcstR` AS `Var #|26 x Fcst`,
+    `Var_Pct_FcstR` AS `Var %|26 x Fcst`,
+    `Var_Abs_AntR`  AS `Var #|26 x 25`,
+    `Var_Pct_AntR`  AS `Var %|26 x 25`,
+    `Var_pp_FcstR`  AS `Var %|p.p.`,
     sort_order
 FROM itens
 WHERE sort_order <> 50
@@ -119,8 +124,6 @@ UNION ALL
 -- Total Rateio Corporativo
 SELECT
     'Rateio Corporativo',
-    ROUND(SUM(m.ant_r), 0),
-    ROUND(SUM(m.ant_adj), 0),
     ROUND(SUM(m.ant_r + m.ant_adj), 0),
     ROUND(CASE WHEN MAX(r.rol_ant)   <> 0 THEN SUM(m.ant_r + m.ant_adj) / MAX(r.rol_ant)   * 100 ELSE 0 END, 1),
     ROUND(SUM(m.atu_f), 0),

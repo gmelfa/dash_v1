@@ -813,7 +813,7 @@ function AppContent() {
                 <div>
                   <h2>{tableData.title}</h2>
                   {tableData.description && <p>{tableData.description}</p>}
-                  <span className="row-count">{tableData.rowCount} linhas</span>
+                  {!tableData.isCombo && <span className="row-count">{tableData.rowCount} linhas</span>}
                 </div>
                 <div className="export-buttons">
                   <button onClick={exportDevelopmentPPT} className="btn-export-ppt">
@@ -825,7 +825,18 @@ function AppContent() {
               {/* CONTEÚDO VERTICAL: TABELA + GRÁFICO + COMENTÁRIOS */}
               <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '30px' }}>
                 <div className="table-wrapper-full" style={{ width: '100%' }}>
-                  <DataTable columns={tableData.columns} data={tableData.data} />
+                  {tableData.isCombo ? (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+                      {tableData.tables.map((t, idx) => (
+                        <div key={idx}>
+                          <h3 style={{ marginBottom: '10px' }}>{t.title}</h3>
+                          <DataTable columns={t.columns} data={t.data} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <DataTable columns={tableData.columns} data={tableData.data} />
+                  )}
                 </div>
 
                 {tableData.chartData && (

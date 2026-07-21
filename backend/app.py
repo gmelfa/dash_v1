@@ -105,7 +105,12 @@ def load_queries():
                 'query': q['sql_content'],
                 'active': True,
                 'tags': q.get('tags', '').split(',') if q.get('tags') else [],
-                'chart_query_id': q.get('chart_query_id', '')
+                'chart_query_id': q.get('chart_query_id', ''),
+                'table_1_query_id': q.get('table_1_query_id', ''),
+                'table_1_title': q.get('table_1_title', ''),
+                'table_2_query_id': q.get('table_2_query_id', ''),
+                'table_2_title': q.get('table_2_title', ''),
+                'file_hash': q.get('file_hash', '')
             })
         
         return queries
@@ -270,6 +275,32 @@ def get_query_by_id(query_id):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+def _run_query_sql(cursor, sql_content, parameters, mes_selecionado):
+    """Executa um SQL e devolve (columns, data) já tratados: remove sort_order
+    e substitui o prefixo fixo 'NM ' (ex: '3M 25 R') pelo mes_selecionado real."""
+    cursor.execute(sql_content, parameters=parameters)
+    columns = [desc[0] for desc in cursor.description]
+    rows = cursor.fetchall()
+
+    sort_order_index = None
+    if 'sort_order' in columns:
+        sort_order_index = columns.index('sort_order')
+        columns = [col for col in columns if col != 'sort_order']
+
+    columns = [re.sub(r'^\d+M ', f'{mes_selecionado}M ', col) for col in columns]
+
+    result = []
+    for row in rows:
+        if sort_order_index is not None:
+            row_list = list(row)
+            row_list.pop(sort_order_index)
+            result.append(dict(zip(columns, row_list)))
+        else:
+            result.append(dict(zip(columns, row)))
+
+    return columns, result
+
+
 @app.route('/api/queries/<path:query_id>/execute', methods=['POST'])
 def execute_saved_query(query_id):
     """Executa uma query salva pelo ID"""
@@ -291,7 +322,31 @@ def execute_saved_query(query_id):
         if mes_selecionado is None or ano_selecionado is None:
             return jsonify({'error': 'Parâmetros mes_selecionado e ano_selecionado são obrigatórios'}), 400
 
-        cache_key = f"{query_id}_{mes_selecionado}_{ano_selecionado}"
+        # Query "combo" — não roda SQL própria, só combina duas queries já existentes
+        # (ex: FOPAG Direta + FOPAG Indireta) em uma página com duas tabelas empilhadas
+        table_1_query_id = query_obj.get('table_1_query_id', '')
+        table_2_query_id = query_obj.get('table_2_query_id', '')
+        table_1_obj = None
+        table_2_obj = None
+
+        if table_1_query_id and table_2_query_id:
+            table_1_obj = next((q for q in queries if q['id'] == table_1_query_id), None)
+            table_2_obj = next((q for q in queries if q['id'] == table_2_query_id), None)
+            if not table_1_obj or not table_2_obj:
+                return jsonify({'error': 'Query(s) referenciada(s) em table_1_query_id/table_2_query_id não encontrada(s)'}), 404
+            # Cache invalida sozinho se qualquer um dos dois arquivos referenciados mudar
+            file_hash_part = f"{table_1_obj.get('file_hash', '')}_{table_2_obj.get('file_hash', '')}"
+        else:
+            # Cache invalida sozinho quando o próprio arquivo .sql muda — sem precisar
+            # reiniciar o backend a cada edição de query (hash já vem do hot-reload)
+            file_hash_part = query_obj.get('file_hash', '')
+            chart_query_id = query_obj.get('chart_query_id', '')
+            if chart_query_id:
+                chart_query_obj = next((q for q in queries if q['id'] == chart_query_id), None)
+                if chart_query_obj:
+                    file_hash_part += f"_{chart_query_obj.get('file_hash', '')}"
+
+        cache_key = f"{query_id}_{mes_selecionado}_{ano_selecionado}_{file_hash_part}"
         if not force_refresh and cache_key in _query_cache:
             return jsonify(_query_cache[cache_key]), 200
 
@@ -301,33 +356,36 @@ def execute_saved_query(query_id):
             'ano_anterior':    int(ano_selecionado) - 1,
         }
 
-        query_sql = query_obj['query']
-
         with get_databricks_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute(query_sql, parameters=parameters)
-                columns = [desc[0] for desc in cursor.description]
-                rows = cursor.fetchall()
+                if table_1_obj and table_2_obj:
+                    cols_1, data_1 = _run_query_sql(cursor, table_1_obj['query'], parameters, mes_selecionado)
+                    cols_2, data_2 = _run_query_sql(cursor, table_2_obj['query'], parameters, mes_selecionado)
 
-                # Remover coluna sort_order se existir
-                sort_order_index = None
-                if 'sort_order' in columns:
-                    sort_order_index = columns.index('sort_order')
-                    columns = [col for col in columns if col != 'sort_order']
+                    response = {
+                        'queryId': query_id,
+                        'title': query_obj['title'],
+                        'description': query_obj.get('description', ''),
+                        'isCombo': True,
+                        'tables': [
+                            {
+                                'title': query_obj.get('table_1_title', '') or table_1_obj['title'],
+                                'columns': cols_1,
+                                'data': data_1,
+                                'rowCount': len(data_1),
+                            },
+                            {
+                                'title': query_obj.get('table_2_title', '') or table_2_obj['title'],
+                                'columns': cols_2,
+                                'data': data_2,
+                                'rowCount': len(data_2),
+                            },
+                        ],
+                    }
+                    _query_cache[cache_key] = response
+                    return jsonify(response), 200
 
-                # Colunas como "3M 25 R" trazem um número de meses fixo no alias SQL
-                # (não é possível parametrizar nome de coluna no Databricks) — substitui
-                # pelo mes_selecionado real de cada request antes de retornar ao frontend
-                columns = [re.sub(r'^\d+M ', f'{mes_selecionado}M ', col) for col in columns]
-
-                result = []
-                for row in rows:
-                    if sort_order_index is not None:
-                        row_list = list(row)
-                        row_list.pop(sort_order_index)
-                        result.append(dict(zip(columns, row_list)))
-                    else:
-                        result.append(dict(zip(columns, row)))
+                columns, result = _run_query_sql(cursor, query_obj['query'], parameters, mes_selecionado)
 
                 # Executar query de gráfico vinculada, se existir
                 chart_data = None

@@ -2,7 +2,7 @@
 -- @name: Premium - PCLD Gráfico
 -- @category: Premium
 -- @type: chart
--- @order: 16
+-- @order: 17
 
 WITH params AS (
     SELECT

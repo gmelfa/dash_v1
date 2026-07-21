@@ -2,7 +2,7 @@
 -- @name: Premium - CAPEX YTD
 -- @category: Premium
 -- @type: table
--- @order: 17
+-- @order: 18
 
 WITH params AS (
     SELECT

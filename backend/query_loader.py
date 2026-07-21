@@ -38,7 +38,11 @@ class QueryMetadata:
     updated_at: str
     query_type: str = 'table'
     chart_query_id: str = ''
-    
+    table_1_query_id: str = ''
+    table_1_title: str = ''
+    table_2_query_id: str = ''
+    table_2_title: str = ''
+
     def to_dict(self) -> Dict[str, Any]:
         """Converte para dicionário"""
         return asdict(self)
@@ -92,7 +96,11 @@ class QueryLoader:
                 created_at TEXT NOT NULL,
                 updated_at TEXT NOT NULL,
                 query_type TEXT DEFAULT 'table',
-                chart_query_id TEXT DEFAULT ''
+                chart_query_id TEXT DEFAULT '',
+                table_1_query_id TEXT DEFAULT '',
+                table_1_title TEXT DEFAULT '',
+                table_2_query_id TEXT DEFAULT '',
+                table_2_title TEXT DEFAULT ''
             )
         ''')
         
@@ -133,9 +141,13 @@ class QueryLoader:
                 'tags': [],
                 'order': 999,
                 'query_type': 'table',
-                'chart_query_id': ''
+                'chart_query_id': '',
+                'table_1_query_id': '',
+                'table_1_title': '',
+                'table_2_query_id': '',
+                'table_2_title': ''
             }
-            
+
             # Regex para capturar metadados
             id_match            = re.search(r'--\s*@id:\s*(.+)', content)
             name_match          = re.search(r'--\s*@name:\s*(.+)', content)
@@ -144,6 +156,10 @@ class QueryLoader:
             order_match         = re.search(r'--\s*@order:\s*(\d+)', content)
             type_match          = re.search(r'--\s*@type:\s*(.+)', content)
             chart_qid_match     = re.search(r'--\s*@chart_query_id:\s*(.+)', content)
+            table1_qid_match    = re.search(r'--\s*@table_1_query_id:\s*(.+)', content)
+            table1_title_match  = re.search(r'--\s*@table_1_title:\s*(.+)', content)
+            table2_qid_match    = re.search(r'--\s*@table_2_query_id:\s*(.+)', content)
+            table2_title_match  = re.search(r'--\s*@table_2_title:\s*(.+)', content)
 
             if id_match:
                 metadata['id'] = id_match.group(1).strip()
@@ -160,7 +176,15 @@ class QueryLoader:
                 metadata['query_type'] = type_match.group(1).strip()
             if chart_qid_match:
                 metadata['chart_query_id'] = chart_qid_match.group(1).strip()
-            
+            if table1_qid_match:
+                metadata['table_1_query_id'] = table1_qid_match.group(1).strip()
+            if table1_title_match:
+                metadata['table_1_title'] = table1_title_match.group(1).strip()
+            if table2_qid_match:
+                metadata['table_2_query_id'] = table2_qid_match.group(1).strip()
+            if table2_title_match:
+                metadata['table_2_title'] = table2_title_match.group(1).strip()
+
             # Se não tiver @id, usar nome do arquivo
             if not metadata['id']:
                 file_name = os.path.splitext(os.path.basename(file_path))[0]
@@ -192,7 +216,11 @@ class QueryLoader:
                 created_at=now,
                 updated_at=now,
                 query_type=metadata['query_type'],
-                chart_query_id=metadata['chart_query_id']
+                chart_query_id=metadata['chart_query_id'],
+                table_1_query_id=metadata['table_1_query_id'],
+                table_1_title=metadata['table_1_title'],
+                table_2_query_id=metadata['table_2_query_id'],
+                table_2_title=metadata['table_2_title']
             )
         
         except Exception as e:
@@ -251,8 +279,8 @@ class QueryLoader:
             if not existing or existing['file_hash'] != query.file_hash or force_reload:
                 cursor.execute('''
                     INSERT OR REPLACE INTO queries
-                    (id, category, name, description, sql_content, file_path, file_hash, tags, query_order, created_at, updated_at, query_type, chart_query_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    (id, category, name, description, sql_content, file_path, file_hash, tags, query_order, created_at, updated_at, query_type, chart_query_id, table_1_query_id, table_1_title, table_2_query_id, table_2_title)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
                     query.id,
                     query.category,
@@ -266,7 +294,11 @@ class QueryLoader:
                     query.created_at,
                     query.updated_at,
                     query.query_type,
-                    query.chart_query_id
+                    query.chart_query_id,
+                    query.table_1_query_id,
+                    query.table_1_title,
+                    query.table_2_query_id,
+                    query.table_2_title
                 ))
                 loaded_count += 1
         
