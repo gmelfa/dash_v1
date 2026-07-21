@@ -84,6 +84,10 @@ function Database({ columns, data }) {
             const value = info.getValue()
             if (value === null || value === undefined || value === '') return '-'
 
+            // Coluna de descrição é sempre texto — nunca tentar formatar como número
+            // (ex: "13º Salário" não pode virar "13" só porque começa com dígito)
+            if (isTextColumn) return value
+
             const numValue = typeof value === 'number' ? value : parseFloat(String(value).replace(/,/g, ''))
 
             const firstColKey = visibleColumnsNames[0];
