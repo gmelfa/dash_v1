@@ -2,7 +2,7 @@
 -- @name: Premium - PCLD Gráfico
 -- @category: Premium
 -- @type: chart
--- @order: 99
+-- @order: 11
 
 WITH params AS (
     SELECT
@@ -31,7 +31,7 @@ hst_mensal AS (
     GROUP BY YEAR(f.Data_Transacao), MONTH(f.Data_Transacao), f.Origem
 ),
 
--- Budget (2026F): sem Ebitda/Recorrente (fonte fcst_budget), sem flip de sinal
+-- Forecast (2026F): sem Ebitda/Recorrente (fonte fcst_budget), sem flip de sinal
 fcst_mensal AS (
     SELECT
         MONTH(f.Data_Transacao) AS mes,
@@ -42,13 +42,13 @@ fcst_mensal AS (
       AND f.Nome_Unidade NOT LIKE '%CSC Local%'
       AND YEAR(f.Data_Transacao) = p.ano_atual
       AND f.Nome_PnL = 'PCLD'
-      AND f.Origem   = 'Budget'
+      AND f.Origem   = 'Forecast'
     GROUP BY MONTH(f.Data_Transacao)
 ),
 
 meses AS (SELECT explode(sequence(1, 12)) AS mes),
 
--- Pré-agregar por ano/mes (soma Resultado+Ajustes para ambas as séries)
+-- Ano anterior soma Resultado+Ajustes; ano atual (realizado) usa só Resultado
 ant_agg AS (
     SELECT mes, SUM(total) AS total
     FROM hst_mensal, params p
@@ -59,6 +59,7 @@ atu_agg AS (
     SELECT mes, SUM(total) AS total
     FROM hst_mensal, params p
     WHERE ano = p.ano_atual
+      AND Origem = 'Resultado'
     GROUP BY mes
 ),
 

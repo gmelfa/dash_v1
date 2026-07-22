@@ -182,7 +182,7 @@ with params as (
 3. O `id` da query é gerado a partir do nome do arquivo (sem número e extensão)
 4. A sidebar do frontend agrupa por `category` (nome da pasta)
 5. Prefixo numérico do arquivo deve sempre bater com o `@order` interno — ao inserir uma tabela nova no meio da sequência, renumerar (via `git mv`) os arquivos seguintes para manter os dois em sincronia
-6. **Exceção**: queries `@type: chart` (nunca aparecem na sidebar, só são referenciadas via `@chart_query_id` de outra query) não participam dessa sequência — usar um número fixo fora da faixa (ex: `99_nome.sql`, `@order: 99`) e nunca renumerar ao inserir tabelas visíveis novas
+6. **Exceção**: queries `@type: chart` (nunca aparecem na sidebar, só são referenciadas via `@chart_query_id` de outra query) não participam da sequência principal — usar o prefixo da tabela-pai + sufixo `b` (ex: a tabela `11_pcld.sql` tem seu gráfico em `11b_pcld_grafico.sql`, com `@order: 11` também, já que a ordem não tem efeito nela). Só precisa ser renomeada se a tabela-pai for renumerada — nunca ao inserir outras tabelas visíveis na sequência
 
 ---
 
