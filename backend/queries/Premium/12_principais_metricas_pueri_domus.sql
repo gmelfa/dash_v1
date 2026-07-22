@@ -1,7 +1,7 @@
--- @id: premium_principais_metricas_ytd
--- @name: Premium - Principais Métricas YTD
+-- @id: premium_principais_metricas_pueri_domus
+-- @name: Premium - Principais Métricas YTD - Pueri Domus
 -- @category: Premium
--- @order: 01
+-- @order: 12
 
 with params as (
     select
@@ -28,6 +28,7 @@ base as (
     from financeiro.prd.mv_f_apresentacao f
     cross join params p
     where f.Vertical = p.vertical
+      and f.Grupo = 'Pueri Domus'
       and year(f.Data_Transacao)  in (p.ano_atual, p.ano_anterior)
       and month(f.Data_Transacao) between 1 and p.mes_ytd
       and f.Nome_Unidade not like '%CSC Local%'
@@ -53,7 +54,6 @@ numeros_raw as (
         sum(case when ano = ano_atual    and mes >= 3 and Origem = 'Alunos'   and skclasspnl = '400000000' then Valor else 0 end) as alunos_26r_soma,
 
         -- receita de ensino em reais brutos, sem /1000 — usada só para calcular o ticket médio
-        -- conforme Excel: D15 (Receita de Ensino Bruta) + D16 (Bolsa de Estudos)
         sum(case when ano = ano_anterior and Origem = 'Resultado' and Ebitda='Sim' and Recorrente='Sim'
                   and Nome_PnL in ('Receitas com Ensino Regular','Receitas com UpSelling','Bolsa de Estudos')
             then Valor*-1 else 0 end) as rec_ensino_25r,
@@ -97,23 +97,22 @@ numeros as (
 )
 
 -- resultado final: cada linha é uma métrica, cada coluna é um período ou variação
-select 'Alunos #' as Metrica,
-    round(alunos_25r, 0)                                                                                  as `25R`,
-    round(alunos_26b, 0)                                                                                  as `26B`,
-    round(alunos_26f, 0)                                                                                  as `26F`,
-    round(alunos_26r, 0)                                                                                  as `26R`,
-    round(alunos_26r - alunos_26b, 0)                                                                             as `Var 26xBgt`,
-    round(case when alunos_26b > 0 then (alunos_26r - alunos_26b) / alunos_26b * 100 else null end, 1)        as `Var % 26xBgt`,
-    round(alunos_26r - alunos_26f, 0)                                                                         as `Var 26xFcst`,
-    round(case when alunos_26f > 0 then (alunos_26r - alunos_26f) / alunos_26f * 100 else null end, 1)        as `Var % 26xFcst`,
-    round(alunos_26r - alunos_25r, 0)                                                                     as `Var 26x25`
+select 'Alunos #' as `YTD`,
+    round(alunos_25r, 0)                                                                                     as `3M 25 R`,
+    round(alunos_26b, 0)                                                                                     as `3M 26 B`,
+    round(alunos_26f, 0)                                                                                     as `3M 26 F`,
+    round(alunos_26r, 0)                                                                                     as `3M 26 R`,
+    round(alunos_26r - alunos_26b, 0)                                                                        as `Var.|26 x Bgt`,
+    round(case when alunos_26b > 0 then (alunos_26r - alunos_26b) / alunos_26b * 100 else null end, 1)       as `Var %|26 x Bgt`,
+    round(alunos_26r - alunos_26f, 0)                                                                        as `Var #|26 x Fcst`,
+    round(case when alunos_26f > 0 then (alunos_26r - alunos_26f) / alunos_26f * 100 else null end, 1)       as `Var %|26 x Fcst`,
+    round(alunos_26r - alunos_25r, 0)                                                                        as `Var #|26 x 25`,
+    round(case when alunos_25r > 0 then (alunos_26r - alunos_25r) / alunos_25r * 100 else null end, 1)        as `Var %|26 x 25`
 from numeros
 
 union all
 
 select 'Ticket Médio (R$ mês)',
-    -- receita de ensino é acumulada (Jan-Mar), alunos é snapshot de março
-    -- ticket = (rec_ensino_Rmil / alunos_snapshot / mes_ytd) * 1000 = rec_ensino_bruto / alunos / mes_ytd
     round(rec_ensino_25r / nullif(alunos_25r, 0) / mes_ytd,                                               0),
     round(rec_ensino_26b / nullif(alunos_26b, 0) / mes_ytd,                                               0),
     round(rec_ensino_26f / nullif(alunos_26f, 0) / mes_ytd,                                               0),
@@ -122,7 +121,8 @@ select 'Ticket Médio (R$ mês)',
     round(case when alunos_26b > 0 then ((rec_ensino_26r/alunos_26r) - (rec_ensino_26b/alunos_26b)) / (rec_ensino_26b/alunos_26b) * 100 else null end, 1),
     round((rec_ensino_26r/nullif(alunos_26r,0) - rec_ensino_26f/nullif(alunos_26f,0)) / mes_ytd,          2),
     round(case when alunos_26f > 0 then ((rec_ensino_26r/alunos_26r) - (rec_ensino_26f/alunos_26f)) / (rec_ensino_26f/alunos_26f) * 100 else null end, 1),
-    round((rec_ensino_26r/nullif(alunos_26r,0) - rec_ensino_25r/nullif(alunos_25r,0)) / mes_ytd,          0)
+    round((rec_ensino_26r/nullif(alunos_26r,0) - rec_ensino_25r/nullif(alunos_25r,0)) / mes_ytd,          0),
+    round(case when alunos_25r > 0 then ((rec_ensino_26r/alunos_26r) - (rec_ensino_25r/alunos_25r)) / (rec_ensino_25r/alunos_25r) * 100 else null end, 1)
 from numeros
 
 union all
@@ -136,7 +136,8 @@ select 'ROL',
     round(case when rol_26b <> 0 then (rol_26r - rol_26b) / rol_26b * 100 else null end, 1),
     round(rol_26r - rol_26f,  2),
     round(case when rol_26f <> 0 then (rol_26r - rol_26f) / rol_26f * 100 else null end, 1),
-    round(rol_26r - rol_25r,  0)
+    round(rol_26r - rol_25r,  0),
+    round(case when rol_25r <> 0 then (rol_26r - rol_25r) / rol_25r * 100 else null end, 1)
 from numeros
 
 union all
@@ -150,7 +151,8 @@ select 'EBITDA',
     round(case when ebitda_26b <> 0 then (ebitda_26r - ebitda_26b) / ebitda_26b * 100 else null end, 1),
     round(ebitda_26r - ebitda_26f,  2),
     round(case when ebitda_26f <> 0 then (ebitda_26r - ebitda_26f) / ebitda_26f * 100 else null end, 1),
-    round(ebitda_26r - ebitda_25r,  0)
+    round(ebitda_26r - ebitda_25r,  0),
+    round(case when ebitda_25r <> 0 then (ebitda_26r - ebitda_25r) / ebitda_25r * 100 else null end, 1)
 from numeros
 
 union all
@@ -160,5 +162,5 @@ select 'Margem %',
     round(case when rol_26b > 0 then ebitda_26b / rol_26b * 100 else null end, 1),
     round(case when rol_26f > 0 then ebitda_26f / rol_26f * 100 else null end, 1),
     round(case when rol_26r > 0 then ebitda_26r / rol_26r * 100 else null end, 1),
-    null, null, null, null, null
+    null, null, null, null, null, null
 from numeros

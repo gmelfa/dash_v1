@@ -1,7 +1,7 @@
 -- @id: premium_lucro_liquido_ytd_consolidado
 -- @name: Premium - Lucro Líquido YTD - Consolidado
 -- @category: Premium
--- @order: 19
+-- @order: 31
 
 WITH params AS (
     SELECT

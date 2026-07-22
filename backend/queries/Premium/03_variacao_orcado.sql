@@ -2,7 +2,7 @@
 -- @name: EBITDA Variações por tema YTD - Consolidado
 -- @category: Premium
 -- @type: table
--- @order: 08
+-- @order: 03
 
 WITH params AS (
     SELECT

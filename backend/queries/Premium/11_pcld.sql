@@ -1,7 +1,7 @@
 -- @id: premium_pcld
 -- @name: Premium - PCLD
 -- @category: Premium
--- @order: 16
+-- @order: 11
 -- @chart_query_id: Premium/premium_pcld_grafico
 
 WITH params AS (

@@ -1,7 +1,7 @@
--- @id: premium_fopag_direta
--- @name: Premium - FOPAG Direta
+-- @id: premium_beneficios
+-- @name: Premium - Benefícios
 -- @category: Premium
--- @order: 11
+-- @order: 09
 
 WITH params AS (
     SELECT
@@ -11,8 +11,7 @@ WITH params AS (
         'Premium'        AS vertical
 ),
 
--- Lançamentos FOPAG: mv_f_apresentacao + link_pnl para granularidade por Nome_Conta
-fopag_base AS (
+beneficios_base AS (
     SELECT
         lp.Nome_Conta,
         f.Origem,
@@ -30,11 +29,9 @@ fopag_base AS (
       AND MONTH(f.Data_Transacao) <= p.mes_ytd
       AND f.Ebitda     = 'Sim'
       AND f.Recorrente = 'Sim'
-      AND f.Nome_PnL   = 'FOPAG Direto (CLT- PJ)'
-      AND lp.Nome_Conta NOT IN ('Prêmio', 'Outras Despesas Administrativas')
+      AND f.Nome_PnL   = 'Benefícios'
 ),
 
--- ROL para denominador dos % ROL (linhas de receita, sem JOIN com link_pnl)
 rol_base AS (
     SELECT
         f.Origem,
@@ -61,7 +58,7 @@ metricas AS (
         SUM(CASE WHEN ano = ano_anterior AND Origem = 'Ajustes'                 THEN Valor * -1 ELSE 0 END) / 1000 AS ant_adj,
         SUM(CASE WHEN ano = ano_atual    AND Origem = 'Forecast'                THEN Valor * -1 ELSE 0 END) / 1000 AS atu_f,
         SUM(CASE WHEN ano = ano_atual    AND Origem IN ('Resultado', 'Ajustes') THEN Valor * -1 ELSE 0 END) / 1000 AS atu_r
-    FROM fopag_base
+    FROM beneficios_base
     GROUP BY Nome_Conta
 ),
 
@@ -77,39 +74,29 @@ itens AS (
     SELECT
         m.Nome_Conta,
         m.ant_r, m.ant_adj, m.atu_f, m.atu_r,
-        ROUND(m.ant_r, 0)                                                                                                              AS `AntR`,
-        ROUND(m.ant_adj, 0)                                                                                                            AS `Ajustes`,
-        ROUND(m.ant_r + m.ant_adj, 0)                                                                                                  AS `AntTotal`,
-        ROUND(CASE WHEN r.rol_ant   <> 0 THEN (m.ant_r + m.ant_adj) / r.rol_ant   * 100 ELSE 0 END, 1)                               AS `pct_ROL_Ant`,
-        ROUND(m.atu_f, 0)                                                                                                              AS `AtuF`,
-        ROUND(CASE WHEN r.rol_atu_f <> 0 THEN m.atu_f / r.rol_atu_f * 100 ELSE 0 END, 1)                                            AS `pct_ROL_AtuF`,
-        ROUND(m.atu_r, 0)                                                                                                              AS `AtuR`,
-        ROUND(CASE WHEN r.rol_atu_r <> 0 THEN m.atu_r / r.rol_atu_r * 100 ELSE 0 END, 1)                                            AS `pct_ROL_AtuR`,
-        ROUND(m.atu_r - m.atu_f, 0)                                                                                                   AS `Var_Abs_FcstR`,
-        ROUND(CASE WHEN m.atu_f <> 0 THEN (m.atu_r - m.atu_f) / ABS(m.atu_f) * 100 ELSE 0 END, 1)                                  AS `Var_Pct_FcstR`,
-        ROUND(m.atu_r - (m.ant_r + m.ant_adj), 0)                                                                                    AS `Var_Abs_AntR`,
+        ROUND(m.ant_r, 0)                                                                                                                    AS `AntR`,
+        ROUND(m.ant_adj, 0)                                                                                                                  AS `Ajustes`,
+        ROUND(m.ant_r + m.ant_adj, 0)                                                                                                        AS `AntTotal`,
+        ROUND(CASE WHEN r.rol_ant   <> 0 THEN (m.ant_r + m.ant_adj) / r.rol_ant   * 100 ELSE 0 END, 1)                                     AS `pct_ROL_Ant`,
+        ROUND(m.atu_f, 0)                                                                                                                    AS `AtuF`,
+        ROUND(CASE WHEN r.rol_atu_f <> 0 THEN m.atu_f / r.rol_atu_f * 100 ELSE 0 END, 1)                                                  AS `pct_ROL_AtuF`,
+        ROUND(m.atu_r, 0)                                                                                                                    AS `AtuR`,
+        ROUND(CASE WHEN r.rol_atu_r <> 0 THEN m.atu_r / r.rol_atu_r * 100 ELSE 0 END, 1)                                                  AS `pct_ROL_AtuR`,
+        ROUND(m.atu_r - m.atu_f, 0)                                                                                                         AS `Var_Abs_FcstR`,
+        ROUND(CASE WHEN m.atu_f <> 0 THEN (m.atu_r - m.atu_f) / ABS(m.atu_f) * 100 ELSE 0 END, 1)                                        AS `Var_Pct_FcstR`,
+        ROUND(m.atu_r - (m.ant_r + m.ant_adj), 0)                                                                                           AS `Var_Abs_AntR`,
         ROUND(CASE WHEN (m.ant_r + m.ant_adj) <> 0 THEN (m.atu_r - (m.ant_r + m.ant_adj)) / ABS(m.ant_r + m.ant_adj) * 100 ELSE 0 END, 1) AS `Var_Pct_AntR`,
         ROUND(
             CASE WHEN r.rol_atu_r <> 0 THEN m.atu_r / r.rol_atu_r * 100 ELSE 0 END -
             CASE WHEN r.rol_atu_f <> 0 THEN m.atu_f / r.rol_atu_f * 100 ELSE 0 END
-        , 1)                                                                                                                           AS `Var_pp_FcstR`,
+        , 1)                                                                                                                                  AS `Var_pp_FcstR`,
         CASE m.Nome_Conta
-            WHEN 'INSS Sobre Férias'          THEN 1
-            WHEN 'Bolsa Estágio'              THEN 2
-            WHEN 'FGTS Sobre 13º Salário'     THEN 3
-            WHEN 'Férias'                     THEN 4
-            WHEN 'Salários'                   THEN 5
-            WHEN 'FGTS Sobre Férias'          THEN 6
-            WHEN 'INSS Sobre 13º Salário'     THEN 7
-            WHEN '13º Salário'                THEN 8
-            WHEN 'INSS Sobre Salários'        THEN 9
-            WHEN 'FGTS Sobre Salários'        THEN 10
-            WHEN 'Participação nos lucros'    THEN 11
-            WHEN 'Provisão convenção coletiva' THEN 12
-            WHEN 'Multa Rescisória do FGTS'   THEN 13
-            WHEN 'Rescisões'                  THEN 14
-            WHEN 'Ajuda de Custo'             THEN 15
-            WHEN 'Serviços Pedagógicos'       THEN 16
+            WHEN 'Programa Aliment. Trabalhador' THEN 1
+            WHEN 'Assistência Médica'             THEN 2
+            WHEN 'Vale Transporte'                THEN 3
+            WHEN 'Assistência Odontologica'        THEN 4
+            WHEN 'Seguros de Vida'                THEN 5
+            WHEN 'Uniformes'                      THEN 6
             ELSE 50
         END AS sort_order
     FROM metricas m
@@ -132,12 +119,13 @@ SELECT
     `Var_pp_FcstR`  AS `Var %|p.p.`,
     sort_order
 FROM itens
+WHERE sort_order <> 50
 
 UNION ALL
 
--- Total FOPAG (calculado sobre valores não arredondados para evitar erro de soma)
+-- Total Benefícios
 SELECT
-    'FOPAG Direto (CLT- PJ)',
+    'Benefícios',
     ROUND(SUM(m.ant_r + m.ant_adj), 0),
     ROUND(CASE WHEN MAX(r.rol_ant)   <> 0 THEN SUM(m.ant_r + m.ant_adj) / MAX(r.rol_ant)   * 100 ELSE 0 END, 1),
     ROUND(SUM(m.atu_f), 0),
@@ -155,5 +143,9 @@ SELECT
     100
 FROM metricas m
 CROSS JOIN rol r
+WHERE m.Nome_Conta IN (
+    'Programa Aliment. Trabalhador', 'Assistência Médica', 'Vale Transporte',
+    'Assistência Odontologica', 'Seguros de Vida', 'Uniformes'
+)
 
 ORDER BY sort_order

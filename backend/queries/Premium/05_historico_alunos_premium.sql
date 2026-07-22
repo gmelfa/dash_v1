@@ -1,7 +1,7 @@
 -- @id: premium_historico_alunos
 -- @name: Premium - Histórico de Alunos
 -- @category: Premium
--- @order: 10
+-- @order: 05
 
 -- ============================================================
 -- Histórico de Alunos — Premium

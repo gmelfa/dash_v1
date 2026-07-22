@@ -1,7 +1,7 @@
 -- @id: premium_fopag_consolidado
 -- @name: Premium - FOPAG Consolidado
 -- @category: Premium
--- @order: 13
+-- @order: 08
 -- @table_1_query_id: Premium/premium_fopag_direta
 -- @table_1_title: Fopag Direta
 -- @table_2_query_id: Premium/premium_fopag_indireta

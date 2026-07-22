@@ -1,7 +1,7 @@
--- @id: premium_beneficios
--- @name: Premium - Benefícios
+-- @id: premium_rateio_corporativo
+-- @name: Premium - Rateio Corporativo
 -- @category: Premium
--- @order: 14
+-- @order: 10
 
 WITH params AS (
     SELECT
@@ -11,7 +11,7 @@ WITH params AS (
         'Premium'        AS vertical
 ),
 
-beneficios_base AS (
+rateio_base AS (
     SELECT
         lp.Nome_Conta,
         f.Origem,
@@ -29,7 +29,7 @@ beneficios_base AS (
       AND MONTH(f.Data_Transacao) <= p.mes_ytd
       AND f.Ebitda     = 'Sim'
       AND f.Recorrente = 'Sim'
-      AND f.Nome_PnL   = 'Benefícios'
+      AND f.Nome_PnL   = 'Rateio Corporativo'
 ),
 
 rol_base AS (
@@ -58,7 +58,7 @@ metricas AS (
         SUM(CASE WHEN ano = ano_anterior AND Origem = 'Ajustes'                 THEN Valor * -1 ELSE 0 END) / 1000 AS ant_adj,
         SUM(CASE WHEN ano = ano_atual    AND Origem = 'Forecast'                THEN Valor * -1 ELSE 0 END) / 1000 AS atu_f,
         SUM(CASE WHEN ano = ano_atual    AND Origem IN ('Resultado', 'Ajustes') THEN Valor * -1 ELSE 0 END) / 1000 AS atu_r
-    FROM beneficios_base
+    FROM rateio_base
     GROUP BY Nome_Conta
 ),
 
@@ -91,12 +91,10 @@ itens AS (
             CASE WHEN r.rol_atu_f <> 0 THEN m.atu_f / r.rol_atu_f * 100 ELSE 0 END
         , 1)                                                                                                                                  AS `Var_pp_FcstR`,
         CASE m.Nome_Conta
-            WHEN 'Programa Aliment. Trabalhador' THEN 1
-            WHEN 'Assistência Médica'             THEN 2
-            WHEN 'Vale Transporte'                THEN 3
-            WHEN 'Assistência Odontologica'        THEN 4
-            WHEN 'Seguros de Vida'                THEN 5
-            WHEN 'Uniformes'                      THEN 6
+            WHEN 'Rateio CSC Nacional'           THEN 1
+            WHEN 'Rateio Corporativo Finanças'   THEN 2
+            WHEN 'Rateio Diretoria Executiva'    THEN 3
+            WHEN 'Rateio TI'                     THEN 4
             ELSE 50
         END AS sort_order
     FROM metricas m
@@ -123,9 +121,9 @@ WHERE sort_order <> 50
 
 UNION ALL
 
--- Total Benefícios
+-- Total Rateio Corporativo
 SELECT
-    'Benefícios',
+    'Rateio Corporativo',
     ROUND(SUM(m.ant_r + m.ant_adj), 0),
     ROUND(CASE WHEN MAX(r.rol_ant)   <> 0 THEN SUM(m.ant_r + m.ant_adj) / MAX(r.rol_ant)   * 100 ELSE 0 END, 1),
     ROUND(SUM(m.atu_f), 0),
@@ -144,8 +142,8 @@ SELECT
 FROM metricas m
 CROSS JOIN rol r
 WHERE m.Nome_Conta IN (
-    'Programa Aliment. Trabalhador', 'Assistência Médica', 'Vale Transporte',
-    'Assistência Odontologica', 'Seguros de Vida', 'Uniformes'
+    'Rateio CSC Nacional', 'Rateio Corporativo Finanças',
+    'Rateio Diretoria Executiva', 'Rateio TI'
 )
 
 ORDER BY sort_order

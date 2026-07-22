@@ -1,7 +1,7 @@
 -- @id: premium_dre_ytd
 -- @name: Premium - DRE YTD
 -- @category: Premium
--- @order: 09
+-- @order: 04
 
 -- ============================================================================
 -- DRE PREMIUM YTD

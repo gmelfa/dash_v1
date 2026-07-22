@@ -1,7 +1,7 @@
 -- @id: premium_ebtida_por_unidade_ytd
 -- @name: Premium - EBTIDA por Unidade YTD
 -- @category: Premium
--- @order: 07
+-- @order: 02
 
 WITH params AS (
     SELECT

@@ -1,7 +1,7 @@
--- @id: premium_rateio_corporativo
--- @name: Premium - Rateio Corporativo
+-- @id: premium_fopag_indireta
+-- @name: Premium - FOPAG Indireta
 -- @category: Premium
--- @order: 15
+-- @order: 07
 
 WITH params AS (
     SELECT
@@ -11,7 +11,7 @@ WITH params AS (
         'Premium'        AS vertical
 ),
 
-rateio_base AS (
+fopag_base AS (
     SELECT
         lp.Nome_Conta,
         f.Origem,
@@ -29,7 +29,7 @@ rateio_base AS (
       AND MONTH(f.Data_Transacao) <= p.mes_ytd
       AND f.Ebitda     = 'Sim'
       AND f.Recorrente = 'Sim'
-      AND f.Nome_PnL   = 'Rateio Corporativo'
+      AND f.Nome_PnL   = 'Folha de Pagamento'
 ),
 
 rol_base AS (
@@ -58,7 +58,7 @@ metricas AS (
         SUM(CASE WHEN ano = ano_anterior AND Origem = 'Ajustes'                 THEN Valor * -1 ELSE 0 END) / 1000 AS ant_adj,
         SUM(CASE WHEN ano = ano_atual    AND Origem = 'Forecast'                THEN Valor * -1 ELSE 0 END) / 1000 AS atu_f,
         SUM(CASE WHEN ano = ano_atual    AND Origem IN ('Resultado', 'Ajustes') THEN Valor * -1 ELSE 0 END) / 1000 AS atu_r
-    FROM rateio_base
+    FROM fopag_base
     GROUP BY Nome_Conta
 ),
 
@@ -91,10 +91,24 @@ itens AS (
             CASE WHEN r.rol_atu_f <> 0 THEN m.atu_f / r.rol_atu_f * 100 ELSE 0 END
         , 1)                                                                                                                                  AS `Var_pp_FcstR`,
         CASE m.Nome_Conta
-            WHEN 'Rateio CSC Nacional'           THEN 1
-            WHEN 'Rateio Corporativo Finanças'   THEN 2
-            WHEN 'Rateio Diretoria Executiva'    THEN 3
-            WHEN 'Rateio TI'                     THEN 4
+            WHEN 'Salários'                        THEN 1
+            WHEN 'Serviços de Apoio ao Negócio'    THEN 2
+            WHEN 'Rescisões'                        THEN 3
+            WHEN 'Participação nos lucros'          THEN 4
+            WHEN 'Outras Despesas Administrativas' THEN 5
+            WHEN 'Multa Rescisória do FGTS'        THEN 6
+            WHEN 'INSS Sobre Salários'             THEN 7
+            WHEN 'INSS Sobre Férias'               THEN 8
+            WHEN 'INSS Sobre 13º Salário'          THEN 9
+            WHEN 'FGTS Sobre Salários'             THEN 10
+            WHEN 'FGTS Sobre Férias'               THEN 11
+            WHEN 'FGTS Sobre 13º Salário'          THEN 12
+            WHEN 'Provisão convenção coletiva'      THEN 13
+            WHEN 'Férias'                          THEN 14
+            WHEN 'Bolsa Estágio'                   THEN 15
+            WHEN 'Ajuda de Custo'                  THEN 16
+            WHEN '13º Salário'                     THEN 17
+            WHEN 'Prêmio'                          THEN 18
             ELSE 50
         END AS sort_order
     FROM metricas m
@@ -117,13 +131,12 @@ SELECT
     `Var_pp_FcstR`  AS `Var %|p.p.`,
     sort_order
 FROM itens
-WHERE sort_order <> 50
 
 UNION ALL
 
--- Total Rateio Corporativo
+-- Total Folha de Pagamento
 SELECT
-    'Rateio Corporativo',
+    'Folha de Pagamento',
     ROUND(SUM(m.ant_r + m.ant_adj), 0),
     ROUND(CASE WHEN MAX(r.rol_ant)   <> 0 THEN SUM(m.ant_r + m.ant_adj) / MAX(r.rol_ant)   * 100 ELSE 0 END, 1),
     ROUND(SUM(m.atu_f), 0),
@@ -141,9 +154,5 @@ SELECT
     100
 FROM metricas m
 CROSS JOIN rol r
-WHERE m.Nome_Conta IN (
-    'Rateio CSC Nacional', 'Rateio Corporativo Finanças',
-    'Rateio Diretoria Executiva', 'Rateio TI'
-)
 
 ORDER BY sort_order
