@@ -70,8 +70,8 @@
     "semantic_hash": "52dd8ceefccfdd85b91e249da655fe2a"
   },
   "frontend/src/App.jsx": {
-    "mtime": 1784656715.2998724,
-    "ast_hash": "f3f875d25471f7b929eae9a5f4121075",
+    "mtime": 1784746042.632606,
+    "ast_hash": "64c0137af91c53f19942df2a7f3a2327",
     "semantic_hash": ""
   },
   "frontend/src/components/Auth/Login.jsx": {
@@ -105,8 +105,8 @@
     "semantic_hash": "d63c9af6faeba9244967686cb52f83e1"
   },
   "frontend/src/components/DataTable.jsx": {
-    "mtime": 1784722545.366088,
-    "ast_hash": "715c22f747d91c8d8af86967dce44aae",
+    "mtime": 1784730370.9552643,
+    "ast_hash": "26ce84a99b59d0808b2e8071829fce3e",
     "semantic_hash": ""
   },
   "frontend/src/components/PcldChart.jsx": {
@@ -135,8 +135,8 @@
     "semantic_hash": "13a04f7b3de610e73f8bb4c9ba2f8854"
   },
   "CLAUDE.md": {
-    "mtime": 1784578728.1305907,
-    "ast_hash": "f9dc1c3b950d89b72d9a8060a3d01977",
+    "mtime": 1784745909.7370255,
+    "ast_hash": "ae6a6dd344493d30ac5d2ee89f1ab1ae",
     "semantic_hash": ""
   },
   "backend/requirements.txt": {
@@ -224,11 +224,6 @@
     "ast_hash": "933683464e918cd616edbc8ef077496f",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/13_pcld_grafico.sql": {
-    "mtime": 1784721368.653021,
-    "ast_hash": "8fd7a5d8bf8f300d9f068acd5907e357",
-    "semantic_hash": ""
-  },
   "backend/queries/Premium/30_capex.sql": {
     "mtime": 1784720366.3550205,
     "ast_hash": "a4fe576bc82a93af9e1b611b1aedcb9e",
@@ -237,6 +232,56 @@
   "backend/queries/Premium/31_lucro_liquido_ytd_consolidado.sql": {
     "mtime": 1784720367.4884033,
     "ast_hash": "72349e256b074e9f4a2d32c7d4d3488b",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/13_ebitda_por_unidade_pueri_domus.sql": {
+    "mtime": 1784723641.6134305,
+    "ast_hash": "75d300ddd9b097f521250e3625532a25",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/14_ebitda_variacoes_por_tema_pueri_domus.sql": {
+    "mtime": 1784727450.0015852,
+    "ast_hash": "25547d4f0af614f414d2bca632b8021f",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/15_dre_pueri_domus.sql": {
+    "mtime": 1784730275.083197,
+    "ast_hash": "429a4724dfdfcdd4376ee2a018998659",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/16_evolucao_alunos_pueri_domus.sql": {
+    "mtime": 1784739590.27657,
+    "ast_hash": "2a9728d7b0fb5d190baf3a61276cdd5d",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/17_fopag_direta_pueri_domus.sql": {
+    "mtime": 1784740867.6139207,
+    "ast_hash": "3b22c1dbf83117ac3360f83bb5f00030",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/18_fopag_indireta_pueri_domus.sql": {
+    "mtime": 1784741569.5634837,
+    "ast_hash": "182463ffdaa8cfd33df64fceb18385b2",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/19_fopag_consolidado_pueri_domus.sql": {
+    "mtime": 1784743029.2583747,
+    "ast_hash": "e90902676eaff39e4967c2f936b6db02",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/20_rateio_corporativo_pueri_domus.sql": {
+    "mtime": 1784743762.0297558,
+    "ast_hash": "9279db1a8028912d3671718a55611fee",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/21_beneficios_pueri_domus.sql": {
+    "mtime": 1784744785.9596238,
+    "ast_hash": "2ff4998e626679ff3cea80fbb4ffe47d",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/99_pcld_grafico.sql": {
+    "mtime": 1784745909.7722883,
+    "ast_hash": "9fc1554e72d69226d2f1d61c0997e673",
     "semantic_hash": ""
   }
 }

@@ -39,5 +39,14 @@
   "37": "10b_pcld_grafico.sql",
   "38": "12_capex.sql",
   "39": "13_lucro_liquido_ytd_consolidado.sql",
-  "40": "31_lucro_liquido_ytd_consolidado.sql"
+  "40": "31_lucro_liquido_ytd_consolidado.sql",
+  "41": "14_ebitda_variacoes_por_tema_pueri_domus.sql",
+  "42": "15_dre_pueri_domus.sql",
+  "43": "16_pcld_grafico.sql",
+  "44": "17_fopag_direta_pueri_domus.sql",
+  "45": "18_fopag_indireta_pueri_domus.sql",
+  "46": "19_fopag_consolidado_pueri_domus.sql",
+  "47": "20_rateio_corporativo_pueri_domus.sql",
+  "48": "21_beneficios_pueri_domus.sql",
+  "49": "99_pcld_grafico.sql"
 }

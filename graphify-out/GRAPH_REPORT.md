@@ -1,16 +1,16 @@
 # Graph Report - dash_v1  (2026-07-22)
 
 ## Corpus Check
-- 43 files · ~47,677 words
+- 52 files · ~65,685 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 313 nodes · 351 edges · 41 communities (34 shown, 7 thin omitted)
+- 322 nodes · 351 edges · 50 communities (43 shown, 7 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `187b64da`
+- Built from commit: `d36627c7`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -71,7 +71,7 @@
 - **mv_f_apresentacao UNION ALL Sources** — claude_mv_f_apresentacao, claude_f_resultado, claude_f_ajustes, claude_f_orcamento, claude_f_alunos, claude_f_orcamentoalunos [EXTRACTED 1.00]
 - **Premium Vertical Business Rules** — claude_vertical_premium, claude_ipiranga_rule, claude_vertical_ap, claude_d_classunidades [EXTRACTED 1.00]
 
-## Communities (41 total, 7 thin omitted)
+## Communities (50 total, 7 thin omitted)
 
 ### Community 0 - "Flask App Routes & Query API"
 Cohesion: 0.07
@@ -146,7 +146,7 @@ Nodes (5): App(), AppContent(), getDefaultPeriod(), MESES, useTheme()
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `devDependencies` connect `Frontend Dev Tooling` to `Frontend Runtime Dependencies`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Are the 3 inferred relationships involving `User` (e.g. with `admin_create_user()` and `register()`) actually correct?**
   _`User` has 3 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `MESES`, `name`, `private` to the rest of the system?**
