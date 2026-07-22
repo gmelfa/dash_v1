@@ -142,6 +142,15 @@ body {
   margin: 0;
 }
 
+.app-title-link {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.app-title-link:hover {
+  opacity: 0.8;
+}
+
 .period-selector {
   display: flex;
   align-items: center;
@@ -245,6 +254,15 @@ body {
   white-space: nowrap;
 }
 
+/* Controles de sumário (usuários pendentes / exportação em lote / recolher)
+   vivem no header fixo do app, não dentro do scroll da sidebar — assim eles
+   nunca somem ao rolar a lista de queries */
+.sidebar-header-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .sidebar-controls {
   display: flex;
   gap: 0.5rem;
@@ -329,30 +347,6 @@ body {
 .sidebar-toggle-btn:hover {
   background: var(--primary-hover);
   transform: scale(1.05);
-}
-
-/* Botão flutuante quando sidebar está fechado */
-.sidebar-toggle-btn-floating {
-  position: fixed;
-  top: 80px;
-  /* Ajustado para ficar logo abaixo do header (70px + 10px margem) */
-  left: 20px;
-  background: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.75rem 0.5rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  font-size: 1.125rem;
-  transition: all 0.2s;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.sidebar-toggle-btn-floating:hover {
-  background: var(--primary-hover);
-  transform: translateX(4px) scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar.closed .query-list {

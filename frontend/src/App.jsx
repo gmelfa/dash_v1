@@ -512,7 +512,41 @@ function AppContent() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Dashboard Databricks</h1>
+        <h1 className="app-title-link" onClick={showCoverPage} title="Ir para a capa">Dashboard Databricks</h1>
+
+        <div className="sidebar-header-controls">
+          {user?.is_admin && (
+            <button
+              className={`btn-export-mode ${showPendingPanel ? 'active' : ''}`}
+              onClick={() => {
+                if (!isSidebarOpen) setIsSidebarOpen(true)
+                setShowPendingPanel(v => !v)
+              }}
+              title="Usuários aguardando aprovação"
+              style={{ position: 'relative' }}
+            >
+              👤
+            </button>
+          )}
+          <button
+            className={`btn-export-mode ${isExportMode ? 'active' : ''}`}
+            onClick={() => {
+              if (!isSidebarOpen) setIsSidebarOpen(true)
+              setIsExportMode(!isExportMode)
+              if (!isExportMode) setSelectedQueriesForExport(new Set())
+            }}
+            title="Modo de exportação em lote"
+          >
+            📦
+          </button>
+          <button
+            className="sidebar-toggle-btn"
+            onClick={() => setIsSidebarOpen(v => !v)}
+            title={isSidebarOpen ? 'Recolher sumário' : 'Expandir sumário'}
+          >
+            {isSidebarOpen ? '◀' : '▶'}
+          </button>
+        </div>
 
         <div className="period-selector">
           <label>Período:</label>
@@ -571,52 +605,9 @@ function AppContent() {
       </header>
 
       <div className={`main-container ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-        {!isSidebarOpen && (
-          <button
-            className="sidebar-toggle-btn-floating"
-            onClick={() => setIsSidebarOpen(true)}
-            title="Expandir sumário"
-          >
-            ▶
-          </button>
-        )}
-
         <aside className={`sidebar ${isSidebarOpen ? 'open' : 'closed'}`}>
           <div className="sidebar-header">
             <h2>Sumário</h2>
-            <div className="sidebar-controls">
-              {isSidebarOpen && (
-                <>
-                  {user?.is_admin && (
-                    <button
-                      className={`btn-export-mode ${showPendingPanel ? 'active' : ''}`}
-                      onClick={() => setShowPendingPanel(v => !v)}
-                      title="Usuários aguardando aprovação"
-                      style={{ position: 'relative' }}
-                    >
-                      👤
-                    </button>
-                  )}
-                  <button
-                    className={`btn-export-mode ${isExportMode ? 'active' : ''}`}
-                    onClick={() => {
-                      setIsExportMode(!isExportMode)
-                      if (!isExportMode) setSelectedQueriesForExport(new Set())
-                    }}
-                    title="Modo de exportação em lote"
-                  >
-                    📦
-                  </button>
-                  <button
-                    className="sidebar-toggle-btn"
-                    onClick={() => setIsSidebarOpen(false)}
-                    title="Recolher"
-                  >
-                    ◀
-                  </button>
-                </>
-              )}
-            </div>
           </div>
 
           {showPendingPanel && user?.is_admin && (
@@ -688,17 +679,6 @@ function AppContent() {
             <div className="loading-queries">Carregando queries...</div>
           ) : (
             <ul className="query-list">
-              <li
-                key="cover"
-                className={selectedQuery === 'cover' ? 'active' : ''}
-                onClick={showCoverPage}
-              >
-                <span className="query-number">📄</span>
-                <div className="query-info">
-                  <div className="query-title">Capa - Business Review</div>
-                  <div className="query-description">Página inicial do relatório</div>
-                </div>
-              </li>
               {Object.entries(
                 savedQueries.reduce((groups, query) => {
                   const cat = query.category || 'Outros'
