@@ -31,7 +31,12 @@ function Database({ columns, data }) {
         const isAlunos = col.toLowerCase().includes('alunos')
 
         return {
-          accessorKey: col,
+          id: col,
+          // accessorFn (não accessorKey) — accessorKey trata "." no nome da coluna
+          // como separador de caminho aninhado (ex: "Var.|26 x Bgt" virava
+          // row["Var"]["|26 x Bgt"]), retornando undefined pra qualquer nome
+          // de coluna com ponto
+          accessorFn: (row) => row[col],
           header: () => {
             // --- REGRA MESTRA: SEPARADOR PIPE (|) ---
             if (col.includes('|')) {
