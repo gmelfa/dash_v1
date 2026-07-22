@@ -15,7 +15,7 @@ function Database({ columns, data }) {
       col !== 'sort_order ' &&
       col !== 'id'
     );
-    return cleanCols.slice(0, 19);
+    return cleanCols.slice(0, 25);
   }, [columns]);
 
   const tableColumns = useMemo(
@@ -97,7 +97,10 @@ function Database({ columns, data }) {
 
             const firstColKey = visibleColumnsNames[0];
             const firstColValue = String(info.row.original[firstColKey] || '').toLowerCase();
-            const isMargemRow = firstColValue.includes('margem');
+            // Match exato — "margem %" é uma linha onde toda coluna é %.
+            // "(=) Margem de Contribuição" (DRE) NÃO é: mistura R$ mil com % ROL
+            // na mesma linha, então não pode cair nessa regra.
+            const isMargemRow = firstColValue === 'margem %';
 
             if (!isNaN(numValue)) {
               let displayValue = numValue;
@@ -173,10 +176,9 @@ function Database({ columns, data }) {
           <tbody>
             {filteredRows.map((row) => {
               const vertical = row.original.Vertical || row.original.vertical || row.original.Diretoria || ''
-              const isSubtotal = vertical.includes('Operações') || vertical.includes('Total') || vertical.includes('Corporativas')
-
               // Detecta linhas de cabeçalho de seção (Histórico, Forecast, Realizado)
               const firstColValue = String(row.original[visibleColumnsNames[0]] || '')
+              const isSubtotal = vertical.includes('Operações') || vertical.includes('Total') || vertical.includes('Corporativas') || firstColValue.includes('Total') || firstColValue.startsWith('(=)')
               const isSectionHeader = firstColValue.startsWith('Histórico') || firstColValue.startsWith('Forecast') || firstColValue === 'Realizado' || firstColValue.startsWith('Variação')
 
               let rowClass = ''
