@@ -708,7 +708,7 @@ As pastas `backend/queries/financeiro/` e `backend/queries/diretorias/` existem 
 
 ### DataTable.jsx — comportamentos não-óbvios
 
-- Limita a **19 colunas** (slice hardcoded)
+- Limita a **25 colunas** (slice hardcoded, era 19 até 2026-07-22 — aumentado para caber a tabela "EBITDA por unidade YTD - Pueri Domus", que tem 24)
 - Remove colunas `sort_order`, `sort_order ` (com espaço) e `id` automaticamente
 - Linhas com "Maple Bear Escolas Próprias" em Vertical/Diretoria são **filtradas silenciosamente**
 - Linhas com "Operações", "Total", "Corporativas" no campo vertical recebem estilo `subtotal-row`
