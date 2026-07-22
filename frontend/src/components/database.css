@@ -1,7 +1,7 @@
 /* Reset básico */
 .data-table-container {
     width: 100%;
-    font-family: 'Arial', sans-serif;
+    font-family: 'Book Antiqua', Palatino, 'Palatino Linotype', serif;
     margin: 20px 0;
     background: white;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -25,13 +25,14 @@
 .data-table thead th {
     background-color: #002060; /* Azul Marinho Profundo */
     color: white;
-    padding: 10px 4px; /* Mais altura, menos largura */
+    padding: 10px 2px; /* Mais altura, menos largura */
     text-align: center; /* Padrão centralizado para cabeçalhos */
     font-weight: 700;
     border: 1px solid #002060;
     border-right: 1px solid rgba(255,255,255,0.2);
     text-transform: uppercase;
-    font-size: 11px;
+    font-size: 13px;
+    white-space: nowrap;
     position: sticky;
     top: 0;
     z-index: 3;
@@ -48,6 +49,13 @@
 /* Cabeçalhos específicos de variação */
 .center-head {
     text-align: center !important;
+}
+
+/* Cabeçalho da coluna de descrição — mais específico que ".data-table thead th"
+   pra vencer o text-align:center padrão e ficar colado na margem esquerda */
+.data-table thead th.text-left {
+    text-align: left !important;
+    padding-left: 10px;
 }
 
 /* Títulos de Grupo */

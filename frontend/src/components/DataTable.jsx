@@ -38,6 +38,11 @@ function Database({ columns, data }) {
           // de coluna com ponto
           accessorFn: (row) => row[col],
           header: () => {
+            // Coluna de descrição é sempre texto puro em uma linha só —
+            // não aplicar as regras de quebra em duas linhas (pipe,
+            // parênteses, "Var...") mesmo que o nome contenha "(" ou "|"
+            if (isTextColumn) return col
+
             // --- REGRA MESTRA: SEPARADOR PIPE (|) ---
             if (col.includes('|')) {
               const parts = col.split('|')

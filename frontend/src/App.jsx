@@ -820,7 +820,7 @@ function AppContent() {
                 </div>
 
                 {tableData.chartData && (
-                  <div className="data-table-container" style={{ width: '100%' }}>
+                  <div className="data-table-container" style={{ width: '100%', marginTop: '-15px' }}>
                     <PcldChart
                       data={tableData.chartData}
                       anoAtual={selectedAno}
