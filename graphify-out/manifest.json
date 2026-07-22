@@ -45,39 +45,14 @@
     "semantic_hash": "51cc123db6d77a392c59033bcd0547c1"
   },
   "backend/queries/Premium/01_premium_principais_metricas_ytd.sql": {
-    "mtime": 1784555872.3882322,
-    "ast_hash": "eb224421bad2c6546c33a82e5f5347b8",
+    "mtime": 1784721355.6812687,
+    "ast_hash": "7bca4cba35fba2dc233ab3fbb58e9273",
     "semantic_hash": ""
   },
   "backend/queries/Premium/02_EBTIDA_por_unidade_YTD.sql": {
-    "mtime": 1784555872.420826,
-    "ast_hash": "f20331407c11336f0a4abdd509c0ac05",
+    "mtime": 1784721356.772768,
+    "ast_hash": "06d4c3f7de02c65d0191fd676fe74dc2",
     "semantic_hash": ""
-  },
-  "backend/queries/Premium/03_DRE_premium_YTD.sql": {
-    "mtime": 1779461291.4226813,
-    "ast_hash": "a8fd72d96fb12dbfd4db224c76334eab",
-    "semantic_hash": "a8fd72d96fb12dbfd4db224c76334eab"
-  },
-  "backend/queries/Premium/04_historico_alunos_premium.sql": {
-    "mtime": 1776861197.088664,
-    "ast_hash": "d39f69ef8bf5ff69018dbd6ba66da94a",
-    "semantic_hash": "d39f69ef8bf5ff69018dbd6ba66da94a"
-  },
-  "backend/queries/Premium/05_fopag_direta.sql": {
-    "mtime": 1784656714.9447577,
-    "ast_hash": "681a5c6e23b49dfcc3452ca25a98d5b6",
-    "semantic_hash": ""
-  },
-  "backend/queries/Premium/06_fopag_indireta.sql": {
-    "mtime": 1784656714.9847207,
-    "ast_hash": "eae5bf69cdf11c243f3b045426df09ba",
-    "semantic_hash": ""
-  },
-  "backend/queries/Premium/10_variacao_orcado.sql": {
-    "mtime": 1776861238.9675384,
-    "ast_hash": "a13fdbcb44e2ba45edd0f04863c74d87",
-    "semantic_hash": "a13fdbcb44e2ba45edd0f04863c74d87"
   },
   "backend/query_loader.py": {
     "mtime": 1784656715.2512639,
@@ -130,8 +105,8 @@
     "semantic_hash": "d63c9af6faeba9244967686cb52f83e1"
   },
   "frontend/src/components/DataTable.jsx": {
-    "mtime": 1784656715.3269472,
-    "ast_hash": "6e95e9c446d14e1c848a9fe7e0ddd161",
+    "mtime": 1784722545.366088,
+    "ast_hash": "715c22f747d91c8d8af86967dce44aae",
     "semantic_hash": ""
   },
   "frontend/src/components/PcldChart.jsx": {
@@ -199,39 +174,69 @@
     "ast_hash": "f8dafa09d3125d851e9c3c9024145ba2",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/07_fopag_consolidado.sql": {
-    "mtime": 1784644970.8301616,
-    "ast_hash": "364d27cd4e6d11844d299cca9030a0ef",
+  "backend/queries/Premium/03_variacao_orcado.sql": {
+    "mtime": 1784721357.8861783,
+    "ast_hash": "efb1bbdf0e756a69f439a9721ab081ac",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/08_beneficios.sql": {
-    "mtime": 1784658612.4101257,
-    "ast_hash": "cbc192ca464ace106e3360a3737fc262",
+  "backend/queries/Premium/04_DRE_premium_YTD.sql": {
+    "mtime": 1784721358.9620612,
+    "ast_hash": "578fd246e625ba2aa9030155a77bebab",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/09_rateio_corporativo.sql": {
-    "mtime": 1784659819.7972062,
-    "ast_hash": "75d9eef789f3a7744cdb57e02fdb79b3",
+  "backend/queries/Premium/05_historico_alunos_premium.sql": {
+    "mtime": 1784721360.0590136,
+    "ast_hash": "b7a6d606438f0134c8ab76bd038b9559",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/10_pcld.sql": {
-    "mtime": 1784660333.23618,
-    "ast_hash": "366c867a3a2f67f548f44a5a9aa6376a",
+  "backend/queries/Premium/06_fopag_direta.sql": {
+    "mtime": 1784721361.1558523,
+    "ast_hash": "d143fa825d583cc45abba1916c056059",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/10b_pcld_grafico.sql": {
-    "mtime": 1784656715.1296182,
-    "ast_hash": "5466895ae170e6224e7824580fc94786",
+  "backend/queries/Premium/07_fopag_indireta.sql": {
+    "mtime": 1784721362.2095406,
+    "ast_hash": "67116755f76d06a2ca54a71d43cd245e",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/12_capex.sql": {
-    "mtime": 1784656715.1688697,
-    "ast_hash": "9128de069443b73f202b4ea7ff1e9f76",
+  "backend/queries/Premium/08_fopag_consolidado.sql": {
+    "mtime": 1784721363.2538466,
+    "ast_hash": "69e89bb921a617f645bb496b9c194221",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/13_lucro_liquido_ytd_consolidado.sql": {
-    "mtime": 1784656715.2103722,
-    "ast_hash": "3283d175a9936d165608a5130131fc5b",
+  "backend/queries/Premium/09_beneficios.sql": {
+    "mtime": 1784721364.3122194,
+    "ast_hash": "1729499d646875b7adf9ad87de99ad23",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/10_rateio_corporativo.sql": {
+    "mtime": 1784721365.3900647,
+    "ast_hash": "c10a537edb123cf509eaa3d15c1a8cf4",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/11_pcld.sql": {
+    "mtime": 1784721366.473204,
+    "ast_hash": "14a560cc7b85dcb9ab5fb7b381e3d91d",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/12_principais_metricas_pueri_domus.sql": {
+    "mtime": 1784721367.570505,
+    "ast_hash": "933683464e918cd616edbc8ef077496f",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/13_pcld_grafico.sql": {
+    "mtime": 1784721368.653021,
+    "ast_hash": "8fd7a5d8bf8f300d9f068acd5907e357",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/30_capex.sql": {
+    "mtime": 1784720366.3550205,
+    "ast_hash": "a4fe576bc82a93af9e1b611b1aedcb9e",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/31_lucro_liquido_ytd_consolidado.sql": {
+    "mtime": 1784720367.4884033,
+    "ast_hash": "72349e256b074e9f4a2d32c7d4d3488b",
     "semantic_hash": ""
   }
 }

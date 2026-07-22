@@ -1,16 +1,16 @@
-# Graph Report - dash_v1  (2026-07-21)
+# Graph Report - dash_v1  (2026-07-22)
 
 ## Corpus Check
-- 42 files · ~46,385 words
+- 43 files · ~47,677 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 312 nodes · 351 edges · 40 communities (33 shown, 7 thin omitted)
+- 313 nodes · 351 edges · 41 communities (34 shown, 7 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `524fdaf3`
+- Built from commit: `187b64da`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -71,7 +71,7 @@
 - **mv_f_apresentacao UNION ALL Sources** — claude_mv_f_apresentacao, claude_f_resultado, claude_f_ajustes, claude_f_orcamento, claude_f_alunos, claude_f_orcamentoalunos [EXTRACTED 1.00]
 - **Premium Vertical Business Rules** — claude_vertical_premium, claude_ipiranga_rule, claude_vertical_ap, claude_d_classunidades [EXTRACTED 1.00]
 
-## Communities (40 total, 7 thin omitted)
+## Communities (41 total, 7 thin omitted)
 
 ### Community 0 - "Flask App Routes & Query API"
 Cohesion: 0.07

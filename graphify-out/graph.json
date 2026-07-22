@@ -53,15 +53,180 @@
   },
   "nodes": [
     {
+      "label": "01_premium_principais_metricas_ytd.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/01_premium_principais_metricas_ytd.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_01_premium_principais_metricas_ytd",
+      "community": 16,
+      "community_name": "Query 01 - Metricas Principais YTD",
+      "norm_label": "01_premium_principais_metricas_ytd.sql"
+    },
+    {
+      "label": "02_EBTIDA_por_unidade_YTD.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/02_EBTIDA_por_unidade_YTD.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_02_ebtida_por_unidade_ytd",
+      "community": 17,
+      "community_name": "Query 02 - EBITDA por Unidade YTD",
+      "norm_label": "02_ebtida_por_unidade_ytd.sql"
+    },
+    {
+      "label": "03_variacao_orcado.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/03_variacao_orcado.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_03_variacao_orcado",
+      "community": 18,
+      "community_name": "Query 03 - DRE Premium YTD",
+      "norm_label": "03_variacao_orcado.sql"
+    },
+    {
+      "label": "04_DRE_premium_YTD.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/04_DRE_premium_YTD.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_04_dre_premium_ytd",
+      "community": 19,
+      "community_name": "Query 04 - Historico Alunos Premium",
+      "norm_label": "04_dre_premium_ytd.sql"
+    },
+    {
+      "label": "05_historico_alunos_premium.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/05_historico_alunos_premium.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_05_historico_alunos_premium",
+      "community": 20,
+      "community_name": "Query 05 - Fopag Direta",
+      "norm_label": "05_historico_alunos_premium.sql"
+    },
+    {
+      "label": "06_fopag_direta.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/06_fopag_direta.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_06_fopag_direta",
+      "community": 21,
+      "community_name": "Query 06 - Fopag Indireta",
+      "norm_label": "06_fopag_direta.sql"
+    },
+    {
+      "label": "07_fopag_indireta.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/07_fopag_indireta.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_07_fopag_indireta",
+      "community": 25,
+      "community_name": "Query 09b - PCLD Grafico",
+      "norm_label": "07_fopag_indireta.sql"
+    },
+    {
+      "label": "08_fopag_consolidado.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/08_fopag_consolidado.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_08_fopag_consolidado",
+      "community": 26,
+      "community_name": "Query 10 - Variacao Orcado",
+      "norm_label": "08_fopag_consolidado.sql"
+    },
+    {
+      "label": "09_beneficios.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/09_beneficios.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_09_beneficios",
+      "community": 27,
+      "community_name": "Query 11 - CAPEX",
+      "norm_label": "09_beneficios.sql"
+    },
+    {
+      "label": "10_rateio_corporativo.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/10_rateio_corporativo.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_10_rateio_corporativo",
+      "community": 28,
+      "community_name": "Query 12 - Lucro Liquido YTD",
+      "norm_label": "10_rateio_corporativo.sql"
+    },
+    {
+      "label": "11_pcld.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/11_pcld.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_11_pcld",
+      "community": 36,
+      "community_name": "10_pcld.sql",
+      "norm_label": "11_pcld.sql"
+    },
+    {
+      "label": "12_principais_metricas_pueri_domus.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/12_principais_metricas_pueri_domus.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_12_principais_metricas_pueri_domus",
+      "community": 37,
+      "community_name": "10b_pcld_grafico.sql",
+      "norm_label": "12_principais_metricas_pueri_domus.sql"
+    },
+    {
+      "label": "13_pcld_grafico.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/13_pcld_grafico.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_13_pcld_grafico",
+      "community": 38,
+      "community_name": "12_capex.sql",
+      "norm_label": "13_pcld_grafico.sql"
+    },
+    {
+      "label": "30_capex.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/30_capex.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_30_capex",
+      "community": 39,
+      "community_name": "13_lucro_liquido_ytd_consolidado.sql",
+      "norm_label": "30_capex.sql"
+    },
+    {
+      "label": "31_lucro_liquido_ytd_consolidado.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/31_lucro_liquido_ytd_consolidado.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_31_lucro_liquido_ytd_consolidado",
+      "community": 40,
+      "community_name": "31_lucro_liquido_ytd_consolidado.sql",
+      "norm_label": "31_lucro_liquido_ytd_consolidado.sql"
+    },
+    {
       "label": "app.py",
       "file_type": "code",
       "source_file": "backend/app.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "backend_app",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "app.py"
+      "norm_label": "app.py",
+      "id": "backend_app"
     },
     {
       "label": "load_user()",
@@ -69,10 +234,10 @@
       "source_file": "backend/app.py",
       "source_location": "L40",
       "_origin": "ast",
-      "id": "backend_app_load_user",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "load_user()"
+      "norm_label": "load_user()",
+      "id": "backend_app_load_user"
     },
     {
       "label": "start_timer()",
@@ -80,10 +245,10 @@
       "source_file": "backend/app.py",
       "source_location": "L44",
       "_origin": "ast",
-      "id": "backend_app_start_timer",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "start_timer()"
+      "norm_label": "start_timer()",
+      "id": "backend_app_start_timer"
     },
     {
       "label": "log_request()",
@@ -91,10 +256,10 @@
       "source_file": "backend/app.py",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "backend_app_log_request",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "log_request()"
+      "norm_label": "log_request()",
+      "id": "backend_app_log_request"
     },
     {
       "label": "get_databricks_connection()",
@@ -102,10 +267,10 @@
       "source_file": "backend/app.py",
       "source_location": "L78",
       "_origin": "ast",
-      "id": "backend_app_get_databricks_connection",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_databricks_connection()"
+      "norm_label": "get_databricks_connection()",
+      "id": "backend_app_get_databricks_connection"
     },
     {
       "label": "load_queries()",
@@ -113,10 +278,10 @@
       "source_file": "backend/app.py",
       "source_location": "L86",
       "_origin": "ast",
-      "id": "backend_app_load_queries",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "load_queries()"
+      "norm_label": "load_queries()",
+      "id": "backend_app_load_queries"
     },
     {
       "label": "load_queries_categorized()",
@@ -124,10 +289,10 @@
       "source_file": "backend/app.py",
       "source_location": "L121",
       "_origin": "ast",
-      "id": "backend_app_load_queries_categorized",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "load_queries_categorized()"
+      "norm_label": "load_queries_categorized()",
+      "id": "backend_app_load_queries_categorized"
     },
     {
       "label": "save_queries()",
@@ -135,10 +300,10 @@
       "source_file": "backend/app.py",
       "source_location": "L161",
       "_origin": "ast",
-      "id": "backend_app_save_queries",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "save_queries()"
+      "norm_label": "save_queries()",
+      "id": "backend_app_save_queries"
     },
     {
       "label": "health_check()",
@@ -146,10 +311,10 @@
       "source_file": "backend/app.py",
       "source_location": "L167",
       "_origin": "ast",
-      "id": "backend_app_health_check",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "health_check()"
+      "norm_label": "health_check()",
+      "id": "backend_app_health_check"
     },
     {
       "label": "get_query_stats()",
@@ -157,10 +322,10 @@
       "source_file": "backend/app.py",
       "source_location": "L172",
       "_origin": "ast",
-      "id": "backend_app_get_query_stats",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_query_stats()"
+      "norm_label": "get_query_stats()",
+      "id": "backend_app_get_query_stats"
     },
     {
       "label": "get_query_categories()",
@@ -168,10 +333,10 @@
       "source_file": "backend/app.py",
       "source_location": "L181",
       "_origin": "ast",
-      "id": "backend_app_get_query_categories",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_query_categories()"
+      "norm_label": "get_query_categories()",
+      "id": "backend_app_get_query_categories"
     },
     {
       "label": "search_queries()",
@@ -179,10 +344,10 @@
       "source_file": "backend/app.py",
       "source_location": "L190",
       "_origin": "ast",
-      "id": "backend_app_search_queries",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "search_queries()"
+      "norm_label": "search_queries()",
+      "id": "backend_app_search_queries"
     },
     {
       "label": "reload_queries()",
@@ -190,10 +355,10 @@
       "source_file": "backend/app.py",
       "source_location": "L216",
       "_origin": "ast",
-      "id": "backend_app_reload_queries",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "reload_queries()"
+      "norm_label": "reload_queries()",
+      "id": "backend_app_reload_queries"
     },
     {
       "label": "get_queries()",
@@ -201,10 +366,10 @@
       "source_file": "backend/app.py",
       "source_location": "L231",
       "_origin": "ast",
-      "id": "backend_app_get_queries",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_queries()"
+      "norm_label": "get_queries()",
+      "id": "backend_app_get_queries"
     },
     {
       "label": "get_query_by_id()",
@@ -212,10 +377,10 @@
       "source_file": "backend/app.py",
       "source_location": "L265",
       "_origin": "ast",
-      "id": "backend_app_get_query_by_id",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_query_by_id()"
+      "norm_label": "get_query_by_id()",
+      "id": "backend_app_get_query_by_id"
     },
     {
       "label": "_run_query_sql()",
@@ -223,10 +388,10 @@
       "source_file": "backend/app.py",
       "source_location": "L278",
       "_origin": "ast",
-      "id": "backend_app_run_query_sql",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "_run_query_sql()"
+      "norm_label": "_run_query_sql()",
+      "id": "backend_app_run_query_sql"
     },
     {
       "label": "execute_saved_query()",
@@ -234,10 +399,10 @@
       "source_file": "backend/app.py",
       "source_location": "L305",
       "_origin": "ast",
-      "id": "backend_app_execute_saved_query",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "execute_saved_query()"
+      "norm_label": "execute_saved_query()",
+      "id": "backend_app_execute_saved_query"
     },
     {
       "label": "add_query()",
@@ -245,10 +410,10 @@
       "source_file": "backend/app.py",
       "source_location": "L417",
       "_origin": "ast",
-      "id": "backend_app_add_query",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "add_query()"
+      "norm_label": "add_query()",
+      "id": "backend_app_add_query"
     },
     {
       "label": "update_query()",
@@ -256,10 +421,10 @@
       "source_file": "backend/app.py",
       "source_location": "L455",
       "_origin": "ast",
-      "id": "backend_app_update_query",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "update_query()"
+      "norm_label": "update_query()",
+      "id": "backend_app_update_query"
     },
     {
       "label": "delete_query()",
@@ -267,10 +432,10 @@
       "source_file": "backend/app.py",
       "source_location": "L483",
       "_origin": "ast",
-      "id": "backend_app_delete_query",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "delete_query()"
+      "norm_label": "delete_query()",
+      "id": "backend_app_delete_query"
     },
     {
       "label": "get_tables()",
@@ -278,10 +443,10 @@
       "source_file": "backend/app.py",
       "source_location": "L497",
       "_origin": "ast",
-      "id": "backend_app_get_tables",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_tables()"
+      "norm_label": "get_tables()",
+      "id": "backend_app_get_tables"
     },
     {
       "label": "execute_query()",
@@ -289,10 +454,10 @@
       "source_file": "backend/app.py",
       "source_location": "L510",
       "_origin": "ast",
-      "id": "backend_app_execute_query",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "execute_query()"
+      "norm_label": "execute_query()",
+      "id": "backend_app_execute_query"
     },
     {
       "label": "get_table_data()",
@@ -300,10 +465,10 @@
       "source_file": "backend/app.py",
       "source_location": "L537",
       "_origin": "ast",
-      "id": "backend_app_get_table_data",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "get_table_data()"
+      "norm_label": "get_table_data()",
+      "id": "backend_app_get_table_data"
     },
     {
       "label": "Estabelece conex\u00e3o com o Databricks",
@@ -311,10 +476,10 @@
       "source_file": "backend/app.py",
       "source_location": "L79",
       "_origin": "ast",
-      "id": "backend_app_rationale_79",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "estabelece conexao com o databricks"
+      "norm_label": "estabelece conexao com o databricks",
+      "id": "backend_app_rationale_79"
     },
     {
       "label": "Carrega queries usando QueryLoader (novo sistema)",
@@ -322,10 +487,10 @@
       "source_file": "backend/app.py",
       "source_location": "L87",
       "_origin": "ast",
-      "id": "backend_app_rationale_87",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "carrega queries usando queryloader (novo sistema)"
+      "norm_label": "carrega queries usando queryloader (novo sistema)",
+      "id": "backend_app_rationale_87"
     },
     {
       "label": "Carrega queries no formato categorizado usando QueryLoader",
@@ -333,10 +498,10 @@
       "source_file": "backend/app.py",
       "source_location": "L122",
       "_origin": "ast",
-      "id": "backend_app_rationale_122",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "carrega queries no formato categorizado usando queryloader"
+      "norm_label": "carrega queries no formato categorizado usando queryloader",
+      "id": "backend_app_rationale_122"
     },
     {
       "label": "Salva queries no arquivo JSON (mantido para compatibilidade, mas n\u00e3o usado)",
@@ -344,10 +509,10 @@
       "source_file": "backend/app.py",
       "source_location": "L162",
       "_origin": "ast",
-      "id": "backend_app_rationale_162",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "salva queries no arquivo json (mantido para compatibilidade, mas nao usado)"
+      "norm_label": "salva queries no arquivo json (mantido para compatibilidade, mas nao usado)",
+      "id": "backend_app_rationale_162"
     },
     {
       "label": "Endpoint para verificar se o servidor est\u00e1 rodando",
@@ -355,10 +520,10 @@
       "source_file": "backend/app.py",
       "source_location": "L168",
       "_origin": "ast",
-      "id": "backend_app_rationale_168",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "endpoint para verificar se o servidor esta rodando"
+      "norm_label": "endpoint para verificar se o servidor esta rodando",
+      "id": "backend_app_rationale_168"
     },
     {
       "label": "Retorna estat\u00edsticas do sistema de queries",
@@ -366,10 +531,10 @@
       "source_file": "backend/app.py",
       "source_location": "L173",
       "_origin": "ast",
-      "id": "backend_app_rationale_173",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "retorna estatisticas do sistema de queries"
+      "norm_label": "retorna estatisticas do sistema de queries",
+      "id": "backend_app_rationale_173"
     },
     {
       "label": "Retorna lista de categorias dispon\u00edveis",
@@ -377,10 +542,10 @@
       "source_file": "backend/app.py",
       "source_location": "L182",
       "_origin": "ast",
-      "id": "backend_app_rationale_182",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "retorna lista de categorias disponiveis"
+      "norm_label": "retorna lista de categorias disponiveis",
+      "id": "backend_app_rationale_182"
     },
     {
       "label": "Busca queries por termo",
@@ -388,10 +553,10 @@
       "source_file": "backend/app.py",
       "source_location": "L191",
       "_origin": "ast",
-      "id": "backend_app_rationale_191",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "busca queries por termo"
+      "norm_label": "busca queries por termo",
+      "id": "backend_app_rationale_191"
     },
     {
       "label": "For\u00e7a reload de todas as queries do diret\u00f3rio",
@@ -399,10 +564,10 @@
       "source_file": "backend/app.py",
       "source_location": "L217",
       "_origin": "ast",
-      "id": "backend_app_rationale_217",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "forca reload de todas as queries do diretorio"
+      "norm_label": "forca reload de todas as queries do diretorio",
+      "id": "backend_app_rationale_217"
     },
     {
       "label": "Retorna lista de todas as queries cadastradas",
@@ -410,10 +575,10 @@
       "source_file": "backend/app.py",
       "source_location": "L232",
       "_origin": "ast",
-      "id": "backend_app_rationale_232",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "retorna lista de todas as queries cadastradas"
+      "norm_label": "retorna lista de todas as queries cadastradas",
+      "id": "backend_app_rationale_232"
     },
     {
       "label": "Retorna uma query espec\u00edfica pelo ID",
@@ -421,10 +586,10 @@
       "source_file": "backend/app.py",
       "source_location": "L266",
       "_origin": "ast",
-      "id": "backend_app_rationale_266",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "retorna uma query especifica pelo id"
+      "norm_label": "retorna uma query especifica pelo id",
+      "id": "backend_app_rationale_266"
     },
     {
       "label": "Executa um SQL e devolve (columns, data) j\u00e1 tratados: remove sort_order     e s",
@@ -432,10 +597,10 @@
       "source_file": "backend/app.py",
       "source_location": "L279",
       "_origin": "ast",
-      "id": "backend_app_rationale_279",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "executa um sql e devolve (columns, data) ja tratados: remove sort_order     e s"
+      "norm_label": "executa um sql e devolve (columns, data) ja tratados: remove sort_order     e s",
+      "id": "backend_app_rationale_279"
     },
     {
       "label": "Executa uma query salva pelo ID",
@@ -443,10 +608,10 @@
       "source_file": "backend/app.py",
       "source_location": "L306",
       "_origin": "ast",
-      "id": "backend_app_rationale_306",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "executa uma query salva pelo id"
+      "norm_label": "executa uma query salva pelo id",
+      "id": "backend_app_rationale_306"
     },
     {
       "label": "Adiciona uma nova query ao sistema",
@@ -454,10 +619,10 @@
       "source_file": "backend/app.py",
       "source_location": "L418",
       "_origin": "ast",
-      "id": "backend_app_rationale_418",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "adiciona uma nova query ao sistema"
+      "norm_label": "adiciona uma nova query ao sistema",
+      "id": "backend_app_rationale_418"
     },
     {
       "label": "Atualiza uma query existente",
@@ -465,10 +630,10 @@
       "source_file": "backend/app.py",
       "source_location": "L456",
       "_origin": "ast",
-      "id": "backend_app_rationale_456",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "atualiza uma query existente"
+      "norm_label": "atualiza uma query existente",
+      "id": "backend_app_rationale_456"
     },
     {
       "label": "Remove uma query do sistema",
@@ -476,10 +641,10 @@
       "source_file": "backend/app.py",
       "source_location": "L484",
       "_origin": "ast",
-      "id": "backend_app_rationale_484",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "remove uma query do sistema"
+      "norm_label": "remove uma query do sistema",
+      "id": "backend_app_rationale_484"
     },
     {
       "label": "Retorna lista de tabelas dispon\u00edveis",
@@ -487,10 +652,10 @@
       "source_file": "backend/app.py",
       "source_location": "L498",
       "_origin": "ast",
-      "id": "backend_app_rationale_498",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "retorna lista de tabelas disponiveis"
+      "norm_label": "retorna lista de tabelas disponiveis",
+      "id": "backend_app_rationale_498"
     },
     {
       "label": "Executa uma query no Databricks e retorna os resultados",
@@ -498,10 +663,10 @@
       "source_file": "backend/app.py",
       "source_location": "L511",
       "_origin": "ast",
-      "id": "backend_app_rationale_511",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "executa uma query no databricks e retorna os resultados"
+      "norm_label": "executa uma query no databricks e retorna os resultados",
+      "id": "backend_app_rationale_511"
     },
     {
       "label": "Retorna os dados de uma tabela espec\u00edfica",
@@ -509,87 +674,10 @@
       "source_file": "backend/app.py",
       "source_location": "L538",
       "_origin": "ast",
-      "id": "backend_app_rationale_538",
       "community": 0,
       "community_name": "Flask App Routes & Query API",
-      "norm_label": "retorna os dados de uma tabela especifica"
-    },
-    {
-      "label": "07_fopag_consolidado.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/07_fopag_consolidado.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_07_fopag_consolidado",
-      "community": 25,
-      "community_name": "Query 09b - PCLD Grafico",
-      "norm_label": "07_fopag_consolidado.sql"
-    },
-    {
-      "label": "08_beneficios.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/08_beneficios.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_08_beneficios",
-      "community": 27,
-      "community_name": "Query 11 - CAPEX",
-      "norm_label": "08_beneficios.sql"
-    },
-    {
-      "label": "09_rateio_corporativo.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/09_rateio_corporativo.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_09_rateio_corporativo",
-      "community": 28,
-      "community_name": "Query 12 - Lucro Liquido YTD",
-      "norm_label": "09_rateio_corporativo.sql"
-    },
-    {
-      "label": "10_pcld.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/10_pcld.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_10_pcld",
-      "community": 36,
-      "community_name": "10_pcld.sql",
-      "norm_label": "10_pcld.sql"
-    },
-    {
-      "label": "10b_pcld_grafico.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/10b_pcld_grafico.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_10b_pcld_grafico",
-      "community": 37,
-      "community_name": "10b_pcld_grafico.sql",
-      "norm_label": "10b_pcld_grafico.sql"
-    },
-    {
-      "label": "12_capex.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/12_capex.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_12_capex",
-      "community": 38,
-      "community_name": "12_capex.sql",
-      "norm_label": "12_capex.sql"
-    },
-    {
-      "label": "13_lucro_liquido_ytd_consolidado.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/13_lucro_liquido_ytd_consolidado.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_13_lucro_liquido_ytd_consolidado",
-      "community": 39,
-      "community_name": "13_lucro_liquido_ytd_consolidado.sql",
-      "norm_label": "13_lucro_liquido_ytd_consolidado.sql"
+      "norm_label": "retorna os dados de uma tabela especifica",
+      "id": "backend_app_rationale_538"
     },
     {
       "label": "query_loader.py",
@@ -597,10 +685,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "backend_query_loader",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "query_loader.py"
+      "norm_label": "query_loader.py",
+      "id": "backend_query_loader"
     },
     {
       "label": "QueryMetadata",
@@ -608,10 +696,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "backend_query_loader_querymetadata",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "querymetadata"
+      "norm_label": "querymetadata",
+      "id": "backend_query_loader_querymetadata"
     },
     {
       "label": ".to_dict()",
@@ -619,10 +707,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "backend_query_loader_querymetadata_to_dict",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".to_dict()"
+      "norm_label": ".to_dict()",
+      "id": "backend_query_loader_querymetadata_to_dict"
     },
     {
       "label": "Any",
@@ -630,10 +718,10 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "any",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "any"
+      "norm_label": "any",
+      "id": "any"
     },
     {
       "label": "QueryLoader",
@@ -641,10 +729,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L51",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "queryloader"
+      "norm_label": "queryloader",
+      "id": "backend_query_loader_queryloader"
     },
     {
       "label": ".__init__()",
@@ -652,10 +740,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L59",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_init",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".__init__()"
+      "norm_label": ".__init__()",
+      "id": "backend_query_loader_queryloader_init"
     },
     {
       "label": "._init_database()",
@@ -663,10 +751,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L79",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_init_database",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "._init_database()"
+      "norm_label": "._init_database()",
+      "id": "backend_query_loader_queryloader_init_database"
     },
     {
       "label": "._calculate_file_hash()",
@@ -674,10 +762,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L114",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_calculate_file_hash",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "._calculate_file_hash()"
+      "norm_label": "._calculate_file_hash()",
+      "id": "backend_query_loader_queryloader_calculate_file_hash"
     },
     {
       "label": "._extract_metadata()",
@@ -685,10 +773,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L122",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_extract_metadata",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "._extract_metadata()"
+      "norm_label": "._extract_metadata()",
+      "id": "backend_query_loader_queryloader_extract_metadata"
     },
     {
       "label": "._scan_queries_directory()",
@@ -696,10 +784,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L230",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_scan_queries_directory",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "._scan_queries_directory()"
+      "norm_label": "._scan_queries_directory()",
+      "id": "backend_query_loader_queryloader_scan_queries_directory"
     },
     {
       "label": ".load_all_queries()",
@@ -707,10 +795,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L258",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_load_all_queries",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".load_all_queries()"
+      "norm_label": ".load_all_queries()",
+      "id": "backend_query_loader_queryloader_load_all_queries"
     },
     {
       "label": ".get_query()",
@@ -718,10 +806,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L309",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_get_query",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".get_query()"
+      "norm_label": ".get_query()",
+      "id": "backend_query_loader_queryloader_get_query"
     },
     {
       "label": ".list_queries()",
@@ -729,10 +817,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L327",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_list_queries",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".list_queries()"
+      "norm_label": ".list_queries()",
+      "id": "backend_query_loader_queryloader_list_queries"
     },
     {
       "label": ".get_categories()",
@@ -740,10 +828,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L347",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_get_categories",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".get_categories()"
+      "norm_label": ".get_categories()",
+      "id": "backend_query_loader_queryloader_get_categories"
     },
     {
       "label": ".search_queries()",
@@ -751,10 +839,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L365",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_search_queries",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".search_queries()"
+      "norm_label": ".search_queries()",
+      "id": "backend_query_loader_queryloader_search_queries"
     },
     {
       "label": ".check_for_updates()",
@@ -762,10 +850,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L387",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_check_for_updates",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".check_for_updates()"
+      "norm_label": ".check_for_updates()",
+      "id": "backend_query_loader_queryloader_check_for_updates"
     },
     {
       "label": ".get_stats()",
@@ -773,10 +861,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L422",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_get_stats",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".get_stats()"
+      "norm_label": ".get_stats()",
+      "id": "backend_query_loader_queryloader_get_stats"
     },
     {
       "label": ".close()",
@@ -784,10 +872,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L454",
       "_origin": "ast",
-      "id": "backend_query_loader_queryloader_close",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": ".close()"
+      "norm_label": ".close()",
+      "id": "backend_query_loader_queryloader_close"
     },
     {
       "label": "Query Loader Module - Sistema de Gerenciamento de Queries com Cache SQLite  Es",
@@ -795,10 +883,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_1",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "query loader module - sistema de gerenciamento de queries com cache sqlite  es"
+      "norm_label": "query loader module - sistema de gerenciamento de queries com cache sqlite  es",
+      "id": "backend_query_loader_rationale_1"
     },
     {
       "label": "Metadados de uma query SQL",
@@ -806,10 +894,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_27",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "metadados de uma query sql"
+      "norm_label": "metadados de uma query sql",
+      "id": "backend_query_loader_rationale_27"
     },
     {
       "label": "Converte para dicion\u00e1rio",
@@ -817,10 +905,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L47",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_47",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "converte para dicionario"
+      "norm_label": "converte para dicionario",
+      "id": "backend_query_loader_rationale_47"
     },
     {
       "label": "Gerenciador de queries com cache SQLite          Carrega queries de arquivos .",
@@ -828,10 +916,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L52",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_52",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "gerenciador de queries com cache sqlite          carrega queries de arquivos ."
+      "norm_label": "gerenciador de queries com cache sqlite          carrega queries de arquivos .",
+      "id": "backend_query_loader_rationale_52"
     },
     {
       "label": "Inicializa o QueryLoader                  Args:             queries_dir: Dire",
@@ -839,10 +927,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L60",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_60",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "inicializa o queryloader                  args:             queries_dir: dire"
+      "norm_label": "inicializa o queryloader                  args:             queries_dir: dire",
+      "id": "backend_query_loader_rationale_60"
     },
     {
       "label": "Inicializa o banco de dados SQLite",
@@ -850,10 +938,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L80",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_80",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "inicializa o banco de dados sqlite"
+      "norm_label": "inicializa o banco de dados sqlite",
+      "id": "backend_query_loader_rationale_80"
     },
     {
       "label": "Calcula hash MD5 de um arquivo",
@@ -861,10 +949,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L115",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_115",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "calcula hash md5 de um arquivo"
+      "norm_label": "calcula hash md5 de um arquivo",
+      "id": "backend_query_loader_rationale_115"
     },
     {
       "label": "Extrai metadados de um arquivo SQL                  Procura por coment\u00e1rios es",
@@ -872,10 +960,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L123",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_123",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "extrai metadados de um arquivo sql                  procura por comentarios es"
+      "norm_label": "extrai metadados de um arquivo sql                  procura por comentarios es",
+      "id": "backend_query_loader_rationale_123"
     },
     {
       "label": "Varre o diret\u00f3rio de queries e retorna lista de metadados",
@@ -883,10 +971,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L231",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_231",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "varre o diretorio de queries e retorna lista de metadados"
+      "norm_label": "varre o diretorio de queries e retorna lista de metadados",
+      "id": "backend_query_loader_rationale_231"
     },
     {
       "label": "Carrega todas as queries do diret\u00f3rio para o cache SQLite                  Arg",
@@ -894,10 +982,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L259",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_259",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "carrega todas as queries do diretorio para o cache sqlite                  arg"
+      "norm_label": "carrega todas as queries do diretorio para o cache sqlite                  arg",
+      "id": "backend_query_loader_rationale_259"
     },
     {
       "label": "Busca uma query por ID                  Args:             query_id: ID da que",
@@ -905,10 +993,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L310",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_310",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "busca uma query por id                  args:             query_id: id da que"
+      "norm_label": "busca uma query por id                  args:             query_id: id da que",
+      "id": "backend_query_loader_rationale_310"
     },
     {
       "label": "Lista todas as queries, opcionalmente filtradas por categoria",
@@ -916,10 +1004,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L328",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_328",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "lista todas as queries, opcionalmente filtradas por categoria"
+      "norm_label": "lista todas as queries, opcionalmente filtradas por categoria",
+      "id": "backend_query_loader_rationale_328"
     },
     {
       "label": "Retorna lista de categorias com contagem de queries                  Returns:",
@@ -927,10 +1015,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L348",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_348",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "retorna lista de categorias com contagem de queries                  returns:"
+      "norm_label": "retorna lista de categorias com contagem de queries                  returns:",
+      "id": "backend_query_loader_rationale_348"
     },
     {
       "label": "Busca queries por termo (nome ou descri\u00e7\u00e3o)                  Args:",
@@ -938,10 +1026,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L366",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_366",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "busca queries por termo (nome ou descricao)                  args:"
+      "norm_label": "busca queries por termo (nome ou descricao)                  args:",
+      "id": "backend_query_loader_rationale_366"
     },
     {
       "label": "Verifica se algum arquivo foi modificado (hot reload)                  Returns",
@@ -949,10 +1037,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L388",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_388",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "verifica se algum arquivo foi modificado (hot reload)                  returns"
+      "norm_label": "verifica se algum arquivo foi modificado (hot reload)                  returns",
+      "id": "backend_query_loader_rationale_388"
     },
     {
       "label": "Retorna estat\u00edsticas do sistema de queries                  Returns:",
@@ -960,10 +1048,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L423",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_423",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "retorna estatisticas do sistema de queries                  returns:"
+      "norm_label": "retorna estatisticas do sistema de queries                  returns:",
+      "id": "backend_query_loader_rationale_423"
     },
     {
       "label": "Fecha a conex\u00e3o com o banco de dados",
@@ -971,10 +1059,10 @@
       "source_file": "backend/query_loader.py",
       "source_location": "L455",
       "_origin": "ast",
-      "id": "backend_query_loader_rationale_455",
       "community": 1,
       "community_name": "Query Loader Service",
-      "norm_label": "fecha a conexao com o banco de dados"
+      "norm_label": "fecha a conexao com o banco de dados",
+      "id": "backend_query_loader_rationale_455"
     },
     {
       "label": "App.jsx",
@@ -982,10 +1070,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "frontend_src_app",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "app.jsx"
+      "norm_label": "app.jsx",
+      "id": "frontend_src_app"
     },
     {
       "label": "MESES",
@@ -993,10 +1081,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "frontend_src_app_meses",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "meses"
+      "norm_label": "meses",
+      "id": "frontend_src_app_meses"
     },
     {
       "label": "useTheme()",
@@ -1004,10 +1092,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "frontend_src_app_usetheme",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "usetheme()"
+      "norm_label": "usetheme()",
+      "id": "frontend_src_app_usetheme"
     },
     {
       "label": "getDefaultPeriod()",
@@ -1015,10 +1103,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L27",
       "_origin": "ast",
-      "id": "frontend_src_app_getdefaultperiod",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "getdefaultperiod()"
+      "norm_label": "getdefaultperiod()",
+      "id": "frontend_src_app_getdefaultperiod"
     },
     {
       "label": "CreateUserInline()",
@@ -1026,10 +1114,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L34",
       "_origin": "ast",
-      "id": "frontend_src_app_createuserinline",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "createuserinline()"
+      "norm_label": "createuserinline()",
+      "id": "frontend_src_app_createuserinline"
     },
     {
       "label": "AppContent()",
@@ -1037,10 +1125,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L176",
       "_origin": "ast",
-      "id": "frontend_src_app_appcontent",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "appcontent()"
+      "norm_label": "appcontent()",
+      "id": "frontend_src_app_appcontent"
     },
     {
       "label": "App()",
@@ -1048,10 +1136,10 @@
       "source_file": "frontend/src/App.jsx",
       "source_location": "L865",
       "_origin": "ast",
-      "id": "frontend_src_app_app",
       "community": 22,
       "community_name": "Query 07 - Beneficios",
-      "norm_label": "app()"
+      "norm_label": "app()",
+      "id": "frontend_src_app_app"
     },
     {
       "label": "auth.py",
@@ -1866,83 +1954,6 @@
       "community_name": "PPTX Export (Single)",
       "norm_label": "adiciona secao de comentarios no slide",
       "id": "backend_pptx_service_rationale_244"
-    },
-    {
-      "label": "01_premium_principais_metricas_ytd.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/01_premium_principais_metricas_ytd.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 16,
-      "community_name": "Query 01 - Metricas Principais YTD",
-      "norm_label": "01_premium_principais_metricas_ytd.sql",
-      "id": "backend_queries_premium_01_premium_principais_metricas_ytd"
-    },
-    {
-      "label": "02_EBTIDA_por_unidade_YTD.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/02_EBTIDA_por_unidade_YTD.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 17,
-      "community_name": "Query 02 - EBITDA por Unidade YTD",
-      "norm_label": "02_ebtida_por_unidade_ytd.sql",
-      "id": "backend_queries_premium_02_ebtida_por_unidade_ytd"
-    },
-    {
-      "label": "03_DRE_premium_YTD.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/03_DRE_premium_YTD.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 18,
-      "community_name": "Query 03 - DRE Premium YTD",
-      "norm_label": "03_dre_premium_ytd.sql",
-      "id": "backend_queries_premium_03_dre_premium_ytd"
-    },
-    {
-      "label": "04_historico_alunos_premium.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/04_historico_alunos_premium.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "Query 04 - Historico Alunos Premium",
-      "norm_label": "04_historico_alunos_premium.sql",
-      "id": "backend_queries_premium_04_historico_alunos_premium"
-    },
-    {
-      "label": "05_fopag_direta.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/05_fopag_direta.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 20,
-      "community_name": "Query 05 - Fopag Direta",
-      "norm_label": "05_fopag_direta.sql",
-      "id": "backend_queries_premium_05_fopag_direta"
-    },
-    {
-      "label": "06_fopag_indireta.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/06_fopag_indireta.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 21,
-      "community_name": "Query 06 - Fopag Indireta",
-      "norm_label": "06_fopag_indireta.sql",
-      "id": "backend_queries_premium_06_fopag_indireta"
-    },
-    {
-      "label": "10_variacao_orcado.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/10_variacao_orcado.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 26,
-      "community_name": "Query 10 - Variacao Orcado",
-      "norm_label": "10_variacao_orcado.sql",
-      "id": "backend_queries_premium_10_variacao_orcado"
     },
     {
       "label": "eslint.config.js",
@@ -3696,27 +3707,15 @@
   ],
   "links": [
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "backend/app.py",
-      "source_location": "L14",
-      "weight": 1.0,
-      "_origin": "ast",
-      "source": "backend_app",
-      "target": "backend_auth",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "backend/app.py",
       "source_location": "L417",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_add_query",
-      "confidence_score": 1.0
+      "target": "backend_app_add_query"
     },
     {
       "relation": "contains",
@@ -3725,9 +3724,9 @@
       "source_location": "L483",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_delete_query",
-      "confidence_score": 1.0
+      "target": "backend_app_delete_query"
     },
     {
       "relation": "contains",
@@ -3736,9 +3735,9 @@
       "source_location": "L510",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_execute_query",
-      "confidence_score": 1.0
+      "target": "backend_app_execute_query"
     },
     {
       "relation": "contains",
@@ -3747,9 +3746,9 @@
       "source_location": "L305",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_execute_saved_query",
-      "confidence_score": 1.0
+      "target": "backend_app_execute_saved_query"
     },
     {
       "relation": "contains",
@@ -3758,9 +3757,9 @@
       "source_location": "L78",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_databricks_connection",
-      "confidence_score": 1.0
+      "target": "backend_app_get_databricks_connection"
     },
     {
       "relation": "contains",
@@ -3769,9 +3768,9 @@
       "source_location": "L231",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_get_queries"
     },
     {
       "relation": "contains",
@@ -3780,9 +3779,9 @@
       "source_location": "L265",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_query_by_id",
-      "confidence_score": 1.0
+      "target": "backend_app_get_query_by_id"
     },
     {
       "relation": "contains",
@@ -3791,9 +3790,9 @@
       "source_location": "L181",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_query_categories",
-      "confidence_score": 1.0
+      "target": "backend_app_get_query_categories"
     },
     {
       "relation": "contains",
@@ -3802,9 +3801,9 @@
       "source_location": "L172",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_query_stats",
-      "confidence_score": 1.0
+      "target": "backend_app_get_query_stats"
     },
     {
       "relation": "contains",
@@ -3813,9 +3812,9 @@
       "source_location": "L537",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_table_data",
-      "confidence_score": 1.0
+      "target": "backend_app_get_table_data"
     },
     {
       "relation": "contains",
@@ -3824,9 +3823,9 @@
       "source_location": "L497",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_get_tables",
-      "confidence_score": 1.0
+      "target": "backend_app_get_tables"
     },
     {
       "relation": "contains",
@@ -3835,9 +3834,9 @@
       "source_location": "L167",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_health_check",
-      "confidence_score": 1.0
+      "target": "backend_app_health_check"
     },
     {
       "relation": "contains",
@@ -3846,9 +3845,9 @@
       "source_location": "L86",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "contains",
@@ -3857,9 +3856,9 @@
       "source_location": "L121",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_load_queries_categorized",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries_categorized"
     },
     {
       "relation": "contains",
@@ -3868,9 +3867,9 @@
       "source_location": "L40",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_load_user",
-      "confidence_score": 1.0
+      "target": "backend_app_load_user"
     },
     {
       "relation": "contains",
@@ -3879,9 +3878,9 @@
       "source_location": "L48",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_log_request",
-      "confidence_score": 1.0
+      "target": "backend_app_log_request"
     },
     {
       "relation": "contains",
@@ -3890,9 +3889,9 @@
       "source_location": "L216",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_reload_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_reload_queries"
     },
     {
       "relation": "contains",
@@ -3901,9 +3900,9 @@
       "source_location": "L278",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_run_query_sql",
-      "confidence_score": 1.0
+      "target": "backend_app_run_query_sql"
     },
     {
       "relation": "contains",
@@ -3912,9 +3911,9 @@
       "source_location": "L161",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_save_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_save_queries"
     },
     {
       "relation": "contains",
@@ -3923,9 +3922,9 @@
       "source_location": "L190",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_search_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_search_queries"
     },
     {
       "relation": "contains",
@@ -3934,9 +3933,9 @@
       "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_start_timer",
-      "confidence_score": 1.0
+      "target": "backend_app_start_timer"
     },
     {
       "relation": "contains",
@@ -3945,9 +3944,21 @@
       "source_location": "L455",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_app_update_query",
-      "confidence_score": 1.0
+      "target": "backend_app_update_query"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/app.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "backend_app",
+      "target": "backend_auth"
     },
     {
       "relation": "imports_from",
@@ -3957,9 +3968,9 @@
       "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_comments",
-      "confidence_score": 1.0
+      "target": "backend_comments"
     },
     {
       "relation": "imports_from",
@@ -3969,9 +3980,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_database",
-      "confidence_score": 1.0
+      "target": "backend_database"
     },
     {
       "relation": "imports_from",
@@ -3981,9 +3992,9 @@
       "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_export",
-      "confidence_score": 1.0
+      "target": "backend_export"
     },
     {
       "relation": "imports_from",
@@ -3993,9 +4004,9 @@
       "source_location": "L17",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_export_batch_images",
-      "confidence_score": 1.0
+      "target": "backend_export_batch_images"
     },
     {
       "relation": "imports_from",
@@ -4005,9 +4016,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_models",
-      "confidence_score": 1.0
+      "target": "backend_models"
     },
     {
       "relation": "imports_from",
@@ -4017,9 +4028,9 @@
       "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app",
-      "target": "backend_query_loader",
-      "confidence_score": 1.0
+      "target": "backend_query_loader"
     },
     {
       "relation": "calls",
@@ -4029,9 +4040,9 @@
       "source_location": "L519",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_execute_query",
-      "target": "backend_app_get_databricks_connection",
-      "confidence_score": 1.0
+      "target": "backend_app_get_databricks_connection"
     },
     {
       "relation": "calls",
@@ -4041,9 +4052,9 @@
       "source_location": "L359",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_execute_saved_query",
-      "target": "backend_app_get_databricks_connection",
-      "confidence_score": 1.0
+      "target": "backend_app_get_databricks_connection"
     },
     {
       "relation": "calls",
@@ -4053,9 +4064,9 @@
       "source_location": "L542",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_get_table_data",
-      "target": "backend_app_get_databricks_connection",
-      "confidence_score": 1.0
+      "target": "backend_app_get_databricks_connection"
     },
     {
       "relation": "calls",
@@ -4065,9 +4076,9 @@
       "source_location": "L500",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_get_tables",
-      "target": "backend_app_get_databricks_connection",
-      "confidence_score": 1.0
+      "target": "backend_app_get_databricks_connection"
     },
     {
       "relation": "rationale_for",
@@ -4076,9 +4087,9 @@
       "source_location": "L79",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_79",
-      "target": "backend_app_get_databricks_connection",
-      "confidence_score": 1.0
+      "target": "backend_app_get_databricks_connection"
     },
     {
       "relation": "calls",
@@ -4088,9 +4099,9 @@
       "source_location": "L428",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_add_query",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "calls",
@@ -4100,9 +4111,9 @@
       "source_location": "L486",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_delete_query",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "calls",
@@ -4112,9 +4123,9 @@
       "source_location": "L308",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_execute_saved_query",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "calls",
@@ -4124,9 +4135,9 @@
       "source_location": "L242",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_get_queries",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "calls",
@@ -4136,9 +4147,9 @@
       "source_location": "L268",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_get_query_by_id",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "rationale_for",
@@ -4147,9 +4158,9 @@
       "source_location": "L87",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_87",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "calls",
@@ -4159,9 +4170,9 @@
       "source_location": "L459",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_update_query",
-      "target": "backend_app_load_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries"
     },
     {
       "relation": "calls",
@@ -4171,9 +4182,9 @@
       "source_location": "L238",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_get_queries",
-      "target": "backend_app_load_queries_categorized",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries_categorized"
     },
     {
       "relation": "rationale_for",
@@ -4182,9 +4193,9 @@
       "source_location": "L122",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_122",
-      "target": "backend_app_load_queries_categorized",
-      "confidence_score": 1.0
+      "target": "backend_app_load_queries_categorized"
     },
     {
       "relation": "calls",
@@ -4194,9 +4205,9 @@
       "source_location": "L447",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_add_query",
-      "target": "backend_app_save_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_save_queries"
     },
     {
       "relation": "calls",
@@ -4206,9 +4217,9 @@
       "source_location": "L489",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_delete_query",
-      "target": "backend_app_save_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_save_queries"
     },
     {
       "relation": "rationale_for",
@@ -4217,9 +4228,9 @@
       "source_location": "L162",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_162",
-      "target": "backend_app_save_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_save_queries"
     },
     {
       "relation": "calls",
@@ -4229,9 +4240,9 @@
       "source_location": "L475",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_update_query",
-      "target": "backend_app_save_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_save_queries"
     },
     {
       "relation": "rationale_for",
@@ -4240,9 +4251,9 @@
       "source_location": "L168",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_168",
-      "target": "backend_app_health_check",
-      "confidence_score": 1.0
+      "target": "backend_app_health_check"
     },
     {
       "relation": "rationale_for",
@@ -4251,9 +4262,9 @@
       "source_location": "L173",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_173",
-      "target": "backend_app_get_query_stats",
-      "confidence_score": 1.0
+      "target": "backend_app_get_query_stats"
     },
     {
       "relation": "rationale_for",
@@ -4262,9 +4273,9 @@
       "source_location": "L182",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_182",
-      "target": "backend_app_get_query_categories",
-      "confidence_score": 1.0
+      "target": "backend_app_get_query_categories"
     },
     {
       "relation": "rationale_for",
@@ -4273,9 +4284,9 @@
       "source_location": "L191",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_191",
-      "target": "backend_app_search_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_search_queries"
     },
     {
       "relation": "rationale_for",
@@ -4284,9 +4295,9 @@
       "source_location": "L217",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_217",
-      "target": "backend_app_reload_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_reload_queries"
     },
     {
       "relation": "rationale_for",
@@ -4295,9 +4306,9 @@
       "source_location": "L232",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_232",
-      "target": "backend_app_get_queries",
-      "confidence_score": 1.0
+      "target": "backend_app_get_queries"
     },
     {
       "relation": "rationale_for",
@@ -4306,9 +4317,9 @@
       "source_location": "L266",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_266",
-      "target": "backend_app_get_query_by_id",
-      "confidence_score": 1.0
+      "target": "backend_app_get_query_by_id"
     },
     {
       "relation": "calls",
@@ -4318,9 +4329,9 @@
       "source_location": "L362",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_execute_saved_query",
-      "target": "backend_app_run_query_sql",
-      "confidence_score": 1.0
+      "target": "backend_app_run_query_sql"
     },
     {
       "relation": "rationale_for",
@@ -4329,9 +4340,9 @@
       "source_location": "L279",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_279",
-      "target": "backend_app_run_query_sql",
-      "confidence_score": 1.0
+      "target": "backend_app_run_query_sql"
     },
     {
       "relation": "rationale_for",
@@ -4340,9 +4351,9 @@
       "source_location": "L306",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_306",
-      "target": "backend_app_execute_saved_query",
-      "confidence_score": 1.0
+      "target": "backend_app_execute_saved_query"
     },
     {
       "relation": "rationale_for",
@@ -4351,9 +4362,9 @@
       "source_location": "L418",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_418",
-      "target": "backend_app_add_query",
-      "confidence_score": 1.0
+      "target": "backend_app_add_query"
     },
     {
       "relation": "rationale_for",
@@ -4362,9 +4373,9 @@
       "source_location": "L456",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_456",
-      "target": "backend_app_update_query",
-      "confidence_score": 1.0
+      "target": "backend_app_update_query"
     },
     {
       "relation": "rationale_for",
@@ -4373,9 +4384,9 @@
       "source_location": "L484",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_484",
-      "target": "backend_app_delete_query",
-      "confidence_score": 1.0
+      "target": "backend_app_delete_query"
     },
     {
       "relation": "rationale_for",
@@ -4384,9 +4395,9 @@
       "source_location": "L498",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_498",
-      "target": "backend_app_get_tables",
-      "confidence_score": 1.0
+      "target": "backend_app_get_tables"
     },
     {
       "relation": "rationale_for",
@@ -4395,9 +4406,9 @@
       "source_location": "L511",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_511",
-      "target": "backend_app_execute_query",
-      "confidence_score": 1.0
+      "target": "backend_app_execute_query"
     },
     {
       "relation": "rationale_for",
@@ -4406,9 +4417,9 @@
       "source_location": "L538",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_app_rationale_538",
-      "target": "backend_app_get_table_data",
-      "confidence_score": 1.0
+      "target": "backend_app_get_table_data"
     },
     {
       "relation": "contains",
@@ -4417,9 +4428,9 @@
       "source_location": "L51",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader",
-      "target": "backend_query_loader_queryloader",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader"
     },
     {
       "relation": "contains",
@@ -4428,9 +4439,9 @@
       "source_location": "L26",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader",
-      "target": "backend_query_loader_querymetadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_querymetadata"
     },
     {
       "relation": "rationale_for",
@@ -4439,9 +4450,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_1",
-      "target": "backend_query_loader",
-      "confidence_score": 1.0
+      "target": "backend_query_loader"
     },
     {
       "relation": "references",
@@ -4451,9 +4462,9 @@
       "source_location": "L122",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_extract_metadata",
-      "target": "backend_query_loader_querymetadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_querymetadata"
     },
     {
       "relation": "references",
@@ -4463,9 +4474,9 @@
       "source_location": "L230",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_scan_queries_directory",
-      "target": "backend_query_loader_querymetadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_querymetadata"
     },
     {
       "relation": "method",
@@ -4474,9 +4485,9 @@
       "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_querymetadata",
-      "target": "backend_query_loader_querymetadata_to_dict",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_querymetadata_to_dict"
     },
     {
       "relation": "rationale_for",
@@ -4485,9 +4496,9 @@
       "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_27",
-      "target": "backend_query_loader_querymetadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_querymetadata"
     },
     {
       "relation": "references",
@@ -4497,9 +4508,9 @@
       "source_location": "L46",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_querymetadata_to_dict",
-      "target": "any",
-      "confidence_score": 1.0
+      "target": "any"
     },
     {
       "relation": "rationale_for",
@@ -4508,9 +4519,9 @@
       "source_location": "L47",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_47",
-      "target": "backend_query_loader_querymetadata_to_dict",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_querymetadata_to_dict"
     },
     {
       "relation": "references",
@@ -4520,9 +4531,9 @@
       "source_location": "L347",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_get_categories",
-      "target": "any",
-      "confidence_score": 1.0
+      "target": "any"
     },
     {
       "relation": "references",
@@ -4532,9 +4543,9 @@
       "source_location": "L309",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_get_query",
-      "target": "any",
-      "confidence_score": 1.0
+      "target": "any"
     },
     {
       "relation": "references",
@@ -4544,9 +4555,9 @@
       "source_location": "L422",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_get_stats",
-      "target": "any",
-      "confidence_score": 1.0
+      "target": "any"
     },
     {
       "relation": "references",
@@ -4556,9 +4567,9 @@
       "source_location": "L327",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_list_queries",
-      "target": "any",
-      "confidence_score": 1.0
+      "target": "any"
     },
     {
       "relation": "references",
@@ -4568,9 +4579,9 @@
       "source_location": "L365",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_search_queries",
-      "target": "any",
-      "confidence_score": 1.0
+      "target": "any"
     },
     {
       "relation": "method",
@@ -4579,9 +4590,9 @@
       "source_location": "L114",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_calculate_file_hash",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_calculate_file_hash"
     },
     {
       "relation": "method",
@@ -4590,9 +4601,9 @@
       "source_location": "L387",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_check_for_updates",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_check_for_updates"
     },
     {
       "relation": "method",
@@ -4601,9 +4612,9 @@
       "source_location": "L454",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_close",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_close"
     },
     {
       "relation": "method",
@@ -4612,9 +4623,9 @@
       "source_location": "L122",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_extract_metadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_extract_metadata"
     },
     {
       "relation": "method",
@@ -4623,9 +4634,9 @@
       "source_location": "L347",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_get_categories",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_get_categories"
     },
     {
       "relation": "method",
@@ -4634,9 +4645,9 @@
       "source_location": "L309",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_get_query",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_get_query"
     },
     {
       "relation": "method",
@@ -4645,9 +4656,9 @@
       "source_location": "L422",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_get_stats",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_get_stats"
     },
     {
       "relation": "method",
@@ -4656,9 +4667,9 @@
       "source_location": "L59",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_init",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_init"
     },
     {
       "relation": "method",
@@ -4667,9 +4678,9 @@
       "source_location": "L79",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_init_database",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_init_database"
     },
     {
       "relation": "method",
@@ -4678,9 +4689,9 @@
       "source_location": "L327",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_list_queries",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_list_queries"
     },
     {
       "relation": "method",
@@ -4689,9 +4700,9 @@
       "source_location": "L258",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_load_all_queries",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_load_all_queries"
     },
     {
       "relation": "method",
@@ -4700,9 +4711,9 @@
       "source_location": "L230",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_scan_queries_directory",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_scan_queries_directory"
     },
     {
       "relation": "method",
@@ -4711,9 +4722,9 @@
       "source_location": "L365",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader",
-      "target": "backend_query_loader_queryloader_search_queries",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_search_queries"
     },
     {
       "relation": "rationale_for",
@@ -4722,9 +4733,9 @@
       "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_52",
-      "target": "backend_query_loader_queryloader",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader"
     },
     {
       "relation": "calls",
@@ -4734,9 +4745,9 @@
       "source_location": "L77",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_init",
-      "target": "backend_query_loader_queryloader_init_database",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_init_database"
     },
     {
       "relation": "rationale_for",
@@ -4745,9 +4756,9 @@
       "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_60",
-      "target": "backend_query_loader_queryloader_init",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_init"
     },
     {
       "relation": "rationale_for",
@@ -4756,9 +4767,9 @@
       "source_location": "L80",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_80",
-      "target": "backend_query_loader_queryloader_init_database",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_init_database"
     },
     {
       "relation": "calls",
@@ -4768,9 +4779,9 @@
       "source_location": "L201",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_extract_metadata",
-      "target": "backend_query_loader_queryloader_calculate_file_hash",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_calculate_file_hash"
     },
     {
       "relation": "rationale_for",
@@ -4779,9 +4790,9 @@
       "source_location": "L115",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_115",
-      "target": "backend_query_loader_queryloader_calculate_file_hash",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_calculate_file_hash"
     },
     {
       "relation": "calls",
@@ -4791,9 +4802,9 @@
       "source_location": "L404",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_check_for_updates",
-      "target": "backend_query_loader_queryloader_extract_metadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_extract_metadata"
     },
     {
       "relation": "calls",
@@ -4803,9 +4814,9 @@
       "source_location": "L250",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_scan_queries_directory",
-      "target": "backend_query_loader_queryloader_extract_metadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_extract_metadata"
     },
     {
       "relation": "rationale_for",
@@ -4814,9 +4825,9 @@
       "source_location": "L123",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_123",
-      "target": "backend_query_loader_queryloader_extract_metadata",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_extract_metadata"
     },
     {
       "relation": "calls",
@@ -4826,9 +4837,9 @@
       "source_location": "L268",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_queryloader_load_all_queries",
-      "target": "backend_query_loader_queryloader_scan_queries_directory",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_scan_queries_directory"
     },
     {
       "relation": "rationale_for",
@@ -4837,9 +4848,9 @@
       "source_location": "L231",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_231",
-      "target": "backend_query_loader_queryloader_scan_queries_directory",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_scan_queries_directory"
     },
     {
       "relation": "rationale_for",
@@ -4848,9 +4859,9 @@
       "source_location": "L259",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_259",
-      "target": "backend_query_loader_queryloader_load_all_queries",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_load_all_queries"
     },
     {
       "relation": "rationale_for",
@@ -4859,9 +4870,9 @@
       "source_location": "L310",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_310",
-      "target": "backend_query_loader_queryloader_get_query",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_get_query"
     },
     {
       "relation": "rationale_for",
@@ -4870,9 +4881,9 @@
       "source_location": "L328",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_328",
-      "target": "backend_query_loader_queryloader_list_queries",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_list_queries"
     },
     {
       "relation": "rationale_for",
@@ -4881,9 +4892,9 @@
       "source_location": "L348",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_348",
-      "target": "backend_query_loader_queryloader_get_categories",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_get_categories"
     },
     {
       "relation": "rationale_for",
@@ -4892,9 +4903,9 @@
       "source_location": "L366",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_366",
-      "target": "backend_query_loader_queryloader_search_queries",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_search_queries"
     },
     {
       "relation": "rationale_for",
@@ -4903,9 +4914,9 @@
       "source_location": "L388",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_388",
-      "target": "backend_query_loader_queryloader_check_for_updates",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_check_for_updates"
     },
     {
       "relation": "rationale_for",
@@ -4914,9 +4925,9 @@
       "source_location": "L423",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_423",
-      "target": "backend_query_loader_queryloader_get_stats",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_get_stats"
     },
     {
       "relation": "rationale_for",
@@ -4925,9 +4936,9 @@
       "source_location": "L455",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_455",
-      "target": "backend_query_loader_queryloader_close",
-      "confidence_score": 1.0
+      "target": "backend_query_loader_queryloader_close"
     },
     {
       "relation": "contains",
@@ -4936,9 +4947,9 @@
       "source_location": "L865",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app",
-      "target": "frontend_src_app_app",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_app"
     },
     {
       "relation": "contains",
@@ -4947,9 +4958,9 @@
       "source_location": "L176",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app",
-      "target": "frontend_src_app_appcontent",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_appcontent"
     },
     {
       "relation": "contains",
@@ -4958,9 +4969,9 @@
       "source_location": "L34",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app",
-      "target": "frontend_src_app_createuserinline",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_createuserinline"
     },
     {
       "relation": "contains",
@@ -4969,9 +4980,9 @@
       "source_location": "L27",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app",
-      "target": "frontend_src_app_getdefaultperiod",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_getdefaultperiod"
     },
     {
       "relation": "contains",
@@ -4980,9 +4991,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app",
-      "target": "frontend_src_app_meses",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_meses"
     },
     {
       "relation": "contains",
@@ -4991,9 +5002,9 @@
       "source_location": "L16",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app",
-      "target": "frontend_src_app_usetheme",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_usetheme"
     },
     {
       "relation": "imports_from",
@@ -5015,9 +5026,9 @@
       "source_location": "L178",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app_appcontent",
-      "target": "frontend_src_app_usetheme",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_usetheme"
     },
     {
       "relation": "calls",
@@ -5027,9 +5038,9 @@
       "source_location": "L193",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "frontend_src_app_appcontent",
-      "target": "frontend_src_app_getdefaultperiod",
-      "confidence_score": 1.0
+      "target": "frontend_src_app_getdefaultperiod"
     },
     {
       "relation": "imports",
@@ -7631,5 +7642,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "524fdaf39407dbc2f22cc84dd4c8c3f371b21312"
+  "built_at_commit": "187b64dab75ba45697c4bd5086455e8f6540cef7"
 }

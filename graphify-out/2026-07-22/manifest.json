@@ -5,8 +5,8 @@
     "semantic_hash": "70626d6a4f6d3808ce4df623b5775ab6"
   },
   "backend/app.py": {
-    "mtime": 1784579007.5997684,
-    "ast_hash": "e2a885c956ce666ceb35bc3b65d57f2a",
+    "mtime": 1784656714.906978,
+    "ast_hash": "7814a2dae9e00a5bc33d7a3579788fa0",
     "semantic_hash": ""
   },
   "backend/auth.py": {
@@ -65,54 +65,24 @@
     "semantic_hash": "d39f69ef8bf5ff69018dbd6ba66da94a"
   },
   "backend/queries/Premium/05_fopag_direta.sql": {
-    "mtime": 1776861197.1948617,
-    "ast_hash": "8fdf32bb3562fb9a73b7fdb7bc1362fe",
-    "semantic_hash": "8fdf32bb3562fb9a73b7fdb7bc1362fe"
+    "mtime": 1784656714.9447577,
+    "ast_hash": "681a5c6e23b49dfcc3452ca25a98d5b6",
+    "semantic_hash": ""
   },
   "backend/queries/Premium/06_fopag_indireta.sql": {
-    "mtime": 1776861197.30615,
-    "ast_hash": "4332b6bf40648ad9e768d3d0c207ea8a",
-    "semantic_hash": "4332b6bf40648ad9e768d3d0c207ea8a"
-  },
-  "backend/queries/Premium/07_beneficios.sql": {
-    "mtime": 1776861197.4020998,
-    "ast_hash": "094a09810ca6ad348b8f22a69b696f3e",
-    "semantic_hash": "094a09810ca6ad348b8f22a69b696f3e"
-  },
-  "backend/queries/Premium/08_rateio_corporativo.sql": {
-    "mtime": 1776861197.5190938,
-    "ast_hash": "0c8cad05f9dddd0aaa6a9723b7a4a960",
-    "semantic_hash": "0c8cad05f9dddd0aaa6a9723b7a4a960"
-  },
-  "backend/queries/Premium/09_pcld.sql": {
-    "mtime": 1776861197.6529481,
-    "ast_hash": "b9086329716733f2d979646c4441cc30",
-    "semantic_hash": "b9086329716733f2d979646c4441cc30"
-  },
-  "backend/queries/Premium/09b_pcld_grafico.sql": {
-    "mtime": 1776861197.7793894,
-    "ast_hash": "7b746e0967885aa006099646df06bce4",
-    "semantic_hash": "7b746e0967885aa006099646df06bce4"
+    "mtime": 1784656714.9847207,
+    "ast_hash": "eae5bf69cdf11c243f3b045426df09ba",
+    "semantic_hash": ""
   },
   "backend/queries/Premium/10_variacao_orcado.sql": {
     "mtime": 1776861238.9675384,
     "ast_hash": "a13fdbcb44e2ba45edd0f04863c74d87",
     "semantic_hash": "a13fdbcb44e2ba45edd0f04863c74d87"
   },
-  "backend/queries/Premium/11_capex.sql": {
-    "mtime": 1776945117.4366505,
-    "ast_hash": "17b1b662d3fdac5ef26cde5d6ffd5aab",
-    "semantic_hash": "17b1b662d3fdac5ef26cde5d6ffd5aab"
-  },
-  "backend/queries/Premium/12_lucro_liquido_ytd_consolidado.sql": {
-    "mtime": 1779469346.6146336,
-    "ast_hash": "dda1645ca46549cf40b5b29baab57333",
-    "semantic_hash": "dda1645ca46549cf40b5b29baab57333"
-  },
   "backend/query_loader.py": {
-    "mtime": 1776451687.8398428,
-    "ast_hash": "368d11cb7c360f2016c48abbb386e787",
-    "semantic_hash": "368d11cb7c360f2016c48abbb386e787"
+    "mtime": 1784656715.2512639,
+    "ast_hash": "33567f9c6eebddd1557f8b97defa9cc8",
+    "semantic_hash": ""
   },
   "frontend/eslint.config.js": {
     "mtime": 1763561053.408453,
@@ -125,9 +95,9 @@
     "semantic_hash": "52dd8ceefccfdd85b91e249da655fe2a"
   },
   "frontend/src/App.jsx": {
-    "mtime": 1779906074.453708,
-    "ast_hash": "a6280394b96304a0b4e880d4f59c6873",
-    "semantic_hash": "a6280394b96304a0b4e880d4f59c6873"
+    "mtime": 1784656715.2998724,
+    "ast_hash": "f3f875d25471f7b929eae9a5f4121075",
+    "semantic_hash": ""
   },
   "frontend/src/components/Auth/Login.jsx": {
     "mtime": 1779126413.5812562,
@@ -160,9 +130,9 @@
     "semantic_hash": "d63c9af6faeba9244967686cb52f83e1"
   },
   "frontend/src/components/DataTable.jsx": {
-    "mtime": 1781641354.4600232,
-    "ast_hash": "b0c60952250b5021da43106601086107",
-    "semantic_hash": "b0c60952250b5021da43106601086107"
+    "mtime": 1784656715.3269472,
+    "ast_hash": "6e95e9c446d14e1c848a9fe7e0ddd161",
+    "semantic_hash": ""
   },
   "frontend/src/components/PcldChart.jsx": {
     "mtime": 1776451729.3925803,
@@ -227,6 +197,41 @@
   "scripts/prune_graphify_backups.sh": {
     "mtime": 1784567638.7768822,
     "ast_hash": "f8dafa09d3125d851e9c3c9024145ba2",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/07_fopag_consolidado.sql": {
+    "mtime": 1784644970.8301616,
+    "ast_hash": "364d27cd4e6d11844d299cca9030a0ef",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/08_beneficios.sql": {
+    "mtime": 1784658612.4101257,
+    "ast_hash": "cbc192ca464ace106e3360a3737fc262",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/09_rateio_corporativo.sql": {
+    "mtime": 1784659819.7972062,
+    "ast_hash": "75d9eef789f3a7744cdb57e02fdb79b3",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/10_pcld.sql": {
+    "mtime": 1784660333.23618,
+    "ast_hash": "366c867a3a2f67f548f44a5a9aa6376a",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/10b_pcld_grafico.sql": {
+    "mtime": 1784656715.1296182,
+    "ast_hash": "5466895ae170e6224e7824580fc94786",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/12_capex.sql": {
+    "mtime": 1784656715.1688697,
+    "ast_hash": "9128de069443b73f202b4ea7ff1e9f76",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/13_lucro_liquido_ytd_consolidado.sql": {
+    "mtime": 1784656715.2103722,
+    "ast_hash": "3283d175a9936d165608a5130131fc5b",
     "semantic_hash": ""
   }
 }

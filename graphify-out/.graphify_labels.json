@@ -38,5 +38,6 @@
   "36": "10_pcld.sql",
   "37": "10b_pcld_grafico.sql",
   "38": "12_capex.sql",
-  "39": "13_lucro_liquido_ytd_consolidado.sql"
+  "39": "13_lucro_liquido_ytd_consolidado.sql",
+  "40": "31_lucro_liquido_ytd_consolidado.sql"
 }
