@@ -181,6 +181,8 @@ with params as (
 2. O `QueryLoader` carrega automaticamente na inicialização
 3. O `id` da query é gerado a partir do nome do arquivo (sem número e extensão)
 4. A sidebar do frontend agrupa por `category` (nome da pasta)
+5. Prefixo numérico do arquivo deve sempre bater com o `@order` interno — ao inserir uma tabela nova no meio da sequência, renumerar (via `git mv`) os arquivos seguintes para manter os dois em sincronia
+6. **Exceção**: queries `@type: chart` (nunca aparecem na sidebar, só são referenciadas via `@chart_query_id` de outra query) não participam dessa sequência — usar um número fixo fora da faixa (ex: `99_nome.sql`, `@order: 99`) e nunca renumerar ao inserir tabelas visíveis novas
 
 ---
 
