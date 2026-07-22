@@ -53,15 +53,125 @@
   },
   "nodes": [
     {
+      "label": "11b_pcld_grafico.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/11b_pcld_grafico.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_11b_pcld_grafico",
+      "community": 49,
+      "community_name": "99_pcld_grafico.sql",
+      "norm_label": "11b_pcld_grafico.sql"
+    },
+    {
+      "label": "22_pcld_pueri_domus.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/22_pcld_pueri_domus.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_22_pcld_pueri_domus",
+      "community": 50,
+      "community_name": "22_pcld_pueri_domus.sql",
+      "norm_label": "22_pcld_pueri_domus.sql"
+    },
+    {
+      "label": "22b_pcld_grafico_pueri_domus.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/22b_pcld_grafico_pueri_domus.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "id": "backend_queries_premium_22b_pcld_grafico_pueri_domus",
+      "community": 51,
+      "community_name": "22b_pcld_grafico_pueri_domus.sql",
+      "norm_label": "22b_pcld_grafico_pueri_domus.sql"
+    },
+    {
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "app.jsx",
+      "id": "frontend_src_app"
+    },
+    {
+      "label": "MESES",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L13",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "meses",
+      "id": "frontend_src_app_meses"
+    },
+    {
+      "label": "useTheme()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L16",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "usetheme()",
+      "id": "frontend_src_app_usetheme"
+    },
+    {
+      "label": "getDefaultPeriod()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "getdefaultperiod()",
+      "id": "frontend_src_app_getdefaultperiod"
+    },
+    {
+      "label": "CreateUserInline()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L34",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "createuserinline()",
+      "id": "frontend_src_app_createuserinline"
+    },
+    {
+      "label": "AppContent()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L176",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "appcontent()",
+      "id": "frontend_src_app_appcontent"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L845",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "app()",
+      "id": "frontend_src_app_app"
+    },
+    {
       "label": "16_evolucao_alunos_pueri_domus.sql",
       "file_type": "code",
       "source_file": "backend/queries/Premium/16_evolucao_alunos_pueri_domus.sql",
       "source_location": null,
       "_origin": "ast",
-      "id": "backend_queries_premium_16_evolucao_alunos_pueri_domus",
       "community": 43,
       "community_name": "16_pcld_grafico.sql",
-      "norm_label": "16_evolucao_alunos_pueri_domus.sql"
+      "norm_label": "16_evolucao_alunos_pueri_domus.sql",
+      "id": "backend_queries_premium_16_evolucao_alunos_pueri_domus"
     },
     {
       "label": "17_fopag_direta_pueri_domus.sql",
@@ -69,10 +179,10 @@
       "source_file": "backend/queries/Premium/17_fopag_direta_pueri_domus.sql",
       "source_location": null,
       "_origin": "ast",
-      "id": "backend_queries_premium_17_fopag_direta_pueri_domus",
       "community": 44,
       "community_name": "17_fopag_direta_pueri_domus.sql",
-      "norm_label": "17_fopag_direta_pueri_domus.sql"
+      "norm_label": "17_fopag_direta_pueri_domus.sql",
+      "id": "backend_queries_premium_17_fopag_direta_pueri_domus"
     },
     {
       "label": "18_fopag_indireta_pueri_domus.sql",
@@ -80,10 +190,10 @@
       "source_file": "backend/queries/Premium/18_fopag_indireta_pueri_domus.sql",
       "source_location": null,
       "_origin": "ast",
-      "id": "backend_queries_premium_18_fopag_indireta_pueri_domus",
       "community": 45,
       "community_name": "18_fopag_indireta_pueri_domus.sql",
-      "norm_label": "18_fopag_indireta_pueri_domus.sql"
+      "norm_label": "18_fopag_indireta_pueri_domus.sql",
+      "id": "backend_queries_premium_18_fopag_indireta_pueri_domus"
     },
     {
       "label": "19_fopag_consolidado_pueri_domus.sql",
@@ -91,10 +201,10 @@
       "source_file": "backend/queries/Premium/19_fopag_consolidado_pueri_domus.sql",
       "source_location": null,
       "_origin": "ast",
-      "id": "backend_queries_premium_19_fopag_consolidado_pueri_domus",
       "community": 46,
       "community_name": "19_fopag_consolidado_pueri_domus.sql",
-      "norm_label": "19_fopag_consolidado_pueri_domus.sql"
+      "norm_label": "19_fopag_consolidado_pueri_domus.sql",
+      "id": "backend_queries_premium_19_fopag_consolidado_pueri_domus"
     },
     {
       "label": "20_rateio_corporativo_pueri_domus.sql",
@@ -102,10 +212,10 @@
       "source_file": "backend/queries/Premium/20_rateio_corporativo_pueri_domus.sql",
       "source_location": null,
       "_origin": "ast",
-      "id": "backend_queries_premium_20_rateio_corporativo_pueri_domus",
       "community": 47,
       "community_name": "20_rateio_corporativo_pueri_domus.sql",
-      "norm_label": "20_rateio_corporativo_pueri_domus.sql"
+      "norm_label": "20_rateio_corporativo_pueri_domus.sql",
+      "id": "backend_queries_premium_20_rateio_corporativo_pueri_domus"
     },
     {
       "label": "21_beneficios_pueri_domus.sql",
@@ -113,21 +223,10 @@
       "source_file": "backend/queries/Premium/21_beneficios_pueri_domus.sql",
       "source_location": null,
       "_origin": "ast",
-      "id": "backend_queries_premium_21_beneficios_pueri_domus",
       "community": 48,
       "community_name": "21_beneficios_pueri_domus.sql",
-      "norm_label": "21_beneficios_pueri_domus.sql"
-    },
-    {
-      "label": "99_pcld_grafico.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/99_pcld_grafico.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "id": "backend_queries_premium_99_pcld_grafico",
-      "community": 49,
-      "community_name": "99_pcld_grafico.sql",
-      "norm_label": "99_pcld_grafico.sql"
+      "norm_label": "21_beneficios_pueri_domus.sql",
+      "id": "backend_queries_premium_21_beneficios_pueri_domus"
     },
     {
       "label": "13_ebitda_por_unidade_pueri_domus.sql",
@@ -1162,83 +1261,6 @@
       "community_name": "Query Loader Service",
       "norm_label": "fecha a conexao com o banco de dados",
       "id": "backend_query_loader_rationale_455"
-    },
-    {
-      "label": "App.jsx",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "app.jsx",
-      "id": "frontend_src_app"
-    },
-    {
-      "label": "MESES",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L13",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "meses",
-      "id": "frontend_src_app_meses"
-    },
-    {
-      "label": "useTheme()",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "usetheme()",
-      "id": "frontend_src_app_usetheme"
-    },
-    {
-      "label": "getDefaultPeriod()",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L27",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "getdefaultperiod()",
-      "id": "frontend_src_app_getdefaultperiod"
-    },
-    {
-      "label": "CreateUserInline()",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L34",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "createuserinline()",
-      "id": "frontend_src_app_createuserinline"
-    },
-    {
-      "label": "AppContent()",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L176",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "appcontent()",
-      "id": "frontend_src_app_appcontent"
-    },
-    {
-      "label": "App()",
-      "file_type": "code",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L865",
-      "_origin": "ast",
-      "community": 22,
-      "community_name": "Query 07 - Beneficios",
-      "norm_label": "app()",
-      "id": "frontend_src_app_app"
     },
     {
       "label": "auth.py",
@@ -3808,6 +3830,120 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L845",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app",
+      "target": "frontend_src_app_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L176",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app",
+      "target": "frontend_src_app_appcontent"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L34",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app",
+      "target": "frontend_src_app_createuserinline"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L27",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app",
+      "target": "frontend_src_app_getdefaultperiod"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app",
+      "target": "frontend_src_app_meses"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L16",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app",
+      "target": "frontend_src_app_usetheme"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/main.jsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_main",
+      "target": "frontend_src_app"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L178",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_appcontent",
+      "target": "frontend_src_app_usetheme"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L193",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_app_appcontent",
+      "target": "frontend_src_app_getdefaultperiod"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/main.jsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "_origin": "ast",
+      "confidence_score": 1.0,
+      "source": "frontend_src_main",
+      "target": "frontend_src_app_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "backend/app.py",
       "source_location": "L417",
       "weight": 1.0,
@@ -5038,120 +5174,6 @@
       "confidence_score": 1.0,
       "source": "backend_query_loader_rationale_455",
       "target": "backend_query_loader_queryloader_close"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L865",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app",
-      "target": "frontend_src_app_app"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L176",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app",
-      "target": "frontend_src_app_appcontent"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L34",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app",
-      "target": "frontend_src_app_createuserinline"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L27",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app",
-      "target": "frontend_src_app_getdefaultperiod"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L13",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app",
-      "target": "frontend_src_app_meses"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L16",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app",
-      "target": "frontend_src_app_usetheme"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/main.jsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_main",
-      "target": "frontend_src_app"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L178",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app_appcontent",
-      "target": "frontend_src_app_usetheme"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/App.jsx",
-      "source_location": "L193",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_app_appcontent",
-      "target": "frontend_src_app_getdefaultperiod"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "frontend/src/main.jsx",
-      "source_location": "L4",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_main",
-      "target": "frontend_src_app_app"
     },
     {
       "relation": "contains",
@@ -7741,5 +7763,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "c7b9fe0cb7abbef952d6c9260e56438a502e4d8f"
+  "built_at_commit": "14f0b8311fa26b9ee3364f0e0272156c341b36d1"
 }

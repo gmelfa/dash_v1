@@ -130,6 +130,61 @@
       "norm_label": "app()"
     },
     {
+      "label": "DataTable.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/DataTable.jsx",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "frontend_src_components_datatable",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "datatable.jsx"
+    },
+    {
+      "label": "Database()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/DataTable.jsx",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "frontend_src_components_datatable_database",
+      "community": 22,
+      "community_name": "Query 07 - Beneficios",
+      "norm_label": "database()"
+    },
+    {
+      "label": "11b_pcld_grafico.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/11b_pcld_grafico.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 49,
+      "community_name": "99_pcld_grafico.sql",
+      "norm_label": "11b_pcld_grafico.sql",
+      "id": "backend_queries_premium_11b_pcld_grafico"
+    },
+    {
+      "label": "22_pcld_pueri_domus.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/22_pcld_pueri_domus.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 50,
+      "community_name": "22_pcld_pueri_domus.sql",
+      "norm_label": "22_pcld_pueri_domus.sql",
+      "id": "backend_queries_premium_22_pcld_pueri_domus"
+    },
+    {
+      "label": "22b_pcld_grafico_pueri_domus.sql",
+      "file_type": "code",
+      "source_file": "backend/queries/Premium/22b_pcld_grafico_pueri_domus.sql",
+      "source_location": null,
+      "_origin": "ast",
+      "community": 51,
+      "community_name": "22b_pcld_grafico_pueri_domus.sql",
+      "norm_label": "22b_pcld_grafico_pueri_domus.sql",
+      "id": "backend_queries_premium_22b_pcld_grafico_pueri_domus"
+    },
+    {
       "label": "16_evolucao_alunos_pueri_domus.sql",
       "file_type": "code",
       "source_file": "backend/queries/Premium/16_evolucao_alunos_pueri_domus.sql",
@@ -194,17 +249,6 @@
       "community_name": "21_beneficios_pueri_domus.sql",
       "norm_label": "21_beneficios_pueri_domus.sql",
       "id": "backend_queries_premium_21_beneficios_pueri_domus"
-    },
-    {
-      "label": "99_pcld_grafico.sql",
-      "file_type": "code",
-      "source_file": "backend/queries/Premium/99_pcld_grafico.sql",
-      "source_location": null,
-      "_origin": "ast",
-      "community": 49,
-      "community_name": "99_pcld_grafico.sql",
-      "norm_label": "99_pcld_grafico.sql",
-      "id": "backend_queries_premium_99_pcld_grafico"
     },
     {
       "label": "13_ebitda_por_unidade_pueri_domus.sql",
@@ -2704,28 +2748,6 @@
       "id": "frontend_src_components_comments_commentssection_commentssection"
     },
     {
-      "label": "DataTable.jsx",
-      "file_type": "code",
-      "source_file": "frontend/src/components/DataTable.jsx",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 24,
-      "community_name": "Query 09 - PCLD",
-      "norm_label": "datatable.jsx",
-      "id": "frontend_src_components_datatable"
-    },
-    {
-      "label": "Database()",
-      "file_type": "code",
-      "source_file": "frontend/src/components/DataTable.jsx",
-      "source_location": "L11",
-      "_origin": "ast",
-      "community": 24,
-      "community_name": "Query 09 - PCLD",
-      "norm_label": "database()",
-      "id": "frontend_src_components_datatable_database"
-    },
-    {
       "label": "PcldChart.jsx",
       "file_type": "code",
       "source_file": "frontend/src/components/PcldChart.jsx",
@@ -3875,6 +3897,30 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "frontend_src_app",
+      "target": "frontend_src_components_datatable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "frontend_src_app",
+      "target": "frontend_src_components_datatable_database",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "frontend/src/main.jsx",
       "source_location": "L4",
       "weight": 1.0,
@@ -3918,6 +3964,17 @@
       "confidence_score": 1.0,
       "source": "frontend_src_main",
       "target": "frontend_src_app_app"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/DataTable.jsx",
+      "source_location": "L11",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "frontend_src_components_datatable",
+      "target": "frontend_src_components_datatable_database",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -6927,17 +6984,6 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "frontend/src/components/DataTable.jsx",
-      "source_location": "L11",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "frontend_src_components_datatable",
-      "target": "frontend_src_components_datatable_database"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
       "source_file": "frontend/src/components/PcldChart.jsx",
       "source_location": "L8",
       "weight": 1.0,
@@ -7741,5 +7787,5 @@
       "source_file": "CLAUDE.md"
     }
   ],
-  "built_at_commit": "d36627c7842772f439fab1f344dc86b4258e0434"
+  "built_at_commit": "e0c10f874e0179d24e56bfe035dff3f8a2542d5b"
 }

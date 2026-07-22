@@ -1,16 +1,16 @@
 # Graph Report - dash_v1  (2026-07-22)
 
 ## Corpus Check
-- 52 files · ~65,685 words
+- 54 files · ~66,793 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 322 nodes · 351 edges · 50 communities (43 shown, 7 thin omitted)
+- 324 nodes · 353 edges · 51 communities (44 shown, 7 thin omitted)
 - Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `d36627c7`
+- Built from commit: `e0c10f87`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -71,7 +71,7 @@
 - **mv_f_apresentacao UNION ALL Sources** — claude_mv_f_apresentacao, claude_f_resultado, claude_f_ajustes, claude_f_orcamento, claude_f_alunos, claude_f_orcamentoalunos [EXTRACTED 1.00]
 - **Premium Vertical Business Rules** — claude_vertical_premium, claude_ipiranga_rule, claude_vertical_ap, claude_d_classunidades [EXTRACTED 1.00]
 
-## Communities (50 total, 7 thin omitted)
+## Communities (51 total, 7 thin omitted)
 
 ### Community 0 - "Flask App Routes & Query API"
 Cohesion: 0.07
@@ -134,8 +134,8 @@ Cohesion: 0.67
 Nodes (4): Ipiranga Rule (seb.md), Vertical Premium (seb.md), Ipiranga (1040) Special Rule, Vertical Premium
 
 ### Community 22 - "Query 07 - Beneficios"
-Cohesion: 0.36
-Nodes (5): App(), AppContent(), getDefaultPeriod(), MESES, useTheme()
+Cohesion: 0.29
+Nodes (6): App(), AppContent(), getDefaultPeriod(), MESES, useTheme(), Database()
 
 ## Knowledge Gaps
 - **57 isolated node(s):** `MESES`, `name`, `private`, `version`, `type` (+52 more)

@@ -70,8 +70,8 @@
     "semantic_hash": "52dd8ceefccfdd85b91e249da655fe2a"
   },
   "frontend/src/App.jsx": {
-    "mtime": 1784746042.632606,
-    "ast_hash": "64c0137af91c53f19942df2a7f3a2327",
+    "mtime": 1784751188.9570365,
+    "ast_hash": "b9914a36b267af1b31436364ab467074",
     "semantic_hash": ""
   },
   "frontend/src/components/Auth/Login.jsx": {
@@ -105,8 +105,8 @@
     "semantic_hash": "d63c9af6faeba9244967686cb52f83e1"
   },
   "frontend/src/components/DataTable.jsx": {
-    "mtime": 1784730370.9552643,
-    "ast_hash": "26ce84a99b59d0808b2e8071829fce3e",
+    "mtime": 1784749969.6361089,
+    "ast_hash": "4a5d85417a92a9b65a0ed809edfe3693",
     "semantic_hash": ""
   },
   "frontend/src/components/PcldChart.jsx": {
@@ -135,8 +135,8 @@
     "semantic_hash": "13a04f7b3de610e73f8bb4c9ba2f8854"
   },
   "CLAUDE.md": {
-    "mtime": 1784745909.7370255,
-    "ast_hash": "ae6a6dd344493d30ac5d2ee89f1ab1ae",
+    "mtime": 1784746719.8783953,
+    "ast_hash": "6f0f8a5ec445c9a6195408d7f6b5d3b4",
     "semantic_hash": ""
   },
   "backend/requirements.txt": {
@@ -279,9 +279,19 @@
     "ast_hash": "2ff4998e626679ff3cea80fbb4ffe47d",
     "semantic_hash": ""
   },
-  "backend/queries/Premium/99_pcld_grafico.sql": {
-    "mtime": 1784745909.7722883,
-    "ast_hash": "9fc1554e72d69226d2f1d61c0997e673",
+  "backend/queries/Premium/11b_pcld_grafico.sql": {
+    "mtime": 1784749074.7675958,
+    "ast_hash": "7c50dcc7c1016862284df4249d95b350",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/22_pcld_pueri_domus.sql": {
+    "mtime": 1784749732.7716691,
+    "ast_hash": "a01670055bfc35206217f0f3cb8bdff1",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/22b_pcld_grafico_pueri_domus.sql": {
+    "mtime": 1784749092.010928,
+    "ast_hash": "f71d001c8943af7c875d234e1b863d6a",
     "semantic_hash": ""
   }
 }

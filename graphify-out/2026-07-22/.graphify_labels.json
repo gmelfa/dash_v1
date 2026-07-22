@@ -48,5 +48,7 @@
   "46": "19_fopag_consolidado_pueri_domus.sql",
   "47": "20_rateio_corporativo_pueri_domus.sql",
   "48": "21_beneficios_pueri_domus.sql",
-  "49": "99_pcld_grafico.sql"
+  "49": "99_pcld_grafico.sql",
+  "50": "22_pcld_pueri_domus.sql",
+  "51": "22b_pcld_grafico_pueri_domus.sql"
 }
