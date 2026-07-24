@@ -43,6 +43,14 @@ function Database({ columns, data }) {
             // parênteses, "Var...") mesmo que o nome contenha "(" ou "|"
             if (isTextColumn) return col
 
+            // --- PIPE DUPLO (||): mostra só a primeira parte ---
+            // O resto depois do "||" existe só pra manter o nome da coluna
+            // único nos dados (evita colisão de chave quando várias colunas
+            // precisam exibir o mesmo rótulo no cabeçalho, ex: várias "YTD")
+            if (col.includes('||')) {
+              return col.split('||')[0]
+            }
+
             // --- REGRA MESTRA: SEPARADOR PIPE (|) ---
             if (col.includes('|')) {
               const parts = col.split('|')
