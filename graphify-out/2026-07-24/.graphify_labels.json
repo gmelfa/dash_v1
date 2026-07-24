@@ -23,7 +23,7 @@
   "21": "Query 06 - Fopag Indireta",
   "22": "Query 07 - Beneficios",
   "23": "Query 08 - Rateio Corporativo",
-  "24": "Query 09 - PCLD",
+  "24": "23_principais_metricas_ebitda_variacoes_pueri_domus_verbo.sql",
   "25": "Query 09b - PCLD Grafico",
   "26": "Query 10 - Variacao Orcado",
   "27": "Query 11 - CAPEX",
@@ -50,5 +50,12 @@
   "48": "21_beneficios_pueri_domus.sql",
   "49": "99_pcld_grafico.sql",
   "50": "22_pcld_pueri_domus.sql",
-  "51": "22b_pcld_grafico_pueri_domus.sql"
+  "51": "22b_pcld_grafico_pueri_domus.sql",
+  "52": "23a_principais_metricas_pueri_domus_verbo.sql",
+  "53": "23b_ebitda_variacoes_pueri_domus_verbo.sql",
+  "54": "24_dre_pueri_domus_verbo.sql",
+  "55": "25_evolucao_alunos_pueri_domus_verbo.sql",
+  "56": "26_fopag_direta_pueri_domus_verbo.sql",
+  "57": "27_fopag_indireta_pueri_domus_verbo.sql",
+  "58": "28_fopag_consolidado_pueri_domus_verbo.sql"
 }

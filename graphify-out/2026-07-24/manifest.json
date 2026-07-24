@@ -5,8 +5,8 @@
     "semantic_hash": "70626d6a4f6d3808ce4df623b5775ab6"
   },
   "backend/app.py": {
-    "mtime": 1784656714.906978,
-    "ast_hash": "7814a2dae9e00a5bc33d7a3579788fa0",
+    "mtime": 1784807920.2145326,
+    "ast_hash": "3852501300b1adc2b64fb6eef33b1b30",
     "semantic_hash": ""
   },
   "backend/auth.py": {
@@ -25,14 +25,14 @@
     "semantic_hash": "cf9b84c17e615214b1b19c05eecea013"
   },
   "backend/export.py": {
-    "mtime": 1784551579.8543878,
-    "ast_hash": "7e08f710af09ce984b7855f79b718a02",
+    "mtime": 1784828458.732609,
+    "ast_hash": "a83232a5031f2bdce6243e003acf9e63",
     "semantic_hash": ""
   },
   "backend/export_batch_images.py": {
-    "mtime": 1779132096.5559506,
-    "ast_hash": "b1bd31f3b6d75aa141e2b9f2bfa5c844",
-    "semantic_hash": "b1bd31f3b6d75aa141e2b9f2bfa5c844"
+    "mtime": 1784836077.974664,
+    "ast_hash": "4c64fd27f8e14ea933e6391cc2b8b631",
+    "semantic_hash": ""
   },
   "backend/models.py": {
     "mtime": 1779121529.7837367,
@@ -40,9 +40,9 @@
     "semantic_hash": "ca7bf59d730b7320a3919c62e9391d88"
   },
   "backend/pptx_service.py": {
-    "mtime": 1779132116.1211276,
-    "ast_hash": "51cc123db6d77a392c59033bcd0547c1",
-    "semantic_hash": "51cc123db6d77a392c59033bcd0547c1"
+    "mtime": 1784828425.786152,
+    "ast_hash": "12fb4ee0bb326351448b4672056e9dc0",
+    "semantic_hash": ""
   },
   "backend/queries/Premium/01_premium_principais_metricas_ytd.sql": {
     "mtime": 1784721355.6812687,
@@ -55,8 +55,8 @@
     "semantic_hash": ""
   },
   "backend/query_loader.py": {
-    "mtime": 1784656715.2512639,
-    "ast_hash": "33567f9c6eebddd1557f8b97defa9cc8",
+    "mtime": 1784807890.323441,
+    "ast_hash": "0128f752cab53ab79b1a15aabf10213e",
     "semantic_hash": ""
   },
   "frontend/eslint.config.js": {
@@ -70,8 +70,8 @@
     "semantic_hash": "52dd8ceefccfdd85b91e249da655fe2a"
   },
   "frontend/src/App.jsx": {
-    "mtime": 1784751188.9570365,
-    "ast_hash": "b9914a36b267af1b31436364ab467074",
+    "mtime": 1784832274.1908653,
+    "ast_hash": "20a80e3fc87e80026168f387dc14b66f",
     "semantic_hash": ""
   },
   "frontend/src/components/Auth/Login.jsx": {
@@ -105,8 +105,8 @@
     "semantic_hash": "d63c9af6faeba9244967686cb52f83e1"
   },
   "frontend/src/components/DataTable.jsx": {
-    "mtime": 1784749969.6361089,
-    "ast_hash": "4a5d85417a92a9b65a0ed809edfe3693",
+    "mtime": 1784809550.7029586,
+    "ast_hash": "ecaf42e11877213d8fba56ecc930fbff",
     "semantic_hash": ""
   },
   "frontend/src/components/PcldChart.jsx": {
@@ -135,8 +135,8 @@
     "semantic_hash": "13a04f7b3de610e73f8bb4c9ba2f8854"
   },
   "CLAUDE.md": {
-    "mtime": 1784746719.8783953,
-    "ast_hash": "6f0f8a5ec445c9a6195408d7f6b5d3b4",
+    "mtime": 1784808029.453065,
+    "ast_hash": "ba39648873cc426a0eef43c1ff64c792",
     "semantic_hash": ""
   },
   "backend/requirements.txt": {
@@ -292,6 +292,46 @@
   "backend/queries/Premium/22b_pcld_grafico_pueri_domus.sql": {
     "mtime": 1784749092.010928,
     "ast_hash": "f71d001c8943af7c875d234e1b863d6a",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/23_principais_metricas_ebitda_variacoes_pueri_domus_verbo.sql": {
+    "mtime": 1784807995.7437644,
+    "ast_hash": "0d89bf3e813d784b30aa6fef8121e0c2",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/23a_principais_metricas_pueri_domus_verbo.sql": {
+    "mtime": 1784807958.4565866,
+    "ast_hash": "82ca60f3a31e677f1a7e74990de1a9c7",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/23b_ebitda_variacoes_pueri_domus_verbo.sql": {
+    "mtime": 1784809572.6094255,
+    "ast_hash": "509817404a4b4b9a12880a9d1fce2007",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/24_dre_pueri_domus_verbo.sql": {
+    "mtime": 1784810103.3442352,
+    "ast_hash": "4bdd448a127ca44907d6f9852655bd55",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/25_evolucao_alunos_pueri_domus_verbo.sql": {
+    "mtime": 1784810998.3998377,
+    "ast_hash": "e8627fa6a85e67e65fd36ee2031521bf",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/26_fopag_direta_pueri_domus_verbo.sql": {
+    "mtime": 1784812757.3731642,
+    "ast_hash": "4a2309d48ce2c10e586d0004d2ad10ed",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/27_fopag_indireta_pueri_domus_verbo.sql": {
+    "mtime": 1784812886.0621037,
+    "ast_hash": "f6ec5a84bece48b5acf704c846cda329",
+    "semantic_hash": ""
+  },
+  "backend/queries/Premium/28_fopag_consolidado_pueri_domus_verbo.sql": {
+    "mtime": 1784813339.7859752,
+    "ast_hash": "7782b821de8ce0f2b72ffcf70a8d1c16",
     "semantic_hash": ""
   }
 }

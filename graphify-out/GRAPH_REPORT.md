@@ -1,16 +1,16 @@
-# Graph Report - dash_v1  (2026-07-22)
+# Graph Report - dash_v1  (2026-07-24)
 
 ## Corpus Check
-- 54 files · ~66,793 words
+- 62 files · ~83,794 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 324 nodes · 353 edges · 51 communities (44 shown, 7 thin omitted)
-- Extraction: 90% EXTRACTED · 10% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.86)
+- 330 nodes · 349 edges · 60 communities (53 shown, 7 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.87)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e0c10f87`
+- Built from commit: `322916bd`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -48,8 +48,8 @@
 6. `useAuth()` - 7 edges
 7. `f_resultado` - 7 edges
 8. `get_databricks_connection()` - 6 edges
-9. `save_queries()` - 5 edges
-10. `execute_saved_query()` - 5 edges
+9. `_add_comments_footer()` - 5 edges
+10. `_add_comments_sidebar()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `SQL Convention (seb.md)` --semantically_similar_to--> `Human-Style SQL Convention`  [INFERRED] [semantically similar]
@@ -71,7 +71,7 @@
 - **mv_f_apresentacao UNION ALL Sources** — claude_mv_f_apresentacao, claude_f_resultado, claude_f_ajustes, claude_f_orcamento, claude_f_alunos, claude_f_orcamentoalunos [EXTRACTED 1.00]
 - **Premium Vertical Business Rules** — claude_vertical_premium, claude_ipiranga_rule, claude_vertical_ap, claude_d_classunidades [EXTRACTED 1.00]
 
-## Communities (51 total, 7 thin omitted)
+## Communities (60 total, 7 thin omitted)
 
 ### Community 0 - "Flask App Routes & Query API"
 Cohesion: 0.07
@@ -106,16 +106,16 @@ Cohesion: 0.13
 Nodes (17): approve_user(), _check_lockout(), _clear_attempts(), get_current_user(), _get_ip(), list_pending_users(), list_users(), login() (+9 more)
 
 ### Community 8 - "PPTX Export (Single)"
-Cohesion: 0.17
-Nodes (14): export_batch(), export_development(), export_final(), Exporta múltiplas queries em um único PowerPoint     Recebe: query_ids (array d, Exporta PowerPoint de desenvolvimento     Recebe: query_id, query_title, table_, Exporta PowerPoint final (apenas comentários aprovados com tabela nativa)     R, add_comments_section(), create_development_pptx() (+6 more)
+Cohesion: 0.21
+Nodes (10): export_batch(), export_final(), Exporta PowerPoint final (apenas comentários aprovados com tabela nativa)     R, Exporta múltiplas queries em um único PowerPoint     Recebe: query_ids (array d, add_comments_section(), create_final_pptx(), format_table(), Gera PowerPoint para apresentação final     Contém: Título + Tabela nativa + Co (+2 more)
 
 ### Community 9 - "Backend Dependencies & Architecture"
 Cohesion: 0.14
 Nodes (14): flask==3.0.0, flask-cors==4.0.0, flask-login==0.6.3, flask-sqlalchemy==3.1.1, pillow==12.0.0, python-dotenv==1.0.0, python-pptx==0.6.23, tabulate==0.9.0 (+6 more)
 
 ### Community 10 - "Batch PPTX Export with Images"
-Cohesion: 0.33
-Nodes (8): _add_comments_footer(), _add_comments_sidebar(), export_batch_with_images(), _get_comment_text(), Exporta PPTX com Layout Híbrido Automático e Algoritmo Best-Fit:     - Tabelas, Retorna edited_content se existir, senão content original., Adiciona comentários empilhados no rodapé (Layout A) — um por linha., Adiciona comentários no painel esquerdo (Layout B) com truncamento controlado.
+Cohesion: 0.29
+Nodes (10): _add_comment_text_runs(), _add_comments_footer(), _add_comments_sidebar(), export_batch_with_images(), _get_comment_text(), Exporta PPTX com Layout Híbrido Automático e Algoritmo Best-Fit:     - Tabelas, Retorna edited_content se existir, senão content original., Adiciona o texto do comentário à paragraph, deixando em negrito     qualquer 'R (+2 more)
 
 ### Community 11 - "Student Budget Migration Debt"
 Cohesion: 0.33
@@ -134,8 +134,8 @@ Cohesion: 0.67
 Nodes (4): Ipiranga Rule (seb.md), Vertical Premium (seb.md), Ipiranga (1040) Special Rule, Vertical Premium
 
 ### Community 22 - "Query 07 - Beneficios"
-Cohesion: 0.29
-Nodes (6): App(), AppContent(), getDefaultPeriod(), MESES, useTheme(), Database()
+Cohesion: 0.36
+Nodes (5): App(), AppContent(), getDefaultPeriod(), MESES, useTheme()
 
 ## Knowledge Gaps
 - **57 isolated node(s):** `MESES`, `name`, `private`, `version`, `type` (+52 more)
