@@ -110,7 +110,8 @@ def load_queries():
                 'table_1_title': q.get('table_1_title', ''),
                 'table_2_query_id': q.get('table_2_query_id', ''),
                 'table_2_title': q.get('table_2_title', ''),
-                'file_hash': q.get('file_hash', '')
+                'file_hash': q.get('file_hash', ''),
+                'hidden': bool(q.get('hidden', 0))
             })
         
         return queries
@@ -240,7 +241,12 @@ def get_queries():
         
         # Formato antigo (flat array)
         queries = load_queries()
-        
+
+        # Queries "hidden" existem só como table_1/table_2 de um combo — nunca
+        # aparecem como item próprio no sumário (mas continuam disponíveis pro
+        # execute_saved_query, que chama load_queries() por conta própria)
+        queries = [q for q in queries if not q.get('hidden')]
+
         # Filtra apenas queries ativas se solicitado
         active_only = request.args.get('active_only', 'false').lower() == 'true'
         if active_only:

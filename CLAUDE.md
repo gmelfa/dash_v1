@@ -183,6 +183,7 @@ with params as (
 4. A sidebar do frontend agrupa por `category` (nome da pasta)
 5. Prefixo numérico do arquivo deve sempre bater com o `@order` interno — ao inserir uma tabela nova no meio da sequência, renumerar (via `git mv`) os arquivos seguintes para manter os dois em sincronia
 6. **Exceção**: queries `@type: chart` (nunca aparecem na sidebar, só são referenciadas via `@chart_query_id` de outra query) não participam da sequência principal — usar o prefixo da tabela-pai + sufixo `b` (ex: a tabela `11_pcld.sql` tem seu gráfico em `11b_pcld_grafico.sql`, com `@order: 11` também, já que a ordem não tem efeito nela). Só precisa ser renomeada se a tabela-pai for renumerada — nunca ao inserir outras tabelas visíveis na sequência
+7. **`@hidden: true`**: esconde uma query do sumário mesmo sendo `@type: table` normal — usada quando duas queries só existem pra alimentar um combo (`@table_1_query_id`/`@table_2_query_id`) e não fazem sentido como item próprio no menu (diferente do padrão FOPAG Direta/Indireta, que ficam visíveis sozinhas E combinadas). Convenção de arquivo: sufixos `a`/`b` no prefixo do combo (ex: combo `23_...sql` com fontes ocultas `23a_...sql`/`23b_...sql`). A query oculta continua funcionando normalmente como fonte de dados — só não aparece na listagem que o frontend usa pra montar a sidebar
 
 ---
 

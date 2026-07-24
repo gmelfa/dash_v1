@@ -42,6 +42,7 @@ class QueryMetadata:
     table_1_title: str = ''
     table_2_query_id: str = ''
     table_2_title: str = ''
+    hidden: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         """Converte para dicionário"""
@@ -100,7 +101,8 @@ class QueryLoader:
                 table_1_query_id TEXT DEFAULT '',
                 table_1_title TEXT DEFAULT '',
                 table_2_query_id TEXT DEFAULT '',
-                table_2_title TEXT DEFAULT ''
+                table_2_title TEXT DEFAULT '',
+                hidden INTEGER DEFAULT 0
             )
         ''')
         
@@ -145,7 +147,8 @@ class QueryLoader:
                 'table_1_query_id': '',
                 'table_1_title': '',
                 'table_2_query_id': '',
-                'table_2_title': ''
+                'table_2_title': '',
+                'hidden': False
             }
 
             # Regex para capturar metadados
@@ -160,6 +163,7 @@ class QueryLoader:
             table1_title_match  = re.search(r'--\s*@table_1_title:\s*(.+)', content)
             table2_qid_match    = re.search(r'--\s*@table_2_query_id:\s*(.+)', content)
             table2_title_match  = re.search(r'--\s*@table_2_title:\s*(.+)', content)
+            hidden_match        = re.search(r'--\s*@hidden:\s*(.+)', content)
 
             if id_match:
                 metadata['id'] = id_match.group(1).strip()
@@ -184,6 +188,8 @@ class QueryLoader:
                 metadata['table_2_query_id'] = table2_qid_match.group(1).strip()
             if table2_title_match:
                 metadata['table_2_title'] = table2_title_match.group(1).strip()
+            if hidden_match:
+                metadata['hidden'] = hidden_match.group(1).strip().lower() in ('true', '1', 'yes')
 
             # Se não tiver @id, usar nome do arquivo
             if not metadata['id']:
@@ -220,7 +226,8 @@ class QueryLoader:
                 table_1_query_id=metadata['table_1_query_id'],
                 table_1_title=metadata['table_1_title'],
                 table_2_query_id=metadata['table_2_query_id'],
-                table_2_title=metadata['table_2_title']
+                table_2_title=metadata['table_2_title'],
+                hidden=metadata['hidden']
             )
         
         except Exception as e:
@@ -279,8 +286,8 @@ class QueryLoader:
             if not existing or existing['file_hash'] != query.file_hash or force_reload:
                 cursor.execute('''
                     INSERT OR REPLACE INTO queries
-                    (id, category, name, description, sql_content, file_path, file_hash, tags, query_order, created_at, updated_at, query_type, chart_query_id, table_1_query_id, table_1_title, table_2_query_id, table_2_title)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    (id, category, name, description, sql_content, file_path, file_hash, tags, query_order, created_at, updated_at, query_type, chart_query_id, table_1_query_id, table_1_title, table_2_query_id, table_2_title, hidden)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ''', (
                     query.id,
                     query.category,
@@ -298,7 +305,8 @@ class QueryLoader:
                     query.table_1_query_id,
                     query.table_1_title,
                     query.table_2_query_id,
-                    query.table_2_title
+                    query.table_2_title,
+                    1 if query.hidden else 0
                 ))
                 loaded_count += 1
         
