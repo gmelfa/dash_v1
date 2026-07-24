@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify, send_file, current_app
 from flask_login import login_required, current_user
 from models import Comment
-from pptx_service import create_development_pptx, create_final_pptx
+from pptx_service import create_final_pptx
 import json
 from io import BytesIO
 from pptx import Presentation
@@ -9,48 +9,6 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 
 export_bp = Blueprint('export', __name__, url_prefix='/api/export')
-
-@export_bp.route('/pptx/development', methods=['POST'])
-@login_required
-def export_development():
-    """
-    Exporta PowerPoint de desenvolvimento
-    Recebe: query_id, query_title, table_image (bytes)
-    """
-    try:
-        query_id = request.form.get('query_id')
-        query_title = request.form.get('query_title')
-        table_image = request.files.get('table_image')
-        
-        if not query_id or not query_title or not table_image:
-            return jsonify({'error': 'query_id, query_title e table_image são obrigatórios'}), 400
-        
-        # Ler bytes da imagem
-        table_image_bytes = table_image.read()
-        
-        # Buscar todos os comentários da query
-        comments = Comment.query.filter_by(query_id=query_id).order_by(Comment.created_at).all()
-        comments_data = [comment.to_dict() for comment in comments]
-        
-        # Gerar PowerPoint
-        prs = create_development_pptx(query_title, table_image_bytes, comments_data)
-        
-        # Salvar em BytesIO
-        pptx_bytes = BytesIO()
-        prs.save(pptx_bytes)
-        pptx_bytes.seek(0)
-        
-        # Retornar arquivo
-        return send_file(
-            pptx_bytes,
-            mimetype='application/vnd.openxmlformats-officedocument.presentationml.presentation',
-            as_attachment=True,
-            download_name=f'{query_id}_development.pptx'
-        )
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 
 @export_bp.route('/pptx/final', methods=['POST'])
 @login_required

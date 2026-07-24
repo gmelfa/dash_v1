@@ -275,62 +275,6 @@ function AppContent() {
     setError(null)
   }
 
-  const exportDevelopmentPPT = async () => {
-    if (!tableData || !selectedQuery) {
-      alert('Selecione uma query primeiro')
-      return
-    }
-
-    try {
-      // Capturar screenshot da tabela
-      const html2canvas = (await import('html2canvas')).default
-      const tableElement = document.querySelector('.data-table-container')
-
-      if (!tableElement) {
-        alert('Tabela não encontrada')
-        return
-      }
-
-      const canvas = await html2canvas(tableElement, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        logging: false
-      })
-
-      // Converter para blob
-      const blob = await new Promise(resolve => {
-        canvas.toBlob(resolve, 'image/png')
-      })
-
-      // Criar FormData
-      const formData = new FormData()
-      formData.append('query_id', selectedQuery)
-      formData.append('query_title', tableData.title)
-      formData.append('table_image', blob, 'table.png')
-
-      // Enviar para backend
-      const response = await axios.post(
-        `${API_URL}/api/export/pptx/development`,
-        formData,
-        {
-          responseType: 'blob',
-          withCredentials: true
-        }
-      )
-
-      // Download do arquivo
-      const url = window.URL.createObjectURL(new Blob([response.data]))
-      const link = document.createElement('a')
-      link.href = url
-      link.setAttribute('download', `${selectedQuery}_development.pptx`)
-      document.body.appendChild(link)
-      link.click()
-      link.remove()
-    } catch (err) {
-      console.error('Erro ao exportar:', err)
-    }
-  }
-
   const toggleQuerySelection = (queryId) => {
     const newSelected = new Set(selectedQueriesForExport)
     if (newSelected.has(queryId)) {
@@ -391,6 +335,27 @@ function AppContent() {
       }
 
       // --- PASSO 2: PROCESSAR QUERIES ---
+      // Prefetch: dispara o SELECT de algumas queries à frente enquanto a atual
+      // ainda está sendo renderizada/capturada em imagem. Assim, quando o loop
+      // chega na próxima página, o select já rodou (ou está terminando) — sem
+      // isso, cada página só começava a buscar dados depois da anterior terminar
+      // de capturar a imagem inteira.
+      const PREFETCH_AHEAD = 3
+      const fetchQueryData = (queryId) =>
+        axios.post(
+          `${API_URL}/api/queries/${queryId}/execute`,
+          { mes_selecionado: selectedMes, ano_selecionado: selectedAno },
+          { withCredentials: true, timeout: 600000 }
+        ).catch(err => ({ __prefetchError: err }))
+
+      const prefetched = new Map()
+      const ensurePrefetched = (i) => {
+        if (i >= 0 && i < queryIds.length && !prefetched.has(i)) {
+          prefetched.set(i, fetchQueryData(queryIds[i]))
+        }
+      }
+      for (let i = 0; i < PREFETCH_AHEAD; i++) ensurePrefetched(i)
+
       for (let idx = 0; idx < queryIds.length; idx++) {
         const queryId = queryIds[idx]
 
@@ -398,11 +363,10 @@ function AppContent() {
           setLoading(true)
           setTableData(null)
 
-          const queryResponse = await axios.post(
-            `${API_URL}/api/queries/${queryId}/execute`,
-            { mes_selecionado: selectedMes, ano_selecionado: selectedAno },
-            { withCredentials: true, timeout: 600000 }
-          )
+          // Mantém a janela de prefetch cheia antes de esperar a atual
+          ensurePrefetched(idx + PREFETCH_AHEAD)
+          const queryResponse = await prefetched.get(idx)
+          if (queryResponse.__prefetchError) throw queryResponse.__prefetchError
           const data = queryResponse.data
 
           progress(idx + 1, queryIds.length + 1, data.title || queryId)
@@ -411,11 +375,15 @@ function AppContent() {
           setLoading(false)
           setTableData(data)
 
+          // Usa o wrapper externo (table-wrapper-full), não .data-table-container
+          // direto — em páginas combo (2+ tabelas empilhadas, ex: FOPAG Consolidado)
+          // existe um .data-table-container por tabela, e querySelector só pegaria
+          // a primeira, descartando as demais e os títulos entre elas
           let tableElement = null
           let attempts = 0
           while (attempts < 1200) {
             await new Promise(resolve => setTimeout(resolve, 500))
-            tableElement = document.querySelector('.data-table-container')
+            tableElement = document.querySelector('.table-wrapper-full')
             if (tableElement && tableElement.querySelector('table')) break
             attempts++
           }
@@ -427,23 +395,78 @@ function AppContent() {
 
           await new Promise(resolve => setTimeout(resolve, 1000))
 
-          const originalTable = tableElement.querySelector('table')
           const cloneContainer = document.createElement('div')
-          cloneContainer.style.cssText = 'position:fixed;top:-10000px;left:0;width:fit-content;height:auto;z-index:-1;background:white;padding:20px'
-          cloneContainer.appendChild(originalTable.cloneNode(true))
+          cloneContainer.style.cssText = 'position:fixed;top:-10000px;left:0;width:fit-content;height:auto;z-index:-1;background:white;padding:2px'
+          cloneContainer.appendChild(tableElement.cloneNode(true))
           document.body.appendChild(cloneContainer)
+
+          // html2canvas não lida bem com position:sticky/fixed (calcula a posição
+          // errada na captura) — neutraliza no clone, sem afetar a tabela real
+          // que continua rolando normalmente na tela
+          cloneContainer.querySelectorAll('th, td').forEach(cell => {
+            if (getComputedStyle(cell).position === 'sticky') {
+              cell.style.position = 'static'
+              cell.style.top = 'auto'
+              cell.style.left = 'auto'
+            }
+          })
+
+          // Algum ancestral entre a tabela e o container clonado limita altura
+          // e rola por dentro (pra caber na tela durante a navegação) — no
+          // clone isso cortava a tabela pela metade, já que o html2canvas só
+          // captura o que "aparece" dentro do scroll. Percorre TODOS os
+          // ancestrais (não só .table-wrapper) pra não depender de adivinhar
+          // qual classe específica tem a restrição.
+          let ancestor = cloneContainer.querySelector('table')
+          while (ancestor && ancestor !== cloneContainer) {
+            ancestor.style.maxHeight = 'none'
+            ancestor.style.overflow = 'visible'
+            ancestor.style.height = 'auto'
+            ancestor = ancestor.parentElement
+          }
+
+          // Fonte e altura de linha compactas só na exportação (não afeta o
+          // tamanho usado durante a navegação normal no site) — quanto mais
+          // compacta a linha, menor a altura total da imagem, então tabelas
+          // grandes (ex: DRE de 44 linhas) ficam com proporção mais parecida
+          // com uma folha de referência em vez de "esticada" verticalmente
+          cloneContainer.querySelectorAll('.data-table').forEach(el => {
+            el.style.fontSize = '11px'
+            el.style.lineHeight = '1'
+          })
+          // Padding mínimo — colunas mais estreitas deixam a imagem menos
+          // "larga" em relação à altura (ajuda o contain-fit a usar mais
+          // altura disponível), e linhas mais próximas cabem bem mais
+          // conteúdo na mesma altura de imagem
+          cloneContainer.querySelectorAll('.data-table td').forEach(el => {
+            el.style.padding = '1px 3px'
+            el.style.lineHeight = '1'
+          })
+          cloneContainer.querySelectorAll('.data-table thead th').forEach(el => {
+            el.style.padding = '4px 2px'
+            el.style.lineHeight = '1'
+          })
+
+          // Mede o tamanho real já com as correções acima aplicadas, e passa
+          // explicitamente pro html2canvas — não depende só de windowWidth/
+          // windowHeight (que configuram o "viewport" interno dele, não
+          // necessariamente o tamanho final do canvas capturado)
+          const fullWidth = cloneContainer.scrollWidth
+          const fullHeight = cloneContainer.scrollHeight
 
           const canvas = await html2canvas(cloneContainer, {
             scale: 3,
             backgroundColor: '#ffffff',
             logging: false,
-            windowWidth: cloneContainer.scrollWidth + 100,
-            windowHeight: cloneContainer.scrollHeight + 100
+            width: fullWidth,
+            height: fullHeight,
+            windowWidth: fullWidth + 100,
+            windowHeight: fullHeight + 100
           })
           document.body.removeChild(cloneContainer)
 
           const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'))
-          queryDataArray.push({ query_id: queryId, query_title: data.title, image_blob: blob, is_cover: false })
+          queryDataArray.push({ query_id: queryId, query_title: data.title, image_blob: blob, is_cover: false, is_combo: !!data.isCombo })
 
           setTableData(null)
           await new Promise(resolve => setTimeout(resolve, 200))
@@ -471,6 +494,7 @@ function AppContent() {
         formData.append(`query_id_${index}`, item.query_id)
         formData.append(`query_title_${index}`, item.query_title)
         formData.append(`table_image_${index}`, item.image_blob, `slide_${index}.png`)
+        formData.append(`is_combo_${index}`, item.is_combo ? '1' : '0')
       })
 
       const response = await axios.post(
@@ -794,11 +818,6 @@ function AppContent() {
                   <h2>{tableData.title}</h2>
                   {tableData.description && <p>{tableData.description}</p>}
                   {!tableData.isCombo && <span className="row-count">{tableData.rowCount} linhas</span>}
-                </div>
-                <div className="export-buttons">
-                  <button onClick={exportDevelopmentPPT} className="btn-export-ppt">
-                    📊 Exportar PPT
-                  </button>
                 </div>
               </div>
 

@@ -1,3 +1,4 @@
+import re
 from flask import Blueprint, request, jsonify, send_file
 from flask_login import login_required
 from models import Comment
@@ -58,7 +59,7 @@ def export_batch_with_images():
             centered_top = container_top + (container_h - final_h) / 2
             
             return centered_left, centered_top, final_w, final_h
-        
+
         # Threshold para decidir entre Layout A (Topo) e Layout B (Split)
         # Só tabelas claramente panorâmicas (ratio > 1.5) usam Layout A
         THRESHOLD_RATIO = 1.5
@@ -68,7 +69,8 @@ def export_batch_with_images():
                 query_id = request.form.get(f'query_id_{i}')
                 query_title = request.form.get(f'query_title_{i}')
                 table_image_file = request.files.get(f'table_image_{i}')
-                
+                is_combo = request.form.get(f'is_combo_{i}', '0') == '1'
+
                 if not all([query_id, query_title, table_image_file]):
                     continue
                 
@@ -87,6 +89,13 @@ def export_batch_with_images():
                 # Adicionar Slide em Branco
                 slide = prs.slides.add_slide(prs.slide_layouts[6])
 
+                # Sem isso o fundo do slide fica no padrão do tema (não
+                # necessariamente branco) — a imagem da tabela já vem com
+                # fundo branco só ao redor dela mesma, e a combinação parecia
+                # uma "ilha" pequena flutuando num fundo diferente
+                slide.background.fill.solid()
+                slide.background.fill.fore_color.rgb = RGBColor(255, 255, 255)
+
                 # --- CAPA ---
                 if query_id == 'cover':
                     # Usa Best Fit na Capa também para centralizar sem distorcer
@@ -101,15 +110,26 @@ def export_batch_with_images():
                 # =========================================================
                 # DECISÃO DE LAYOUT BASEADA NA PROPORÇÃO DA IMAGEM
                 # =========================================================
-                
-                if img_ratio > THRESHOLD_RATIO:
+                # Página combo (2+ tabelas empilhadas) sempre usa Layout A —
+                # a altura maior de várias tabelas juntas derrubava a proporção
+                # e fazia cair no Layout B (painel de comentários lateral, que
+                # nem faz sentido pra combo), espremendo a imagem sem motivo
+                #
+                # Layout B só vale a pena quando existe comentário aprovado
+                # pra mostrar no painel — sem isso, o painel fica em branco e
+                # a tabela é espremida numa coluna estreita sem necessidade
+                has_approved_comments = Comment.query.filter_by(
+                    query_id=query_id, status='approved'
+                ).first() is not None
+
+                if is_combo or img_ratio > THRESHOLD_RATIO or not has_approved_comments:
                     # -----------------------------------------------------
                     # LAYOUT A: FULL WIDTH (Para Tabelas Grandes/Largas)
                     # -----------------------------------------------------
                     MARGIN_X = Inches(0.25)
-                    TITLE_TOP = Inches(0.15)
-                    TITLE_HEIGHT = Inches(0.7)
-                    
+                    TITLE_TOP = Inches(0.05)
+                    TITLE_HEIGHT = Inches(0.6)
+
                     # 1. Título Topo
                     title_shape = slide.shapes.add_textbox(MARGIN_X, TITLE_TOP, prs.slide_width - (MARGIN_X*2), TITLE_HEIGHT)
                     tf = title_shape.text_frame
@@ -130,38 +150,50 @@ def export_batch_with_images():
                         p_sub.alignment = PP_ALIGN.LEFT
 
                     # 2. Área Disponível para a Tabela
-                    # Começa abaixo do título e deixa espaço para rodapé
-                    TABLE_TOP = Inches(1.0) 
-                    FOOTER_HEIGHT = Inches(0.8) 
-                    
+                    # Começa abaixo do título — a imagem SEMPRE cabe dentro do
+                    # slide (contain-fit). Em apresentação (Slideshow) não tem
+                    # como rolar pra ver o que passa do slide, então nunca pode
+                    # estourar o limite
+                    TABLE_TOP = Inches(0.65)
+
                     available_w = prs.slide_width - (MARGIN_X * 2)
-                    available_h = prs.slide_height - TABLE_TOP - FOOTER_HEIGHT
-                    
-                    # CALCULAR BEST FIT
+                    available_h = prs.slide_height - TABLE_TOP - MARGIN_X
+
                     left, top, width, height = get_best_fit_dimensions(
                         orig_w, orig_h, available_w, available_h, MARGIN_X, TABLE_TOP
                     )
-                    
+                    # Alinha à esquerda e ao topo (em vez de centralizar) — o
+                    # espaço que sobra à direita vira coluna de comentários
+                    left = MARGIN_X
+                    top = TABLE_TOP
+
                     slide.shapes.add_picture(image_stream, left, top, width=width, height=height)
-                    
-                    # 3. Comentários Rodapé
-                    footer_top = prs.slide_height - Inches(0.7)
-                    _add_comments_footer(slide, query_id, MARGIN_X, footer_top, prs.slide_width - (MARGIN_X*2))
+
+                    # 3. Comentários — coluna vertical à direita da tabela,
+                    # usando o espaço que sobrou. Se a tabela ocupar a largura
+                    # toda (não sobra espaço pra coluna), cai pro rodapé
+                    sidebar_left = left + width + Inches(0.3)
+                    sidebar_w = prs.slide_width - sidebar_left - MARGIN_X
+                    if has_approved_comments and sidebar_w >= Inches(2.0):
+                        _add_comments_sidebar(slide, query_id, sidebar_left, TABLE_TOP, sidebar_w, height)
+                    elif has_approved_comments:
+                        footer_top = prs.slide_height - Inches(0.7)
+                        _add_comments_footer(slide, query_id, MARGIN_X, footer_top, prs.slide_width - (MARGIN_X*2))
 
                 else:
                     # -----------------------------------------------------
-                    # LAYOUT B: SPLIT (Título topo + Comentários esq. + Tabela dir.)
+                    # LAYOUT B: Título topo + Tabela esq. + Comentários dir.
+                    # Mesma estrutura do Layout A (só entra aqui quando existe
+                    # comentário aprovado E a tabela deixa espaço sobrando)
                     # -----------------------------------------------------
                     MARGIN = Inches(0.25)
-                    TITLE_H = Inches(0.72)
-                    CONTENT_TOP = TITLE_H + Inches(0.18)
-                    COMMENTS_W = Inches(4.0)
-                    DIV_X = COMMENTS_W + MARGIN * 2
-                    TABLE_LEFT = DIV_X + MARGIN
+                    TITLE_TOP = Inches(0.05)
+                    TITLE_H = Inches(0.6)
+                    TABLE_TOP = Inches(0.65)
 
                     # 1. Título topo (largura total)
                     title_shape = slide.shapes.add_textbox(
-                        MARGIN, Inches(0.08), prs.slide_width - MARGIN * 2, TITLE_H
+                        MARGIN, TITLE_TOP, prs.slide_width - MARGIN * 2, TITLE_H
                     )
                     tf = title_shape.text_frame
                     tf.word_wrap = True
@@ -181,27 +213,22 @@ def export_batch_with_images():
                         p_sub.font.color.rgb = RGBColor(100, 116, 139)
                         p_sub.alignment = PP_ALIGN.LEFT
 
-                    # 2. Linha separadora horizontal
-                    sep_y = TITLE_H + Inches(0.06)
-                    sep = slide.shapes.add_connector(1, MARGIN, sep_y, prs.slide_width - MARGIN, sep_y)
-                    sep.line.color.rgb = RGBColor(180, 180, 180)
-
-                    # 3. Comentários painel esquerdo
-                    comments_h = prs.slide_height - CONTENT_TOP - MARGIN
-                    _add_comments_sidebar(slide, query_id, MARGIN, CONTENT_TOP, COMMENTS_W, comments_h)
-
-                    # 4. Linha divisória vertical
-                    sep_v = slide.shapes.add_connector(1, DIV_X, CONTENT_TOP, DIV_X, prs.slide_height - MARGIN)
-                    sep_v.line.color.rgb = RGBColor(200, 200, 200)
-
-                    # 5. Tabela painel direito (best-fit)
-                    available_w = prs.slide_width - TABLE_LEFT - MARGIN
-                    available_h = prs.slide_height - CONTENT_TOP - MARGIN
+                    # 2. Tabela painel esquerdo (contain-fit, alinhada à
+                    # esquerda e ao topo — mesma lógica do Layout A)
+                    available_w = prs.slide_width - (MARGIN * 2)
+                    available_h = prs.slide_height - TABLE_TOP - MARGIN
 
                     left, top, width, height = get_best_fit_dimensions(
-                        orig_w, orig_h, available_w, available_h, TABLE_LEFT, CONTENT_TOP
+                        orig_w, orig_h, available_w, available_h, MARGIN, TABLE_TOP
                     )
+                    left = MARGIN
+                    top = TABLE_TOP
                     slide.shapes.add_picture(image_stream, left, top, width=width, height=height)
+
+                    # 3. Comentários painel direito, no espaço que sobrar
+                    sidebar_left = left + width + Inches(0.3)
+                    sidebar_w = prs.slide_width - sidebar_left - MARGIN
+                    _add_comments_sidebar(slide, query_id, sidebar_left, TABLE_TOP, sidebar_w, height)
 
             except Exception as e:
                 print(f"Erro processando query {i}: {e}")
@@ -227,6 +254,34 @@ def export_batch_with_images():
 def _get_comment_text(c):
     """Retorna edited_content se existir, senão content original."""
     return (c.edited_content or c.content).strip()
+
+# "Rótulo: resto do texto" -> rótulo em negrito. Limitado a 40 caracteres antes
+# dos ":" pra não pegar um ":" que apareça no meio de uma frase longa qualquer
+_LABEL_PREFIX = re.compile(r'^([^:\n]{1,40}):\s*(.*)$', re.DOTALL)
+
+def _add_comment_text_runs(paragraph, text, color, font_size=Pt(11)):
+    """Adiciona o texto do comentário à paragraph, deixando em negrito
+    qualquer 'Rótulo:' no início do texto (ex: 'FOPAG: texto...')."""
+    match = _LABEL_PREFIX.match(text)
+    if match:
+        label, rest = match.group(1), match.group(2)
+        run_label = paragraph.add_run()
+        run_label.text = f"{label}: "
+        run_label.font.bold = True
+        run_label.font.size = font_size
+        run_label.font.color.rgb = color
+
+        run_rest = paragraph.add_run()
+        run_rest.text = rest
+        run_rest.font.bold = False
+        run_rest.font.size = font_size
+        run_rest.font.color.rgb = color
+    else:
+        run = paragraph.add_run()
+        run.text = text
+        run.font.bold = False
+        run.font.size = font_size
+        run.font.color.rgb = color
 
 def _add_comments_footer(slide, query_id, left, top, width):
     """Adiciona comentários empilhados no rodapé (Layout A) — um por linha."""
@@ -257,14 +312,10 @@ def _add_comments_footer(slide, query_id, left, top, width):
         run_author.font.size = Pt(11)
         run_author.font.color.rgb = RGBColor(30, 58, 95)
 
-        run_text = p.add_run()
-        run_text.text = text
-        run_text.font.bold = False
-        run_text.font.size = Pt(11)
-        run_text.font.color.rgb = RGBColor(80, 80, 80)
+        _add_comment_text_runs(p, text, RGBColor(80, 80, 80))
 
 def _add_comments_sidebar(slide, query_id, left, top, width, height):
-    """Adiciona comentários no painel esquerdo (Layout B) com truncamento controlado."""
+    """Adiciona comentários numa coluna lateral (Layout A/B) com truncamento controlado."""
     MAX_CHARS = 140
     MAX_VISIBLE = 3
 
@@ -275,8 +326,15 @@ def _add_comments_sidebar(slide, query_id, left, top, width, height):
         return
 
     shape = slide.shapes.add_textbox(left, top, width, height)
+    # Fundo azul bem claro pra dar contraste com o resto do slide (branco)
+    shape.fill.solid()
+    shape.fill.fore_color.rgb = RGBColor(235, 243, 252)
+    shape.line.fill.background()
     tf = shape.text_frame
     tf.word_wrap = True
+    tf.margin_left = Inches(0.15)
+    tf.margin_right = Inches(0.15)
+    tf.margin_top = Inches(0.1)
 
     p_head = tf.paragraphs[0]
     p_head.text = "Comentários:"
@@ -298,9 +356,7 @@ def _add_comments_sidebar(slide, query_id, left, top, width, height):
         p_auth.font.color.rgb = RGBColor(30, 58, 95)
 
         p_content = tf.add_paragraph()
-        p_content.text = text
-        p_content.font.size = Pt(11)
-        p_content.font.color.rgb = RGBColor(60, 60, 60)
+        _add_comment_text_runs(p_content, text, RGBColor(60, 60, 60))
         p_content.space_after = Pt(6)
 
     remaining = len(approved) - MAX_VISIBLE
